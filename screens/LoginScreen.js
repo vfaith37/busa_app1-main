@@ -57,7 +57,7 @@ const LoginScreen = () => {
 						alignItems: "center",
 					}}
 				>
-					<SignInForm />
+					<SignInForm/>
 					<Text
 						style={{
 							fontWeight: "400",
@@ -75,7 +75,8 @@ const LoginScreen = () => {
 						<Text style={{ textAlign: "center" }}>Don't have an account?</Text>
 						<Text
 							style={{ color: "#363be8", fontWeight: "500", marginLeft: 5 }}
-							// onPress={() => navigation.navigate("S")}
+							onPress={() => navigation.navigate("Sign-up")
+						}
 						>
 							Sign up
 						</Text>

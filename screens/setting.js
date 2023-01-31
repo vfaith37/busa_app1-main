@@ -17,7 +17,7 @@ import {
 	Direction,
 	Warning,
 } from "../constants/icons";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { SettingsButton } from "../Components/settingsButton";
 import { ModalPopUp } from "../Components/Modal";
 import { COLORS } from "../constants/theme";
@@ -25,15 +25,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
 const { width } = Dimensions.get("screen");
 const QR = width / 2;
+
 export const Profile = () => {
 	
-	const [actionTriggered, setActionTriggered] = React.useState("");
-	const [visible, setVisible] = React.useState(false);
-	const navigation = useNavigation();
-
-	// here, i'm getting the whole userinfo to get the values
 	const {userInfo, logout} = useContext(AuthContext)
 
+	const [actionTriggered, setActionTriggered] = useState("");
+	const [visible, setVisible] = useState(false);
+	// const  [userInfo, setUserInfo]= useState(null)
+
+	const navigation = useNavigation();
+
+//    const getUSerInfo = async()=>{
+// 	   try{
+// 	   const userInfo = await AsyncStorage.getItem("userInfo")
+// 	   userInfo = JSON.parse(userInfo)
+
+// 	   if(userInfo!==null){
+// 		setUserInfo(userInfo)
+// 	   }
+// 	   }
+// 	   catch(e){
+// 		   console.log(`${e}`)
+// 	   }
+//    }
+//    useEffect(()=>{
+// 	getUSerInfo()
+// 	},[])
+
+	// here, i'm getting the whole userinfo to get the values
 	return (
 
 		<View style={styles.container}>
@@ -223,10 +243,12 @@ export const Profile = () => {
 				>
 		<Text style={{top:50}}>Sign out</Text>
 				</TouchableOpacity> */} 
-				<Button title="sign out" onPress={logout()}/>
+				<Button title="sign out" onPress={()=>logout()}/>
 		</View>
 	);
 };
+
+
 
 const styles = StyleSheet.create({
 	container: {

@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect } from 'react'
 import { useRef, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
@@ -7,6 +7,7 @@ import { Icon } from '../constants/icons';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../context/AuthContext';
 // import moment from 'moment/moment';
 const{width, height} = Dimensions.get("window")
 const COLORS = {
@@ -110,24 +111,30 @@ return(
 
 const EventBody=(props)=>{
 
+  const navigation= useNavigation()
+  const {userInfo}= useContext(AuthContext)
+
   //run the async to get email and also get title being passed as a prop
 
-  const [email, setEmail] = useState("")
+  // const [email, setEmail] = useState("")
     // const [isLoading, setIsLoading] = useState("false")
 
     const pay = async()=>{
-        try{
-            const email = await AsyncStorage.getItem("email")
-            // console.log(useremail)
+        // try{
+        //     const email = await AsyncStorage.getItem("email")
+        //     // console.log(useremail)
 
-            if(email!==null){
-                setEmail(email)
-            }
-        }
-        catch(e){
-            console.log(`an error occured ${e}`)
-        }
+        //     if(email!==null){
+        //         setEmail(email)
+        //     }
+        // }
+        // catch(e){
+          //     console.log(`an error occured ${e}`)
+          // }
+          
+        const email = userInfo.email
         console.log(email)
+
         const title = props.title
         console.log(title)
 
@@ -154,42 +161,14 @@ const EventBody=(props)=>{
 })
 
     }
-    useEffect(()=>{
-      pay()
-    },[])
+
+    // useEffect(()=>{
+    //   pay()
+    // },[])
 
     // console.log(email)
 
-    
-    
-//     const pay = async(email, title)=>{
-//         const title = props.title
-//         await axios.post(`https://backendcode-usrb.onrender.com/api/pay/payForTicket`,{
-//          email:email,
-//          title:title
-// }).then((res)=>{
-
-//   if(res.status===200){
-//     navigation.dispatch(
-//               StackActions.replace("CheckOutScreen"
-//               , {
-//              authorization_url: res.data.authorization_url
-//               }
-//               )
-//               );
-//   }
-// }).catch((e)=>{
-//   console.log(`The error is: ${e}`)
-// })
-//     }
-
-
-
-
-
-
   
-  const navigation= useNavigation()
  const [fontsLoaded] = useFonts({
         'Poppins': require('../assets/fonts/Poppins-Light.ttf'),
         'Poppins2':require('../assets/fonts/Poppins-Bold.ttf'),

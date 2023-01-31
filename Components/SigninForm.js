@@ -10,36 +10,37 @@ import { AuthContext } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
+
+
 const validationSchema = Yup.object({
 	email: Yup.string()
 		.trim()
 		.matches(
 			/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
 			"School Email required"
-		)
+			)
 		.required("Email is required!"),
 	password: Yup.string()
-		.trim()
-		.min(8, "Password not long enough!")
-		.required("Password required!"),
+	.trim()
+	.min(8, "Password not long enough!")
+	.required("Password required!"),
 });
 export const SignInForm = () => {
-//  const {login} = useContext(AuthContext)
+	//  const {login} = useContext(AuthContext)
 	const navigation = useNavigation()
 	const [isLoading, setIsLoading] = useState(false);
 	const [userToken, setUserToken]= useState(null)
 	const [userInfos, setUserInfo] = useState(null)
-
+	
 	const userInfo = {
 		email: "",
 		password: "",
 	};
-     
-	
+
 	
 	 const signIn = async (values) => {
-		 await axios.post("https://no-vex-abeg.onrender.com/api/signin", {
-			...values,
+			 await axios.post("https://no-vex-abeg.onrender.com/api/signin", {
+					...values,
 		}).then((res)=>{
 			console.log(res)
 			if (res.status === 200) {
@@ -57,11 +58,10 @@ export const SignInForm = () => {
 					AsyncStorage.setItem("userToken",token)
 					console.log(userInfo)
 					console.log(token)
-				navigation.dispatch(StackActions.replace("Tab"));
 				}catch(e){
 					console.log(`Async Storage error: ${e}`)
 				}
-
+				navigation.dispatch(StackActions.replace("Tab"));
 
 				// let useremail = values.email
 				// try{
@@ -86,8 +86,7 @@ export const SignInForm = () => {
 			<Formik
 				initialValues={userInfo}
 				validationSchema={validationSchema}
-				onSubmit={signIn}
-				// onSubmit={()=> {login}}
+				 onSubmit={signIn}
 			>
 				{({
 					values,
