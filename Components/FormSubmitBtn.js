@@ -15,7 +15,7 @@ export const FormSubmitBtn = ({ title, onPress, submitting }) => {
 					color: "#FFF",
 					fontWeight: "500",
 					fontSize: 16,
-					// fontFamily:"Poppins"
+					fontFamily:"Poppins3"
 				}}
 			>
 				{title}

@@ -45,6 +45,7 @@ import axios from "axios";
 
 
 
+
 	export const Login = async (values) => {
 		const navigation = useNavigation()
 		const [isLoading, setIsLoading] = useState(false);
@@ -74,23 +75,12 @@ import axios from "axios";
 			   }catch(e){
 				   console.log(`Async Storage error: ${e}`)
 			   }
-
-
-			   // let useremail = values.email
-			   // try{
-			   // AsyncStorage.setItem("email", useremail)
-			   // // console.log(useremail)
-			   // navigation.dispatch(StackActions.replace("Tab"));
-			   // }catch(e){
-			   //  console.log(`The error is ${e}`)
-			   // }
 		   }
 	   }).catch((e)=>{
 		   console.log(e)
 	   }
 	   
-	   )
-	   
+	   )  
    };
 
 

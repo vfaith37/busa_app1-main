@@ -14,91 +14,136 @@ import client from "../api/client";
 import axios from "axios";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import LottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const VerifyAccountScreen = () => {
+
+const VerifyAccountScreen =({route})=>{
+	return(
+		<VerifyLogic route={route}/>
+	)
+}
+
+
+
+
+
+
+const VerifyLogic = (props) => {
+	const {email, password} = props.route.params
+
 	const navigation= useNavigation()
 	const [isLoading, setIsLoading] = React.useState(false);
+	const [userInfo, setUserInfo] = useState(null)
+	const [userToken, setUserToken]= useState(null)
+
+
 	const verify = async (values) => {
   	await axios.post('https://no-vex-abeg.onrender.com/api/verifyToken', {
 			...values,
 			})
 			.then((res) => {
 			console.log(res)
-				if (res.data.message === "User verified successfully") {
-                 navigation.dispatch(StackActions.replace("Log-in"));
-				}else{
-					console.error("Invalid input")
+				if (res.status === 200) {
+               //since the response was succesful, then email and password is valid
+
+				 // run the login function
+
+				 axios.post("https://no-vex-abeg.onrender.com/api/signin",{
+                email:email,
+			 password:password
+				 }).then(async(res)=>{
+					console.log(res)
+					if (res.status === 200) {
+						// also store the users values as an object and pass it round
+						console.log(res.data);
+						let userInfo = res.data.user
+						console.log(userInfo)
+			
+						setUserInfo(userInfo)
+						let token = res.data.token
+						setUserToken(token)
+			
+						try{
+							axios.defaults.headers.common.Authorization = `Bearer ${token}`
+							// stringify the user object
+							await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
+							 
+							// get the user token
+							await AsyncStorage.setItem("userToken",token)
+						}catch(e){
+							console.log(`Async Storage error: ${e}`)
+						}
+
+						navigation.dispatch(StackActions.replace("Sign-up2"));
+					}else{
+						console.error("Error with Login Functionality")
 					}
-			// 	console.log(newres.data);
+
+				 }).catch((e)=>{
+					console.log(`This is the login function error: ${e}`)
+				}
+				 )
+				
+				}
+				else{
+					console.error("Invalid token")
+					// {<View>
+                    //  <Text style={{color:"red"}}>sbfdbfsjfbsjfbsfbbfbf</Text>
+					// </View>}
+					}
 			})
-			.catch((error) => {
-				console.log(error);
+			.catch((e) => {
+				console.log(` This is the verify token error: ${e}`);
 			});
-
-
-		//login the user, if successful
 
 	};
 	
 
 	return (
-		<SafeAreaView>
-			<View
-				style={{
-					backgroundColor:
-						"linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
-					height: height,
-				}}
-			>
-				<View
-					style={{
-						alignSelf: "center",
-						marginTop: height * 0.5,
-						width: 315,
-						height: 172,
-						backgroundColor: "white",
-						boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.17)",
-						borderRadius: 10,
-						alignItems: "center",
-					}}
-				>
-					{isLoading ? (
-						<View>
-							<ActivityIndicator size="large" color="#0000ff" />
-						</View>
-					) : (
-						<OTP
+		
+		  <View style ={styles.container}>
+			  <StatusBar hidden/>
+			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>verify Account</Text>
+	  <LottieView
+	  source={require("../assets/animations/email-verification.json")}
+	  style={{
+		width: 300,
+		height: 300,
+		resizeMode:"cover",
+		alignSelf:"center",
+		top:30
+	  }}
+	  loop={true}
+	  autoPlay
+	  />
+	  
+	  <View style={{marginTop:60}}>
+	  <View style={{width:315, height:172, backgroundColor:"#ffff", borderRadius:10, alignSelf:"center"}}>
+                            <OTP
 							codeCount={5}
-							containerStyle={{ marginTop: 50 }}
-							otpStyles={{ backgroundColor: "#eee" }}
-							onFinish={(value) => verify(value)}
-						/>
-					)}
-
-					{/* <View
-						style={{
-							width: 100,
-							height: 38,
-							backgroundColor: "blue",
-							borderRadius: 5,
-							justifyContent: "center",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<TouchableOpacity
-						activeOpacity={0.5}
-						// onPress={(token)=>verify(token)}
-						>
-						<Text style={{ color: "#fff" }}>verify</Text>
-						</TouchableOpacity>
-					</View> */}
-				</View>
-			</View>
-		</SafeAreaView>
-	);
+							containerStyle={{ marginTop: 65 }}
+							otpStyles={{ backgroundColor: "#fff" }}
+						onFinish={(value) => verify(value)}
+						      />
+		  <Text style={{fontWeight:"500", color:"#363BE8", textAlign:"center", bottom:95, fontFamily:"Poppins", fontSize:12.5}}>enter code sent to your email address</Text>
+	  </View>
+	  
+		  <View style={{top:20}}>
+		  <Text style={{textAlign:"center", fontWeight:"600", fontSize:13, color:"#ffff", fontFamily:"Poppins3"}}>Didn't receive a code?</Text>
+		  <TouchableOpacity
+		  activeOpacity={0.6}
+		  >
+			  <Text style={{alignItems:"center", fontWeight:"600", fontSize:14, textAlign:"center", color:"#ffff", textDecorationLine:"underline", fontFamily:"Poppins3"}}>Resend code</Text>
+		  </TouchableOpacity>
+		  </View>
+		  </View>
+	  </View>
+		)
 };
+
 
 export default VerifyAccountScreen;
 
@@ -114,4 +159,11 @@ const styles = StyleSheet.create({
 		paddingLeft: 5,
 		fontSize: 15,
 	},
+	container:{
+        flex:1.5,
+        // backgroundColor:"#363be8",
+		backgroundColor:
+"linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
+
+    }
 });

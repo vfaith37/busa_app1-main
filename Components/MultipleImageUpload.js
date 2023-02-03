@@ -1,153 +1,138 @@
-// import React, { useState } from "react";
-// import {
-// 	ActivityIndicator,
-// 	Button,
-// 	FlatList,
-// 	Image,
-// 	StyleSheet,
-// 	Text,
-// 	useWindowDimensions,
-// 	View,
-// } from "react-native";
-// import * as ImagePicker from "expo-image-picker";
-// import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
-// export const MIP = () => {
-// 	const [images, setImages] = useState([]);
-// 	const [isLoading, setIsLoading] = useState(false);
-// 	const { width, height } = useWindowDimensions();
+import React, { useState } from "react";
+import {
+	ActivityIndicator,
+	Button,
+	FlatList,
+	Image,
+	StyleSheet,
+	Text,
+	useWindowDimensions,
+	View,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import { Formik } from "formik";
 
-// 	const pickImages = async () => {
-// 		// No permissions request is necessary for launching the image library
-// 		setIsLoading(true);
-// 		let result = await ImagePicker.launchImageLibraryAsync({
-// 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-// 			// allowsEditing: true,
-// 			allowsMultipleSelection: true,
-// 			selectionLimit:5,
-// 			aspect: [4, 3],
-// 			quality: 1,
-// 		});
-// 		setIsLoading(false);
-// 		// console.log(result);
+export const MIP = () => {
+	const [images, setImages] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const { width, height } = useWindowDimensions();
 
-// 		if (!result.canceled) {
-// 			// setImages(result.assets ? [result.assets] : result.selected)
-// 			setImages(result.assets[0].uri)
-// 		}
-
-// 		// if(!result.canceled){
-// 		// 	setImages(result.assets.uri)
-// 		// }
-		
-// 	return (
-// 		<View
-// 			style={{
-// 				width: width - 40,
-// 				height: height / 4.8,
-// 				// backgroundColor: "rgba(217, 217, 217, 1)",
-// 				marginTop: 15,
-// 				borderRadius: 3.5,
-// 				borderStyle:"dashed",
-// 				borderColor:"#d9d9d9",
-// 				borderWidth:2,
-// 				borderRadius:20
-// 			}}
-// 		>
-// 			<View style={{ padding: 60, flexDirection: "row", justifyContent:"flex-end", marginHorizontal:40}}>
-// 				{isLoading ? (
-// 					<View>
-// 						<ActivityIndicator size="large" color="#0000ff" />
-// 					</View>
-// 				) : (
-// 					<Pressable onPress={pickImages}>
-// 						<View
-// 							style={{
-// 								height: 30,
-// 								width: 30,
-// 								// backgroundColor: "rgba(217, 217, 217, 1)",
-// 								borderRadius: 20,
-// 								alignSelf: "flex-end",
-// 								marginLeft: width - 190,
-// 								marginBottom: 5
-// 							}}
-// 						>
-// 							<View style={{backgroundColor:"blue", height:50, width:50, borderRadius:50}}>
-// 							<Text
-// 								style={{
-// 									fontSize: 40,
-// 									fontWeight: "400",
-// 									color: "#ffff",
-// 									alignSelf: "center",
-// 									bottom:3,
-// 									// fontFamily:"Poppins"
-
-// 								}}
-// 							>
-// 								+
-// 							</Text>
-// 							</View>
-// 						</View>
-// 					</Pressable>
-// 				)}
-// 				<Text style={{ fontSize: 18, left:30, alignSelf:"center", top:5, lineHeight:27, fontWeight:"400"
+	const pickImage = async (setFieldValue) => {
+		try{
+		const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+	
+		if (permissionResult.granted === false) {
+		  alert("Permission to access camera roll is required!");
+		  return;
+		}
+		setIsLoading(true)
+	
+		const pickerResult = await ImagePicker.launchImageLibraryAsync({
+			        allowsMultipleSelection: true,
+			        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			        quality: 1,
+					selectionLimit:5 //for IOS 14+
+			      });
 			
-// 			// ,fontFamily:"Poppins"
-// 			}}>Upload here</Text>
-// 			</View>
-// 			<FlatList
-// 				data={images}
-// 				horizontal
-// 				renderItem={({ item }) => (
-// 					// export const img = item.uri
-// 					<Image
-// 						source={{ uri: item.uri }}
-// 						style={{ width: 106, height: 134, marginLeft: 10, borderRadius: 6 }}
-// 					/>
-// 				)}
-// 				keyExtractor={(item) => item.uri}
-// 				contentContainerStyle={{}}
-// 			/>
-// 		</View>
-// 	);
-// };
-// }
+			      if (!pickerResult.canceled) {
+			        const uris = pickerResult.assets.map((asset, index) => ({
+			          uri: asset.uri,
+			          id: index,
+			        }));
+					setFieldValue('images', uris);
+			        setImages(prevImages => [...prevImages, ...uris]);
+			      }
+				  setIsLoading(false)
+				  console.log(pickerResult.assets)
+				}catch(e){
+                 console.log(`${e}`)
+				}
+	  }
+	return (
 
 
-// import React, { useState } from 'react';
-// import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-// import ImagePicker from 'react-native-image-picker';
-// import { Ionicons } from '@expo/vector-icons';
+		<Formik
+		initialValues={{ images: [] }}
+  onSubmit={(values, { resetForm }) => {
+    console.log('Selected Images:', values.images);
+    resetForm({ values: {} });
+  }}
+  >
 
+{({ handleSubmit, setFieldValue, values }) => (
+		<View
+			style={{
+				width: width - 40,
+				height: height / 3.8,
+				borderColor:"#d9d9d9",
+				borderStyle:"dashed",
+				borderWidth:2.5,
+				marginTop: 15,
+				borderRadius: 3.5,
+				borderRadius:20
+			}}
+		>
+			<View style={{ padding: 10, flexDirection: "row" }}>
+				<Text style={{ fontSize: 16, padding: 5, fontFamily:"Poppins", color:"#000" }}>Upload Here</Text>
+				{isLoading ? (
+					<View>
+						<ActivityIndicator size="large" color="#0000ff" />
+					</View>
+				) : (
+					<Pressable onPress={()=> pickImage(setFieldValue)}>
+						<View
+							style={{
+								height: 30,
+								width: 30,
+								// backgroundColor: "rgba(217, 217, 217, 1)",
+								backgroundColor:"#004fc7",
+								borderRadius: 25,
+								alignSelf: "center",
+								marginLeft: width - 200,
+							}}
+						>
+							<Text
+								style={{
+									fontSize: 30,
+									fontWeight: "300",
+									color: "black",
+									justifyContent: "center",
+									alignItems: "center",
+									fontFamily:"Poppins",
+									position:"absolute",
+									left:4,
+									top:-6,
+									color:"#fff",
 
-// export const MIP = ()=> {
-// 	const [image, setImage] = useState(null);
-  
-// 	const handleSelectImage = () => {
-// 	  ImagePicker.showImagePicker({
-// 		title: 'Select Image',
-// 	  }, (response) => {
-// 		if (response.didCancel) {
-// 		  console.log('User cancelled image picker');
-// 		} else if (response.error) {
-// 		  console.log('ImagePicker Error: ', response.error);
-// 		} else {
-// 		  setImage(response);
-// 		}
-// 	  });
-// 	};
-  
-// 	return (
-// 	  <View style={styles.container}>
-// 		<TouchableOpacity style={styles.selectButton} onPress={handleSelectImage}>
-// 		  <Ionicons name="ios-camera" size={40} color="#888" />
-// 		  <Text style={styles.selectButtonText}>Select Image</Text>
-// 		</TouchableOpacity>
-// 		{image && <Image source={{ uri: image.uri }} style={styles.preview} />}
-// 	  </View>
-// 	);
-//   }
-  
+								}}
+							>
+								+
+							</Text>
+						</View>
+					</Pressable>
+				)}
+			</View>
+			<FlatList
+				data={images.slice(0,5)}
+				horizontal
+				renderItem={({ item }) => (
+					<View style={{width:120,}}>
+						<Image
+							source={{ uri: item.uri }}
+							style={{ width: 103, height: 120, left:7, marginHorizontal:4, borderRadius: 6, resizeMode:"contain",}}
+						/>
+					</View>
+				)}
+				keyExtractor={(item) => item.uri}
+				contentContainerStyle={{}}
+			/>
+	<Button title="Submit" onPress={handleSubmit} />
+		</View>
+)}
+</Formik>
+	)}
 
 //   const styles = StyleSheet.create({
 // 	container: {
@@ -176,41 +161,6 @@
 // 	},
 //   });
 
-
-export const MIP = ()=> {
-	const [images, setImages] = useState([]);
-  
-	const handleSelectImage = () => {
-	  ImagePicker.showImagePicker({
-		title: 'Select Image',
-		maxImagesCount: 5,
-		storageOptions: {
-		  skipBackup: true,
-		  path: 'images',
-		},
-	  }, (response) => {
-		if (response.didCancel) {
-		  console.log('User cancelled image picker');
-		} else if (response.error) {
-		  console.log('ImagePicker Error: ', response.error);
-		} else {
-		  setImages([...images, response]);
-		}
-	  });
-	};
-  
-	return (
-	  <View style={styles.container}>
-		<TouchableOpacity style={styles.selectButton} onPress={handleSelectImage}>
-		  <Text style={styles.selectButtonText}>Select Images</Text>
-		</TouchableOpacity>
-		{images.map((image, index) => (
-		  <Image key={index} source={{ uri: image.uri }} style={styles.preview} />
-		))}
-	  </View>
-	);
-  }
-  
 
   
 

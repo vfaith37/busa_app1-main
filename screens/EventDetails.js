@@ -55,7 +55,7 @@ const EventImage=(props)=>{
     })
 return(
     <View>
-     <View style={{ top:20, height:height*0.45, width:width*0.90, backgroundColor:"transparent",borderRadius:10, alignSelf:"center"}}>
+     <View style={{ top:20, height:300, width:300, backgroundColor:"transparent",borderRadius:10, alignSelf:"center"}}>
           <FlatList
           data={props.image}
           horizontal
@@ -74,7 +74,7 @@ return(
             >
                 <Image
                     style={{
-                      height:height*0.45, width:width*0.90,  alignSelf:"center", resizeMode:"contain", borderRadius:10
+                      height:300, width:300,  alignSelf:"center", resizeMode:"contain", borderRadius:10
                     }}
                     key={id}
                     source={{uri:item.image}}
@@ -111,28 +111,41 @@ return(
 
 const EventBody=(props)=>{
 
+  const [userInfo, setUserInfo] = useState(null)
   const navigation= useNavigation()
-  const {userInfo}= useContext(AuthContext)
 
   //run the async to get email and also get title being passed as a prop
 
-  // const [email, setEmail] = useState("")
-    // const [isLoading, setIsLoading] = useState("false")
+  const  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userInfo')
+      if(value !== null) {
+      // console.log(value)
+      setUserInfo(JSON.parse(value))
+      }
+    } catch(e) {
+      console.log(`${e}`)
+    }
+    }
+  
+  
+     useEffect(()=>{
+    getData()
+    },[])
 
     const pay = async()=>{
         // try{
-        //     const email = await AsyncStorage.getItem("email")
-        //     // console.log(useremail)
-
-        //     if(email!==null){
-        //         setEmail(email)
+        //     const value = await AsyncStorage.getItem("userInfo")
+        //     if(value!==null){
+        //         setUserInfo(JSON.parse(value))
         //     }
         // }
         // catch(e){
-          //     console.log(`an error occured ${e}`)
-          // }
+        //       console.log(`an error occured ${e}`)
+        //   }
           
-        const email = userInfo.email
+      
+            const email = userInfo?.email
         console.log(email)
 
         const title = props.title
@@ -144,6 +157,7 @@ const EventBody=(props)=>{
          email:email,
          title:title
 }).then((res)=>{
+  console.log(res)
 
   if(res.status===200){
     navigation.dispatch(
@@ -154,47 +168,28 @@ const EventBody=(props)=>{
               )
               );
 
-    console.log(res)
   }
 }).catch((e)=>{
   console.log(`The error is: ${e}`)
 })
 
     }
-
+    
     // useEffect(()=>{
     //   pay()
-    // },[])
+    //   },[])
 
-    // console.log(email)
-
-  
- const [fontsLoaded] = useFonts({
-        'Poppins': require('../assets/fonts/Poppins-Light.ttf'),
-        'Poppins2':require('../assets/fonts/Poppins-Bold.ttf'),
-    'Poppins3': require('../assets/fonts/Poppins-SemiBold.ttf'),
-      });
-    
-      const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
-          await SplashScreen.hideAsync();
-        }
-      }, [fontsLoaded]);
-    
-      if (!fontsLoaded) {
-        return null;
-      }
 
 return(
     <>
-    <View style={{height:400, width:width, borderTopLeftRadius:30, borderTopRightRadius:30, backgroundColor:"#fff", top:3}}>
+    <View style={{height:335, width:width*0.83, borderRadius:30, backgroundColor:"#fff", top:35, alignSelf:"center"}}>
 
-<View style={{margin:13, left:10}}>
+<View style={{margin:13, left:10, marginVertical:20}}>
 <Text style={{color:"#1b5bff", fontFamily:"Poppins2", fontSize:10, fontWeight:"300", position:"absolute", textTransform:"uppercase"}}>{props.date}</Text>
-<Text style={{fontWeight:"600", fontSize:23, lineHeight:28, color:"#000", fontFamily:"Poppins2", maxWidth:"65%", position:"absolute", top:15}}>{props.title}</Text>
+<Text style={{fontWeight:"600", fontSize:23, lineHeight:28, color:"#000", fontFamily:"Poppins2", position:"absolute", top:20}}>{props.title}</Text>
 
 
-<View style={{bottom:-40, left:5}}>
+<View style={{bottom:-46, left:5}}>
     <View>
    <Icon
    name="time-outline"
@@ -212,7 +207,7 @@ return(
    </View>
 
 
-   <View style={{flexDirection:"row", justifyContent:"space-around", bottom:15, left:-55}}>
+   <View style={{flexDirection:"row", justifyContent:"space-around", bottom:15, left:-25}}>
    <Icon
    name="location-outline"
    size={16}
@@ -228,19 +223,18 @@ return(
 
    </View>
 
-<Text style={{fontFamily:"Poppins2", fontWeight:"400",position:"absolute", right:15, top:35, fontSize:18, lineHeight:22}}>{props.price}</Text>
+<Text style={{fontFamily:"Poppins2", fontWeight:"400",position:"absolute", left:2, bottom:-265, fontSize:18, lineHeight:22}}>{props.price}</Text>
 
-<View style={{width:width*0.90, height:245, position:"absolute"}}>
-<Text style={{fontSize:10, fontFamily:"Poppins", fontWeight:"300", color:"#999999", position:"absolute", top:65, lineHeight:15}}>{props.description}</Text>
+<View style={{width:width*0.75, position:"absolute"}}>
+<Text style={{fontSize:10, fontFamily:"Poppins", fontWeight:"300", color:"#999999", position:"absolute", top:80, lineHeight:12.5}}>{props.description}</Text>
 </View>
 
 </View>
 
-<View style={{width:118, height:37, borderRadius:10, backgroundColor:"#004fc7",alignSelf:"center", position:"absolute", bottom:40}}>
+<View style={{width:118, height:37, borderRadius:10, backgroundColor:"#004fc7",alignSelf:"center", position:"absolute", bottom:10, right:20}}>
     <TouchableOpacity
     activeOpacity={0.9}
     onPress={()=>pay()}
-    // onPress={()=>navigation.navigate("ProcessDetails")}
  >
     <Text style={{color:"#fff", fontSize:14, fontWeight:"600", lineHeight:21, fontFamily:"Poppins2", alignSelf:"center", position:"absolute", padding:8}}>Buy Now</Text>
     </TouchableOpacity>

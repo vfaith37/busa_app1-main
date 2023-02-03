@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackActions, useNavigation } from "@react-navigation/native";
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, useEffect, useMemo, useState} from "react";
 import {Login} from "../Components/Login";
 
 export const AuthContext = createContext();
@@ -69,13 +69,12 @@ export const AuthProvider =({children})=>{
    const logout = async()=>{
     setIsLoading(true)
     setUserToken(null)
-    // setUserInfo(null)
     try{
-   await  AsyncStorage.removeItem("userToken")
-    await AsyncStorage.removeItem("userInfo")
-    }catch(e){
-        console.log(`${e}`)
-    }
+  await  AsyncStorage.removeItem("userToken")
+   await AsyncStorage.removeItem("userInfo")
+}catch(e){
+    console.log(`${e}`)
+}
     setIsLoading(false)
    }
 
@@ -100,6 +99,8 @@ export const AuthProvider =({children})=>{
    useEffect(()=>{
     isLoggedIn()
    }, [])
+
+
 
     return(
         <AuthContext.Provider value={{login, logout, isLoading, userToken, userInfo}}>

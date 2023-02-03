@@ -13,10 +13,8 @@ export function MainStack() {
 			// initialRouteName="verify"
 			screenOptions={{ headerShown: false }}
 		>
-		
-			 {/* <Stack.Screen component={SignUpScreen2} name="SignUpScreen2" /> */}
-			 <Stack.Screen component={TabNavigator} name="Tab" />
-			 {/* <Stack.Screen component={LoginScreen} name="Log-in" />   */}
+			 <Stack.Screen component={TabNavigator} name="Tab" /> 
+
 		</Stack.Navigator>
 	);
 }

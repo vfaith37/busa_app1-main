@@ -5,22 +5,24 @@ export const FormInput = (props) => {
 	const { label, error, style, TextInputStyle } = props;
 	return (
 		<>
-			<View style={{ flexDirection: "row", justifyContent: "space-between", paddingTop: 10  }}>
+			<View style={{ flexDirection: "row", justifyContent: "space-between", paddingTop: 20  }}>
 				<Text style={style}>{label}</Text>
 				{error ? (
-					<Text style={{ fontSize: 11, color: "red" }}>{error}</Text>
+					<Text style={{ fontSize: 11, color: "red", fontFamily:"Poppins"}}>{error}</Text>
 				) : null}
 			</View>
 			<TextInput
 				{...props}
 				style={TextInputStyle}
+				selectionColor={'#363BE8'}
+				cursorColor={"#363be8"}
 			/>
 		</>
 	);
 };
 
 const styles = StyleSheet.create({
-    signupText: { fontSize: 15, },
+    signupText: { fontSize: 15, fontFamily:"Poppins" },
     signupInput: {
         backgroundColor: "#C9D9F2",
         borderRadius: 5,

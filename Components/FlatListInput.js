@@ -7,18 +7,6 @@ export const FlatList =(props)=>{
 return(
 
     <FlatList
-    
-    
-    
-    
-    
-    
-    
-    
     />
 )
-
-
-
-
 }

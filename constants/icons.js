@@ -12,3 +12,4 @@ export const Calendar = <Ionicons name="calendar-check" size={25} color="#717171
 export const Ad = <Ionicons name="ad" size={20} color="#717171"/>;
 export const Direction = <Ionicons name="ios-chevron-forward-outline" size={20} color="#717171" style={{paddingTop: 20}}/>;
 export const Icon =({name, size, style, color})=><Ionicons name={name} size={size} color={color} style={style}/>
+export const ScanTicket = <Ionicons name="scan-outline" size={20} color="#717171" light/>

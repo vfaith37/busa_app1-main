@@ -21,11 +21,13 @@ export const Notification = () => {
 				<Text
 					style={{
 						fontSize: 24,
-						fontWeight: "700",
+						fontWeight: "600",
 						textAlign: "center",
 						color: COLORS.black,
-                        marginRight: width / 3 ,
+                        marginRight: width / 6 ,
 						paddingBottom: 20,
+						fontFamily:"Poppins3",
+						// alignContent:"y"
 					}}
 				>
 					Notifications
@@ -37,6 +39,7 @@ export const Notification = () => {
 					fontWeight: "600",
 					paddingBottom: 5,
 					color: COLORS.black,
+					fontFamily:"Poppins2"
 				}}
 			>
 				Notification Settings
@@ -48,6 +51,7 @@ export const Notification = () => {
 					paddingBottom: 5,
 					fontWeight: "300",
 					color: COLORS.black,
+					fontFamily:"Poppins"
 				}}
 			>
 				We may still send you important notifications about your account outside
@@ -56,9 +60,10 @@ export const Notification = () => {
 			<Text
 				style={{
 					fontSize: 10,
-					paddingBottom: 5,
+					paddingBottom: 8,
 					color: COLORS.black,
 					fontWeight: "500",
+					fontFamily:"Poppins"
 				}}
 			>
 				Interactions
@@ -80,6 +85,7 @@ export const Notification = () => {
 						fontWeight: "600",
 						color: COLORS.black,
 						marginLeft: 5,
+						fontFamily:"Poppins"
 					}}
 				>
 					Notifications

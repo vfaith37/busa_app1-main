@@ -69,21 +69,21 @@ const EventImage=({event, navigation})=>{
   const EventItems=({event})=>{
     // this are all the items that can be found on the image
 
-    const [fontsLoaded] = useFonts({
-        'Poppins': require('../assets/fonts/Poppins-Light.ttf'),
-        'Poppins2':require('../assets/fonts/Poppins-Bold.ttf'),
-    'Poppins3': require('../assets/fonts/Poppins-SemiBold.ttf'),
-      });
+    // const [fontsLoaded] = useFonts({
+    //     'Poppins': require('../assets/fonts/Poppins-Light.ttf'),
+    //     'Poppins2':require('../assets/fonts/Poppins-Bold.ttf'),
+    // 'Poppins3': require('../assets/fonts/Poppins-SemiBold.ttf'),
+    //   });
     
-      const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
-          await SplashScreen.hideAsync();
-        }
-      }, [fontsLoaded]);
+    //   const onLayoutRootView = useCallback(async () => {
+    //     if (fontsLoaded) {
+    //       await SplashScreen.hideAsync();
+    //     }
+    //   }, [fontsLoaded]);
     
-      if (!fontsLoaded) {
-        return null;
-      }
+    //   if (!fontsLoaded) {
+    //     return null;
+    //   }
 
     return(
     <>

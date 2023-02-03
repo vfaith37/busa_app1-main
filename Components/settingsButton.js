@@ -12,13 +12,13 @@ export const SettingsButton = ({ icon, ButtonName, iconLeft }) => {
 			>
 				<View style={{ flexDirection: "row", padding: 20 }}>
 					{icon}
-					<Text style={{ marginLeft: 10 }}>{ButtonName}</Text>
+					<Text style={{ marginLeft: 10, fontFamily:"Poppins", fontWeight:"400", fontSize:14, color:"#717171"}}>{ButtonName}</Text>
 				</View>
 				{iconLeft}
 			</View>
 			<View
 				style={{
-					borderBottomColor: "black",
+					borderBottomColor: "#d9d9d9",
 					borderBottomWidth: StyleSheet.hairlineWidth,
 				}}
 			/>

@@ -52,53 +52,24 @@ export const SignUpForm = () => {
 		confirmpassword: "",
 	};
 	const signUp = async (values, formikActions) => {
-		// setIsLoading(true);
-		// // console.log(values);
-    
+		setIsLoading(true);
 		const res = await client.post("/signup", {
 			...values,
 		});
 
-		// sign in user
-
-		if (res.data.success === true) {
+		if (res.data.success) {
 
                navigation.dispatch(
 						StackActions.replace("verify"
 						, {
 					 email: values.email,
-					//  password:values.password,
+					password:values.password,
 						}
 						)
 						);
 
 						console.log(res.data)
-
-			// {()=> navigation.navigate("verify", {
-			// 	email:values.email,
-			// 	password:values.password,
-			// })}
-
-
-			// const signInRes = await client.post("/sign-in", {
-			// 	email: values.email,
-			// 	password: values.password,
-			// });
-        
-
-		// if (res.data.message === "Successfully added user") {
-		// 	navigation.dispatch(
-		// 		StackActions.replace("verify", {
-		// 			token: signInRes.data.token,
-		// 		})
-		// 		);
-		// }
-
-			//  formikActions.resetForm();
-			// formikActions.setSubmitting(false);
 		}
-	
-
 	};
 	return (
 		<KeyboardAvoidingView
@@ -107,8 +78,8 @@ export const SignUpForm = () => {
 		>
 			<View
 				style={{
-					marginTop: 50,
-					height: height / 1.5,
+					marginTop: 75,
+					height: height / 1.46,
 					width: width - 60,
 					borderRadius: 17,
 					backgroundColor: "#FFFFFF",
@@ -122,14 +93,20 @@ export const SignUpForm = () => {
 					style={{
 						color: "#363BE8",
 						alignSelf: "center",
-						fontSize: 40,
+						fontSize: 35,
 						fontWeight: "600",
+						fontFamily:"Poppins3"
 					}}
 				>
 					Welcome
 				</Text>
+				<View style={{flexDirection:"row", alignSelf:"center"}}>
+				<Text style={{fontFamily:"Poppins"}}>Let's create your</Text>
+				<Text style={{textDecorationLine:"underline", color:"#363be8", fontFamily:"Poppins", left:3}}>account</Text>
+				</View>
+
 				<View
-					style={{ paddingTop: 20, width: width - 130, alignSelf: "center" }}
+					style={{width: width - 130, alignSelf: "center" }}
 				>
 					<Formik
 						initialValues={userInfo}
@@ -202,7 +179,7 @@ export const SignUpForm = () => {
 									/>
 									{isLoading ? (
 										<View>
-											<ActivityIndicator size="large" color="#0000ff" />
+											<ActivityIndicator size="large" color="#0000ff"/>
 										</View>
 									) : (
 										<FormSubmitBtn
@@ -211,17 +188,10 @@ export const SignUpForm = () => {
 											title={"Create Account"}
 										/>
 									)}
-
-
-
-
 								</>
 							);
 						}}
 					</Formik>
-									{/* <View style={{height:50, width:50, backgroundColor:"blue", bottom:150}} onPress={navigation.navigate("verify")}>
-                                    <Text>login</Text>
-									</View> */}
 				</View>
 			</View>
 		</KeyboardAvoidingView>
@@ -229,14 +199,16 @@ export const SignUpForm = () => {
 };
 const styles = StyleSheet.create({
 	text: {
-		fontSize: 15,
+		fontSize: 13.5,
+		fontFamily:"Poppins"
 	},
 	textInput: {
 		backgroundColor: "#C9D9F2",
 		borderRadius: 5,
-		height: 35,
-		marginBottom: 10,
+		height: 33,
+		marginBottom: 2,
 		paddingLeft: 5,
-		fontSize: 15,
+		fontSize: 14,
+		fontFamily:"Poppins"
 	},
 });

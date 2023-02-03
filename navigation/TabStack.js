@@ -2,7 +2,6 @@ import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { EventStack } from "./EventStack";
 import { ProfileStack } from "./ProfileStack";
-import OnBoardingScreen from "../screens/OnBoardingScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { COLORS } from "../constants/theme";
 import {HomeStack} from "./HomeStack"
@@ -35,7 +34,7 @@ export const TabNavigator = () => {
 		>
 			<Tab.Screen name="Home" component={HomeStack} />
 			<Tab.Screen name="Event" component={EventStack} />
-			<Tab.Screen name="Profile" component={ProfileStack} />
+			<Tab.Screen name="Profile" component={ProfileStack}/>
 		</Tab.Navigator>
 	);
 };

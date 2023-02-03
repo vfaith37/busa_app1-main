@@ -27,7 +27,7 @@ export const AccordionItem = () => {
 						style={{ flexDirection: "row", justifyContent: "space-between" }}
 					>
 						<View>
-							<Text>First Name</Text>
+							<Text style={styles.text}>First Name</Text>
 							<TextInput
 								placeholder="Victor"
 								style={[styles.textInput, { width: 155 }]}
@@ -35,7 +35,7 @@ export const AccordionItem = () => {
 							/>
 						</View>
 						<View>
-							<Text>Last Name</Text>
+							<Text style={styles.text}>Last Name</Text>
 							<TextInput
 								editable={false}
 								placeholder="Fagbohun"
@@ -45,7 +45,7 @@ export const AccordionItem = () => {
 						</View>
 					</View>
 					<View>
-						<Text>Last Name</Text>
+						<Text style={styles.text}>email</Text>
 						<TextInput
 							editable={false}
 							placeholder="Fagbohun5865"
@@ -60,6 +60,7 @@ export const AccordionItem = () => {
 								fontSize: 13,
 								fontWeight: "500",
 								color: "rgba(113, 113, 113, 0.5)",
+								fontFamily:"Poppins"
 							}}
 						>
 							@student.babcock.edu.ng
@@ -69,7 +70,7 @@ export const AccordionItem = () => {
 						style={{ flexDirection: "row", justifyContent: "space-between" }}
 					>
 						<View>
-							<Text>Course of study</Text>
+							<Text style={styles.text}>Course of study</Text>
 							<TextInput
 								editable={false}
 								placeholder="Computer Science"
@@ -78,7 +79,7 @@ export const AccordionItem = () => {
 							/>
 						</View>
 						<View>
-							<Text>Gender</Text>
+							<Text style={styles.text}>Gender</Text>
 							<TextInput
 								editable={false}
 								placeholder="Male"
@@ -112,11 +113,13 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 5,
 		paddingLeft: 5,
+		fontFamily:"Poppins"
 	},
 	title: {
-		fontSize: 25,
+		fontSize: 20,
 		color: "#2d2d2d",
-		fontWeight: "bold",
+		// fontWeight: "bold",
+		fontFamily:"Poppins2"
 	},
 	body: {
 		paddingHorizontal: "2%",
@@ -127,4 +130,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 	},
+	text:{
+		fontFamily:"Poppins"
+	}
 });

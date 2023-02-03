@@ -63,12 +63,14 @@ export default function OTP({
 				return (
 					<TextInput
 						maxLength={1}
+						cursorColor="red"
+						selectionColor={"blue"}
 						key={`${index}`}
 						ref={(element) => inputCodeRef.current.push(element)}
 						style={[
 							styles.input,
 							otpStyles,
-							{ width: width / (codeCount + 2), height: height / 14 },
+							{ width: width / (codeCount + 3), height: height / 14 },
 						]}
 						onChangeText={(text) => onChangeCode(text, index)}
 						onKeyPress={(event) => onKeyPress(event, index)}
@@ -93,6 +95,8 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		backgroundColor: "#fff",
 		borderBottomWidth: 1.5,
-		borderBottomColor: "blue",
+		borderBottomColor: "#363BE8",
+		fontFamily:"Poppins",
+		color:"#363be8"
 	},
 });
