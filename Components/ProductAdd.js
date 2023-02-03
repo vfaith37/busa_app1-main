@@ -197,6 +197,11 @@ export const Form = () => {
 						<Text style={{ fontSize: 22, paddingTop: 10, fontFamily:"Poppins3"}}>
 							Content
 						</Text>
+						{/* {errors.content && touched.content && 
+		<Text style={{ color: 'red', fontFamily:"Poppins", fontSize:10, top:-13, alignSelf:"center" }}>
+			{errors.content}
+			</Text>
+			} */}
 						<TextInput
 							multiline
 							style={styles.TextInput2}
