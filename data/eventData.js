@@ -21,7 +21,7 @@ export const EVENTS =[
             campus:"Main",
             miniDate: "13 Dec",        
             date:'SUNDAY, 13 DECEMBER',
-        title:"Busa Game Show",
+        title:"The Test",
         time:"12:00AM",
         location:"cafeteria",
         price:"₦1,500.00",

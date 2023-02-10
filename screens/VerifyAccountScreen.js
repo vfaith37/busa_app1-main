@@ -41,7 +41,7 @@ const VerifyLogic = (props) => {
 
 
 	const verify = async (values) => {
-  	await axios.post('https://no-vex-abeg.onrender.com/api/verifyToken', {
+  	await client.post('/verifyToken', {
 			...values,
 			})
 			.then((res) => {
@@ -51,7 +51,7 @@ const VerifyLogic = (props) => {
 
 				 // run the login function
 
-				 axios.post("https://no-vex-abeg.onrender.com/api/signin",{
+				 client.post("/signin",{
                 email:email,
 			 password:password
 				 }).then(async(res)=>{

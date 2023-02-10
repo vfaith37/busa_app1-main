@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
 	Dimensions,
 	StyleSheet,
@@ -8,6 +8,7 @@ import {
 	Image,
 	TextInput,
 	Button,
+	ActivityIndicator,
 } from "react-native";
 import {
 	TicketIcon,
@@ -24,41 +25,86 @@ import { SettingsButton } from "../Components/settingsButton";
 import { ModalPopUp } from "../Components/Modal";
 import { COLORS } from "../constants/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "../context/AuthContext";
 import { Pressable } from "react-native";
-const { width } = Dimensions.get("screen");
-const QR = width / 2;
+import { ErrorMessage, Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { FormSubmitBtn } from "../Components/FormSubmitBtn";
+import BottomSheet from "../Components/Bottomsheet";
+const { height, width } = Dimensions.get("screen");
 
 export const Profile = () => {
-	
+
 		const [actionTriggered, setActionTriggered] = useState("");
 		const [action, setAction] = useState("");
+	        const [isLoading, setIsLoading] = useState(false);
+			const bottomSheetRef = useRef();
+	  const pressHandler = useCallback(() => {
+		bottomSheetRef.current.expand();
+	  }, []);
+
 	
 		const [visible, setVisible] = useState(false);
           const [userInfo, setUserInfo] = useState(null)
+          const [userToken, setUserToken] = useState(null)
+
 
   const  getData = async () => {
 	try {
 	  const value = await AsyncStorage.getItem('userInfo')
+	  const userToken = await AsyncStorage.getItem("userToken")
+
 	  if(value !== null) {
-		console.log(value)
 		setUserInfo(JSON.parse(value))
+		setUserToken(userToken)
 	  }
 	} catch(e) {
 	  console.log(`${e}`)
 	}
   }
 
-
    useEffect(()=>{
 	getData()
 	},[])
 
-
-
 	const navigation = useNavigation();
 
-  
+
+	const verifyPassword = async(values)=>{
+
+		const email = userInfo?.email
+	     const token = userToken
+		const config = {
+			headers: { Authorization: `Bearer ${token}` }
+		};
+		const body={
+			email:email,
+			password:values.password
+		}
+		
+
+		setIsLoading(true)
+	   axios.post("https://code-6z3x.onrender.com/api/tickets/verifyPassword",body,config
+		).then((res)=>{
+			if(res.status === 200){
+				setVisible(false)
+			setIsLoading(false)
+			navigation.navigate("TicketScreen")
+			}
+		}).catch((e)=>{
+			console.log(`${e}`)
+		})
+		// since i want to use the same functionality to dispatch the users, if the userrole is 1, it would navigate the user to
+		// scantickets, else navigate the user to check tickets
+	   }
+
+	   const validationSchema = Yup.object({
+		password: Yup.string()
+		.trim()
+		.min(8, "Password not long enough!")
+		.required("Password required!"),
+	});
+
 
 	// here, i'm getting the whole userinfo to get the values
 	return (
@@ -72,7 +118,7 @@ export const Profile = () => {
 				<View style={{ flexDirection: "row", marginLeft: 10 }}>
 					<View style={styles.itemcontainer}>
 						<Text style={{ fontWeight: "600", fontSize: 30, color: COLORS.white, fontFamily:"Poppins", color:"#ececec" }}>
-						{userInfo?.firstname.charAt(0)}{userInfo?.lastname.charAt(0)}
+						{userInfo?.firstname.charAt(0).toUpperCase()}{userInfo?.lastname.charAt(0).toUpperCase()}
 						</Text>
 					</View>
 					<View style={{ paddingBottom: 10, paddingLeft: 10 }}>
@@ -105,7 +151,6 @@ export const Profile = () => {
 						activeOpacity={0.7}
 						onPress={() => {
 							setVisible(true);
-							// setActionTriggered("Action_3")
 							setActionTriggered("Action_1");
 						}}
 					>
@@ -123,15 +168,17 @@ export const Profile = () => {
 					</TouchableOpacity>
                      
 					 
-					 { userInfo?.role === 0?
+					 { userInfo?.role === 2?
 					 
 					 (
 						<>
 					 <TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => {
-							setVisible(true);
-							 setActionTriggered("Action_3")}}
+							// setVisible(true);
+							//  setActionTriggered("Action_3")
+							navigation.navigate("ScanTicketScreen")
+							}}
 					>
 						
                          <SettingsButton
@@ -142,10 +189,11 @@ export const Profile = () => {
 
 					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-200, right:15}}>
                      <Pressable
-					onPress={() => {
-						setVisible(true);
-						setActionTriggered("Action_4");
-					}}
+					// onPress={() => {
+					// 	setVisible(true);
+					// 	setActionTriggered("Action_4");
+					// }}
+					onPress={()=>pressHandler()}
 					>
                      <Text style={{bottom:7, fontFamily:"Poppins", alignSelf:"center", fontSize:48, color:"#fff"}}>+</Text>
 					</Pressable>
@@ -156,14 +204,69 @@ export const Profile = () => {
 		null
 }
 
-         
+
+                 <BottomSheet
+						ref={bottomSheetRef}
+						activeHeight={height * 0.5}
+						backgroundColor={"#fff"}
+						// backDropColor={"black"}
+					>
+						<View
+							style={{
+								width: width,
+								height: 200,
+								marginLeft: 20,
+								marginTop: 20,
+							}}
+						>
+							<View>
+								<Text
+									style={{
+										fontWeight: "600",
+										fontFamily: "Poppins2",
+										fontSize: 30,
+									}}
+								>
+									Create
+								</Text>
+
+								<View style={{ paddingVertical: 10 }}>
+									<TouchableOpacity
+										onPress={() => {
+											setVisible(false);
+											navigation.navigate("UploadPostScreen");
+										}}
+									>
+										<View style={{ flexDirection: "row" }}>
+											<Icon name={"newspaper-outline"} size={20} />
+											<Text style={styles.text}>New Post</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+										onPress={() => {
+											setVisible(false);
+											navigation.navigate("UploadEventScreen");
+										}}
+									>
+										<View style={{ flexDirection: "row", top: 15 }}>
+											<Icon name={"calendar-outline"} size={20} />
+											<Text style={styles.text}>New Event</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
+							</View>
+						</View>
+					</BottomSheet>
+
+                      
+
 
 					<ModalPopUp visible={visible}>
 						<View 
 						// style={{ alignItems: "center" }}
 						>
 							<View style={styles.header}>
-								<TouchableOpacity onPress={() => setVisible(false)}>
+								<TouchableOpacity onPress={() =>{ setVisible(false); setIsLoading(false)}}>
 									<Image
 										source={require("../assets/x.png")}
 										style={{ height: 20, width: 20 }}
@@ -172,54 +275,124 @@ export const Profile = () => {
 							</View>
 						</View>
 
-						{actionTriggered === "Action_1" ? (
-							<>
-								<View style={{ alignItems: "center" }}>
+						{actionTriggered === "Action_1" ?
+						(
+                             <Formik
+							 initialValues={{password:""}}
+							 validationSchema={validationSchema}
+							//  onSubmit={(values) => {
+							// 	console.log(values);
+							// }}
+							onSubmit={verifyPassword}
+							 >
+								{({
+                                 values,
+								 errors,
+								 isSubmitting,
+								 handleChange,
+								 handleBlur,
+								 handleSubmit,
+								 touched
+								})=>{
+                               const {password} = values
+									return(
+										<>
+								<View
+									style={{
+										alignItems: "center",
+									}}
+								>
 									<Text
 										style={{
-											fontSize: 20,
-											fontWeight: "600",
-											color: "rgba(47.66, 47.66, 47.66, 1)",
-											fontFamily:"Poppins2"
+											fontSize: 26,
+											fontWeight: "400",
+											color: "rgba(39, 46, 57, 1)",
+											fontFamily:"Poppins3"
 										}}
 									>
-										BUSA Game Show
+										Hey {`${userInfo?.lastname}`}
 									</Text>
 									<Text
 										style={{
+											width:"90%",
 											fontSize: 12,
+											fontWeight: "300",
 											textAlign: "center",
 											color: "rgba(112.62, 112.62, 112.62, 1)",
 											fontFamily:"Poppins"
 										}}
 									>
-										Scan this code to gain entry into BUSA game show
+								  Please enter your secured password 
 									</Text>
 								</View>
-								<Image
-									source={require("../assets/qrcode.jpg")}
-									style={{ height: QR, width: QR, alignSelf: "center" }}
-								/>
-								<Warning style={{alignSelf: 'center', margin: 5}} />
-								<Text
-									style={{
-										width: 240,
-										fontSize: 12,
-										fontWeight: "500",
-										alignSelf: "center",
-										textAlign: "center",
-										color: "rgba(112.62, 112.62, 112.62, 1)",
-										fontFamily:"Poppins"
-									}}
+								{errors.password && touched.password && 
+		<Text style={{ color: 'red', fontFamily:"Poppins", fontSize:10, top:3, alignSelf:"center", left:60 }}>
+			{errors.password}
+			</Text>
+			}
+                                 <TextInput
+	                        placeholder="*********"
+							onChangeText={handleChange("password")}
+								onBlur={handleBlur("password")}
+								value={password}
+								secureTextEntry
+								autoCapitalize="none"
+								maxLength={32}
+								selectionColor='#363BE8'
+								cursorColor='#363be8'
+	                        style={styles.password}
+/>
+							   {/* <TouchableOpacity activeOpacity={0.7}
+								
+								onPress={handleSubmit}
 								>
-									The qr code is one-time and would be unusable after its
-									scanned
-								</Text>
-							</>
-						) : null}
+									<View
+										style={{
+											alignSelf: "center",
+											height: 30,
+											width: 80,
+											backgroundColor: "rgba(0, 79.41, 198.53, 1)",
+											borderRadius: 5,
+											justifyContent: "center",
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 16,
+												fontWeight: "500",
+												textAlign: "center",
+												color: "white",
+												fontFamily:"Poppins3"
+											}}
+
+										>
+										Verify
+										</Text>
+									</View>
+								</TouchableOpacity>	 */}
+
+								{isLoading ? (
+								<View>
+									<ActivityIndicator size="large" color="#0000ff" />
+								</View>
+							) : (
+								<FormSubmitBtn
+									Submitting={isSubmitting}
+									onPress={handleSubmit}
+									title={"verify"}
+								/>
+							)}	
 
 
-
+								</>
+									)
+								}
+							}
+			</Formik>
+						)
+			:
+			null}
+						
 						{actionTriggered === "Action_2" ? (
 							<>
 								<View
@@ -298,8 +471,26 @@ export const Profile = () => {
 
 
 						{actionTriggered === "Action_3" ?
-						 (
-<>
+                             <Formik
+							 initialValues={{password:""}}
+							 validationSchema={validationSchema}
+							//  onSubmit={(values) => {
+							// 	console.log(values);
+							// }}
+							onSubmit={verifyPassword}
+							 >
+								{({
+                                 values,
+								 errors,
+								 isSubmitting,
+								 handleChange,
+								 handleBlur,
+								 handleSubmit,
+								 touched
+								})=>{
+                               const {password} = values
+									return(
+										<>
 								<View
 									style={{
 										alignItems: "center",
@@ -313,11 +504,10 @@ export const Profile = () => {
 											fontFamily:"Poppins3"
 										}}
 									>
-										Hello Admin
+										Hey {`${userInfo?.lastname}`}
 									</Text>
 									<Text
 										style={{
-											// width: width / 3,
 											width:"90%",
 											fontSize: 12,
 											fontWeight: "300",
@@ -326,28 +516,29 @@ export const Profile = () => {
 											fontFamily:"Poppins"
 										}}
 									>
-								  Please enter the secured password given to you
+								  Please enter your secured password 
 									</Text>
 								</View>
-								<TextInput
-									placeholder="*********"
-									multiline={true}
-									style={{
-										borderColor: "gray",
-										width: "100%",
-										borderWidth: 1,
-										borderRadius: 10,
-										padding: 10,
-										height: 60,
-										marginBottom: 15,
-										fontFamily:"Poppins",
-										top:3
-									}}
-									selectionColor={"blue"}
-								/>
-								<TouchableOpacity activeOpacity={0.7}
+								{errors.password && touched.password && 
+		<Text style={{ color: 'red', fontFamily:"Poppins", fontSize:10, top:3, alignSelf:"center", left:60 }}>
+			{errors.password}
+			</Text>
+			}
+                                 <TextInput
+	                        placeholder="*********"
+							onChangeText={handleChange("password")}
+								onBlur={handleBlur("password")}
+								value={password}
+								secureTextEntry
+								autoCapitalize="none"
+								maxLength={32}
+								selectionColor='#363BE8'
+								cursorColor='#363be8'
+	                        style={styles.password}
+/>
+							   {/* {/* <TouchableOpacity activeOpacity={0.7}
 								
-								onPress={()=>{setVisible(false); navigation.navigate("ScanTicketScreen")}}
+								onPress={handleSubmit}
 								
 								>
 									<View
@@ -373,50 +564,25 @@ export const Profile = () => {
 										Verify
 										</Text>
 									</View>
-								</TouchableOpacity>
-							</>
-
-						 )
-						:
-						null }
-
-                       {actionTriggered === "Action_4"
-						?  
-						(
-						 <View style={{ width:width, height:200, }}>
-
-							<View>
-							<Text style={{fontWeight:"600", fontFamily:"Poppins2", fontSize:30}}>Create</Text>
-                              
-							  <View style={{paddingVertical:10}}>
-                                 <View style={{flexDirection:"row",}}>
-							  <Icon name={"newspaper-outline"} size={20}/>
-							  <TouchableOpacity
-							  onPress={()=> { setVisible(false); navigation.navigate("UploadPostScreen")}}
-							  >
-							<Text style={styles.text}>New Post</Text>
-							</TouchableOpacity>
-							</View>
-                            
-							<View style={{flexDirection:"row", top:15}}>
-							<Icon name={"calendar-outline"} size={20}/>
-							<TouchableOpacity
-							onPress={()=>{setVisible(false); navigation.navigate("UploadEventScreen")}}
-							>
-							<Text style={styles.text}>New Event</Text>
-							</TouchableOpacity>
-							</View>
-							</View>
-
-						 </View>
-
-						 </View>
-						)
-						
-						:
-						null
-						} 
-
+								</TouchableOpacity>	 */}
+								{isLoading ? (
+								<View>
+									<ActivityIndicator size="large" color="#0000ff" />
+								</View>
+							) : (
+								<FormSubmitBtn
+									Submitting={isSubmitting}
+									onPress={handleSubmit}
+									title={"verify"}
+								/>
+							)}	
+								</>
+									)
+								}
+							}
+			</Formik>
+			:
+			null}
 					</ModalPopUp>	
 				</View>
 			</View>
@@ -465,5 +631,16 @@ const styles = StyleSheet.create({
 		alignItems: "flex-end",
 		justifyContent: "center",
 	},
-	text:{fontFamily:"Poppins", fontSize: 20, fontWeight:"300", lineHeight:30, alignItems:"center", color:"#363636", left:5, top:-2}
+	text:{fontFamily:"Poppins", fontSize: 20, fontWeight:"300", lineHeight:30, alignItems:"center", color:"#363636", left:5, top:-2},
+	password:{
+		borderColor: "gray",
+		width: "100%",
+		 borderWidth: 1,
+		borderRadius: 10,
+	  padding: 10,
+	 height: 60,
+	marginBottom: 15,
+	fontFamily:"Poppins",
+   top:3
+	   }
 });

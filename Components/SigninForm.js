@@ -5,8 +5,8 @@ import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { StackActions, useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import client from "../api/client";
 import axios from "axios";
 
 
@@ -41,7 +41,8 @@ export const SignInForm = () => {
 	const navigation = useNavigation()
 
 	const signIn = async (values) => {
-			 await axios.post("https://no-vex-abeg.onrender.com/api/signin", {
+		setIsLoading(true)
+			 await client.post("/signin", {
 					...values,
 		}).then(async(res)=>{
 			console.log(res)

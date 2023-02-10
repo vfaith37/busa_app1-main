@@ -8,6 +8,8 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/AuthContext';
+import client from '../api/client';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 // import moment from 'moment/moment';
 const{width, height} = Dimensions.get("window")
 const COLORS = {
@@ -85,6 +87,7 @@ return(
     )}
   />
   </View> 
+  
   <View style={styles.pagination}>
    {props.image.map((_, index) => {
       return (
@@ -112,6 +115,7 @@ return(
 const EventBody=(props)=>{
 
   const [userInfo, setUserInfo] = useState(null)
+  const [userToken, setUserToken] = useState(null)
   const navigation= useNavigation()
 
   //run the async to get email and also get title being passed as a prop
@@ -119,47 +123,41 @@ const EventBody=(props)=>{
   const  getData = async () => {
     try {
       const value = await AsyncStorage.getItem('userInfo')
+      const userToken = await AsyncStorage.getItem(`userToken`)
       if(value !== null) {
-      // console.log(value)
+        console.log(userToken)
       setUserInfo(JSON.parse(value))
+      setUserToken(userToken)
       }
     } catch(e) {
       console.log(`${e}`)
     }
     }
-  
-  
      useEffect(()=>{
     getData()
     },[])
 
+
     const pay = async()=>{
-        // try{
-        //     const value = await AsyncStorage.getItem("userInfo")
-        //     if(value!==null){
-        //         setUserInfo(JSON.parse(value))
-        //     }
-        // }
-        // catch(e){
-        //       console.log(`an error occured ${e}`)
-        //   }
-          
-      
-            const email = userInfo?.email
-        console.log(email)
+          const token = userToken
+          const email = userInfo?.email
+          const title = props.title
+          console.log(title)
 
-        const title = props.title
-        console.log(title)
+ const config = {
+			headers: { Authorization: `Bearer ${token}` }
+		};
 
+        const body={
+          email:email,
+          title:title
+        }
 
-
-        await axios.post(`https://no-vex-abeg.onrender.com/api/pay/payForTicket`,{
-         email:email,
-         title:title
-}).then((res)=>{
+      axios.post("https://code-6z3x.onrender.com/api/pay/payForTicket",body,config)
+        .then((res)=>{
   console.log(res)
 
-  if(res.status===200){
+  if(res.status === 200){
     navigation.dispatch(
               StackActions.replace("CheckOutScreen"
               , {
@@ -174,10 +172,6 @@ const EventBody=(props)=>{
 })
 
     }
-    
-    // useEffect(()=>{
-    //   pay()
-    //   },[])
 
 
 return(
@@ -232,12 +226,13 @@ return(
 </View>
 
 <View style={{width:118, height:37, borderRadius:10, backgroundColor:"#004fc7",alignSelf:"center", position:"absolute", bottom:10, right:20}}>
-    <TouchableOpacity
-    activeOpacity={0.9}
+    <Pressable
+    activeOpacity={0.7}
+    // onPress={()=>pay()}
     onPress={()=>pay()}
  >
     <Text style={{color:"#fff", fontSize:14, fontWeight:"600", lineHeight:21, fontFamily:"Poppins2", alignSelf:"center", position:"absolute", padding:8}}>Buy Now</Text>
-    </TouchableOpacity>
+    </Pressable>
 </View>
 
     </View>
@@ -248,6 +243,11 @@ return(
 
 
 }
+
+
+
+
+
 export default EventDetails
 
 

@@ -8,6 +8,7 @@ import {  useFormik } from 'formik';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
+import client from '../api/client';
 
 const DropdownComponent=()=>{
   const [userInfo, setUserInfo] = useState(null)
@@ -102,7 +103,7 @@ const level = values.level.value
 const campus = values.campus.value
 const course = values.course.value
 
-await axios.put(`https://no-vex-abeg.onrender.com/api/user/${userInfo?._id}`,{
+await client.put(`/user/${userInfo?._id}`,{
  gender:gender,
  level:level,
  campus:campus,

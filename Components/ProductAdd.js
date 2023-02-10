@@ -1,34 +1,76 @@
 import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, Text,
- View, useWindowDimensions, FlatList , ActivityIndicator, Image} from "react-native";
-import React, {useState} from "react";
+ View, FlatList , ActivityIndicator, Image, ScrollView} from "react-native";
+import React, {useEffect, useState} from "react";
 import { Formik } from "formik";
-import {TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import { Back } from "../constants/icons";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { FormInput } from "./FormInput";
 import * as Yup from "yup";
+import { Dropdown } from "react-native-element-dropdown";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import client from "../api/client";
 
 const { width, height } = Dimensions.get("window");
-
-
-
-
 
 const validationSchema = Yup.object({
 	title: Yup.string()
 		.required("Title is required!"),
 	content: Yup.string()
 		.required("Content is required!"),
-images: Yup.array().min(1, 'Please select at least one image').max(5, 'You can only select a maximum of 5 images')
+images: Yup.array().min(1, 'Please select at least one image').max(5, 'You can only select a maximum of 5 images'),
+campus:Yup.string().required("Campus is required!")
 });
 
 
 export const Form = () => {
+	const [userInfo, setUserInfo] = useState(null)
+	const [userToken, setUserToken]= useState(null)
+
+
+	const  getData = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('userInfo')
+		  const token = await AsyncStorage.getItem("userToken")
+		  if(value !== null) {
+			console.log(value)
+			setUserInfo(JSON.parse(value))
+		  }
+		  if(token !==null){
+			console.log(token)
+			setUserToken(token)
+		  }
+		} catch(e) {
+		  console.log(`${e}`)
+		}
+	  }
+	   useEffect(()=>{
+		getData()
+		},[])
+
+
+
+	const Campus=[
+		{
+		  label:"Main", value:"Main",
+		
+		},
+		{label:"Iperu", value:"Iperu"},
+
+	// the news guy is only meant to be able to post for his campus. this is to avoid unncessary mistakes
+
+	// 	{label:`${userInfo?.campus}`, value:`${userInfo?.campus}`
+	// }
+		  ]
+
 	const navigation = useNavigation();
-	const [images, setImages] = useState([]);
+	const [images, setImages] = useState([])
 	const [isLoading, setIsLoading] = useState(false);
+
+
 	// const { width, height } = useWindowDimensions();
 
 	const pickImage = async (setFieldValue) => {
@@ -63,15 +105,48 @@ export const Form = () => {
 				}
 	  }
 
+	  const postNews = async(values)=>{
+      const formData = new FormData();
+      formData.append("title", values.title);
+       values.images.forEach(image => {
+      formData.append("images", {
+         uri: image.uri,
+       type: "image/jpeg",
+       name: `${Date.now()}.jpeg`
+        });
+        });
+      formData.append("campus", values.campus);
+
+		const token = userToken
+		const config={
+			headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+		}
+		console.log(values)
+		await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, config).then((res)=>{
+        console.log(res)
+
+		if(res.status === 201){
+			// navigation.dispatch(StackActions.replace("Tab"))
+			console.log("successful")
+		}
+		// if res is succesful, dispatch the user to home screen to see what he posted
+		}).catch((e)=>{
+         console.log(`${e}`)
+		})
+	  }
+
 	return (
 
 		// add status bar with the color
+
 		<View 
 		style={{ alignSelf: "center", width: width - 40, paddingTop: 55 }}
 		>
 			<View style={{ flexDirection: "row", paddingBottom: 15,}}>
 				<TouchableOpacity
-					activeOpacity={0.6}
+					activeOpacity={1}
 					onPress={() => navigation.goBack()}
 				>
 					<Back color={"#707070"} size={30} />
@@ -79,28 +154,27 @@ export const Form = () => {
 			<Text style={{fontFamily:"Poppins3", alignItems:"center", fontSize:28, position:"absolute", left:100}}>New Post</Text>
 			</View>
 
+ <View>
+
         <KeyboardAvoidingView
 		 enabled
 		 behavior={Platform.OS === "ios" ? "padding" : "height"}
 		>
-			<View>
+				<View>
 			<Formik
 				initialValues={{
-					content: "",
+					// content: "",
 					title: "",
 					images:[],
 					campus:"",
 				}}
-				onSubmit={(values) => {
-					console.log(values);
-				}}
+				onSubmit={postNews}
 				validationSchema={validationSchema}
 			>
 				{({
 					values,
 					errors,
 					touched,
-					isSubmitting,
 					handleChange,
 					handleBlur,
 					handleSubmit,
@@ -108,7 +182,7 @@ export const Form = () => {
 				}) => {
 		          const { title, images, content, campus,} =values;
 					return(
-					<View style={{position:"absolute", top:-25}}>
+					<View style={{position:"absolute", top:60}}>
 						<FormInput
 						onChangeText={handleChange("title")}
 						onBlur={handleBlur("title")}
@@ -191,26 +265,55 @@ export const Form = () => {
 					</View>
 				)}
 				keyExtractor={(item) => item.uri}
-				contentContainerStyle={{}}
+				// contentContainerStyle={{}}
 			/>
 		</View>
 						<Text style={{ fontSize: 22, paddingTop: 10, fontFamily:"Poppins3"}}>
 							Content
 						</Text>
-						{/* {errors.content && touched.content && 
+						{errors.content && touched.content && 
 		<Text style={{ color: 'red', fontFamily:"Poppins", fontSize:10, top:-13, alignSelf:"center" }}>
 			{errors.content}
 			</Text>
-			} */}
+			}
 						<TextInput
 							multiline
 							style={styles.TextInput2}
 							placeholder="Type Something here..."
 							onChangeText={handleChange("content")}
 							onBlur={handleBlur("content")}
-							error={touched.content && errors.content}
+							// error={touched.content && errors.content}
 							value={content}
 						/>
+
+						
+							<View>
+				{errors.campus && touched.campus && 
+		    <Text style={styles.error}>
+			{errors.campus}
+			</Text>
+			}
+     <Dropdown
+      style={styles.dropdown}
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      inputSearchStyle={styles.inputSearchStyle}
+      iconStyle={styles.iconStyle}
+      itemTextStyle={styles.textItem}
+      data={Campus}
+      maxHeight={300}
+      labelField="label"
+      valueField="value"
+      placeholder="Campus"
+        value={campus}
+       onChangeText={handleChange("campus")}
+	   onChange={(value)=> setFieldValue("campus", value.value)}
+    //   renderLeftIcon={() => (
+    //     <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
+    //   )}
+    />
+</View>
+
 							<Pressable onPress={handleSubmit}>
 											<View
 												style={{
@@ -236,12 +339,15 @@ export const Form = () => {
 												</Text>
 											</View>
 										</Pressable>
+										
 					</View>
 					)
 }}
 			</Formik>
 			</View>
+
 		</KeyboardAvoidingView>
+		</View>
 		</View>
 
 	);
@@ -257,6 +363,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		textAlign: "left",
 		fontFamily:"Poppins",
+		width:width-40
 	},
 	checkbox: {
 		alignSelf: "center",
@@ -286,6 +393,62 @@ const styles = StyleSheet.create({
 								textAlign:"left",
 								paddingLeft:11,
 								// height:180
-	 }
+	 },
+	 dropdown: {
+		margin: 15,
+		width: width - 40,
+		height: 50,
+		top:6,
+		backgroundColor: 'white',
+		borderRadius: 12,
+		padding: 12,
+		shadowColor: '#000',
+		shadowOffset: {
+		  width: 0,
+		  height: 1,
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 1.41,
+		elevation: 2,
+		right:10
+	  },
+	  icon: {
+		marginRight: 5,
+		color:"blue"
+	  },
+	  item: {
+		padding: 17,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	  },
+	  textItem: {
+		flex: 1,
+		fontSize: 16,
+		fontFamily:"Poppins",
+		color:"gray"
+	  },
+	  placeholderStyle: {
+		fontSize: 16,
+		fontFamily:"Poppins3",
+		color:"#000"
+	  },
+	  selectedTextStyle: {
+		fontSize: 16,
+		color:"blue",
+		fontFamily:"Poppins"
+	  },
+	  iconStyle: {
+		width: 20,
+		height: 20,
+		color:"blue"
+	  },
+	  inputSearchStyle: {
+		height: 40,
+		fontSize: 16,
+		fontFamily:"Poppins"
+	  },
+  error:{fontFamily:"Poppins", fontSize:10, color:"red", right:35, position:"absolute", top:5}
+	  
 	
 });

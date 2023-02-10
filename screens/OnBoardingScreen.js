@@ -276,27 +276,13 @@ const OnBoardingScreen = ({navigation}) => {
 const scrollx = React.useRef(new Animated.Value(0)).current
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = React.useRef();
+
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);
   };
 
-  const goToNextSlide = () => {
-    const nextSlideIndex = currentSlideIndex + 1;
-    if (nextSlideIndex != Posts.length) {
-      const offset = nextSlideIndex * width;
-      ref?.current.scrollToOffset({offset});
-      setCurrentSlideIndex(currentSlideIndex + 1);
-    }
-  };
-
-  const skip = () => {
-    const lastSlideIndex = Posts.length - 1;
-    const offset = lastSlideIndex * width;
-    ref?.current.scrollToOffset({offset});
-    setCurrentSlideIndex(lastSlideIndex);
-  };
 
   const Backdrop=({scrollx})=>{
 
@@ -371,6 +357,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
             marginTop: 70,
           }}>
           {/* Render indicator */}
+          
           {Posts.map((_, index) => {
     return(
 

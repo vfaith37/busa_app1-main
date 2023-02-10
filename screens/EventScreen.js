@@ -2,8 +2,9 @@ import { StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, FlatList, Text 
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Events from './Events'
-import { EVENTS } from '../data/eventData'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
+import client from '../api/client'
 
 //get the userInfo, and if the event.campus tallies, show the post
 
@@ -11,34 +12,58 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const EventsScreen = () => {
 
 
+  const [events, setEvents] = useState([])
 
-  //  axios.get(`https://no-vex-abeg.onrender.com/api/events/get${userInfo.campus.tocharAt(0).toUpperCase()}CampusEvents`,)
-  //  .then((res)=>{
 
-  //  }).catch((e)=>{
-
-  //  })
 
   const [userInfo, setUserInfo] = useState(null)
+  const [userToken, setUserToken] = useState(null)
 
-  const getData = async()=>{
+  const getEventData = async()=>{
     try {
       const value = await AsyncStorage.getItem('userInfo')
+      const userToken = await AsyncStorage.getItem('userToken')
       if(value !== null) {
-      // console.log(value)
       setUserInfo(JSON.parse(value))
+      setUserToken(userToken)
       }
+
     } catch(e) {
       console.log(`${e}`)
     }
   }
-  useEffect(()=>{
-    getData()
-  })
 
-  // here, get the userInfo.campus and used it to make axios requests
-  // if userinfo.campus === "iperu", get all iperu tickets
-  // if userinfo.campus === "Main", get all main events
+  useEffect(()=>{
+    getEventData()
+  },[])
+
+
+  const token = userToken
+  // console.log(token)
+    const config ={
+      headers: {
+        Authorization: `Bearer ${token}`,
+        }
+      }
+
+  const getEvents = async ()=>{
+     await  axios.get(`https://code-6z3x.onrender.com/api/event/getIperuCampusEvents/1/2`, config
+     //${userInfo?.campus.charAt(0).toUppercase()}
+      )
+      .then((res)=>{
+       console.log(res)
+       // setEvents([...events, ...res.data.data])
+      })
+      .catch((e)=>{
+    console.log(`${e}`)
+      })
+    }
+   
+  useEffect(()=>{
+    getEvents()
+  },[])
+
+ 
 
 
 
@@ -54,7 +79,7 @@ const EventsScreen = () => {
 
      showsVerticalScrollIndicator={false}
      vertical
-     data={EVENTS}
+     data={events}
      bounces={false}
      decelerationRate={"fast"}
     //  keyExtractor={item=>item.id}
@@ -76,24 +101,6 @@ const EventsScreen = () => {
 export default EventsScreen
 
 const styles = StyleSheet.create({})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
