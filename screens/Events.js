@@ -23,7 +23,7 @@ const EventImage=({event, navigation})=>{
     <>
      <View style={{backgroundColor:"transparent", alignSelf:"center", marginBottom:22,  height:height*0.417, width:width*0.85, borderRadius:20, alignItems:"center",}}>
           <FlatList
-          data={event.image}
+          data={event.images}
           horizontal
           bounces={false}
           showsHorizontalScrollIndicator={false}
@@ -54,7 +54,7 @@ const EventImage=({event, navigation})=>{
                 
                     blurRadius={1.8}
                     key={id}
-                    source={{uri:item.image}}
+                    source={{uri:item.images}}
                     />
                     </TouchableOpacity>
                     </View>
@@ -67,29 +67,13 @@ const EventImage=({event, navigation})=>{
   }
 
   const EventItems=({event})=>{
-    // this are all the items that can be found on the image
-
-    // const [fontsLoaded] = useFonts({
-    //     'Poppins': require('../assets/fonts/Poppins-Light.ttf'),
-    //     'Poppins2':require('../assets/fonts/Poppins-Bold.ttf'),
-    // 'Poppins3': require('../assets/fonts/Poppins-SemiBold.ttf'),
-    //   });
-    
-    //   const onLayoutRootView = useCallback(async () => {
-    //     if (fontsLoaded) {
-    //       await SplashScreen.hideAsync();
-    //     }
-    //   }, [fontsLoaded]);
-    
-    //   if (!fontsLoaded) {
-    //     return null;
-    //   }
+  
 
     return(
     <>
 <View style={{width:56, height:62, borderRadius:20, backgroundColor:"#ffff", position:"absolute", right:40, top:20}}>
- <Text style={{alignSelf:"center", fontWeight:"800", padding:5, fontSize:27, fontFamily:"Poppins2", color:"#000"}}>{event.miniDate.slice(0,2)+"\t"}</Text>
-<Text style={{fontWeight:"700", fontSize:16, color:"#8c8c8c", lineHeight:23, alignSelf:"center", bottom:16, right:2, fontFamily:"Poppins2"}}>{ event.miniDate.charAt(3).toUpperCase()+event.miniDate.slice(4,`${event.miniDate.length}`)}</Text>
+ {/* <Text style={{alignSelf:"center", fontWeight:"800", padding:5, fontSize:27, fontFamily:"Poppins2", color:"#000"}}>{event.miniDate.slice(0,2)+"\t"}</Text> */}
+{/* <Text style={{fontWeight:"700", fontSize:16, color:"#8c8c8c", lineHeight:23, alignSelf:"center", bottom:16, right:2, fontFamily:"Poppins2"}}>{ event.miniDate.charAt(3).toUpperCase()+event.miniDate.slice(4,`${event.miniDate.length}`)}</Text> */}
  </View>
 
  <View>
@@ -126,7 +110,7 @@ const EventImage=({event, navigation})=>{
           bottom:25
            }}
        />
-   <Text style={{color:"#fff", fontFamily:"Poppins2", fontSize:14, textTransform:"uppercase",position:"absolute", bottom:20, left:85}}>{event.location}</Text>
+   <Text style={{color:"#fff", fontFamily:"Poppins2", fontSize:14, textTransform:"uppercase",position:"absolute", bottom:20, left:85}}>{event.venue}</Text>
    </View>
  </View>
  </>

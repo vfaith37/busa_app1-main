@@ -6,7 +6,7 @@ import { Form } from '../Components/ProductAdd'
 const UploadPostScreen = () => {
   return (
     <View>
-      <Form/>
+      <Form component={"Post"} />
       </View>
   )
 }

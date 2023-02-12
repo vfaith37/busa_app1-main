@@ -10,7 +10,7 @@ import client from '../api/client'
 
 
 const EventsScreen = () => {
-
+  const navigation = useNavigation()
 
   const [events, setEvents] = useState([])
 
@@ -23,10 +23,33 @@ const EventsScreen = () => {
     try {
       const value = await AsyncStorage.getItem('userInfo')
       const userToken = await AsyncStorage.getItem('userToken')
-      if(value !== null) {
+      if(value !== null && userToken !== null) {
       setUserInfo(JSON.parse(value))
       setUserToken(userToken)
       }
+
+    
+      
+
+      const token = userToken
+      console.log(token)
+        const config ={
+          headers: {
+            Authorization: `Bearer ${token}`,
+            }
+          }
+
+      await  axios.get(`https://code-6z3x.onrender.com/api/event/getMainCampusEvents/1/2`, config
+      //${userInfo?.campus.charAt(0).toUppercase()}
+       )
+       .then((res)=>{
+        console.log(res.data.data)
+        setEvents([...events, ...res.data.data])
+       })
+       .catch((e)=>{
+     console.log(`${e}`)
+       })
+
 
     } catch(e) {
       console.log(`${e}`)
@@ -38,37 +61,8 @@ const EventsScreen = () => {
   },[])
 
 
-  const token = userToken
-  // console.log(token)
-    const config ={
-      headers: {
-        Authorization: `Bearer ${token}`,
-        }
-      }
-
-  const getEvents = async ()=>{
-     await  axios.get(`https://code-6z3x.onrender.com/api/event/getIperuCampusEvents/1/2`, config
-     //${userInfo?.campus.charAt(0).toUppercase()}
-      )
-      .then((res)=>{
-       console.log(res)
-       // setEvents([...events, ...res.data.data])
-      })
-      .catch((e)=>{
-    console.log(`${e}`)
-      })
-    }
-   
-  useEffect(()=>{
-    getEvents()
-  },[])
-
- 
-
-
 
   // don't forget to run the get all events through axios
-    const navigation = useNavigation()
     return (
       <SafeAreaView style={{flex:1, top:40}}>
      <FlatList

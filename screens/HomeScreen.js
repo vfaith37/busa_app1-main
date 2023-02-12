@@ -29,9 +29,33 @@ const HomeScreen = () => {
     try {
       const value = await AsyncStorage.getItem('userInfo')
       const userToken = await AsyncStorage.getItem('userToken')
-      if(value !== null) {
+
+      if(value !== null && userToken !== null) {
       setUserInfo(JSON.parse(value))
       setUserToken(userToken)
+         
+          const token = userToken
+
+      const config = {
+        headers: {
+          Authorization :`Bearer ${token}`
+        },
+      };
+
+      setIsLoading(true);
+      await client
+        .get(
+          `/news/getMainCampusNews/${currentPage}/2`,
+          config
+        )
+        .then((res) => {
+          console.log(res.data.data);
+          setIsLoading(false);
+          setPosts([...posts, ...res.data.data]);
+        })
+        .catch((e) => {
+          console.log(`${e}`);
+        });
       }
 
     } catch(e) {
@@ -43,23 +67,6 @@ const HomeScreen = () => {
     getData()
   },[])
 
-  const token = userToken
-
-  const config ={
-    Headers:{Authorization:`Bearer ${token}`}
-  }
-   
-      const getPosts =()=>{
-    setIsLoading(true)
-        client.get(`/news/getMainCampusNews/${currentPage}/2`, config)
-        .then(res=>{
-           setPosts([...posts, ...res.data.data])
-          console.log(res.data.data)
-  setIsLoading(false)
-        })
-      }
-
-      
   
   const renderLoader=()=>{
     return(
@@ -76,9 +83,7 @@ const HomeScreen = () => {
     setCurrentPage(currentPage +1)
   }
   
-      useEffect(()=>{
-        getPosts()
-      },[currentPage])
+
   
   return ( 
     <>
@@ -91,7 +96,7 @@ const HomeScreen = () => {
 onEndReached={loadMorePosts}
 showsVerticalScrollIndicator={false}
 vertical
-data={posts}
+ data={posts}
 bounces={false}
 decelerationRate={"fast"}
 //  keyExtractor={item=>item.id}

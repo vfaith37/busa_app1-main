@@ -19,6 +19,7 @@ const TicketDisplayScreen = async () =>{
 		const currentIndex = Math.round(contentOffsetX / width);
 		setCurrentSlideIndex(currentIndex);
 	  };
+	  const [tickets, setTickets] = useState([])
 
 	const navigation = useNavigation();
           const [userInfo, setUserInfo] = useState(null)
@@ -26,7 +27,6 @@ const TicketDisplayScreen = async () =>{
 
   const [isLoading, setIsLoading] = useState(false)
 
-const [tickets, setTickets] = useState([])
 
 
   const  getTicketData = async () => {
@@ -38,22 +38,24 @@ const [tickets, setTickets] = useState([])
 		console.log(value)
 		setUserInfo(JSON.parse(value))
 		setUserToken(userToken)
- 
+	  }
+
+
+	  
 		// run the getTicketDetailsFunction
 		setIsLoading(true)
 		const email = userInfo?.email
-		// const formData = new FormData();
-		// formData.append("email", email);
 
 		const token = userToken
-		// const config ={
-		// 		headers: {
-		// 			Authorization: `Bearer ${token}`,
-		// 			}
-		// 		}
+		const config ={
+				headers: {
+					Authorization: `Bearer ${token}`,
+					}
+				}
 
-				if (tickets.length === 0){
-					await axios.get(`https://code-6z3x.onrender.com/api/tickets/getTicketByEmail?email=${email}`
+				// if (tickets.length === 0){
+
+					await axios.get(`https://code-6z3x.onrender.com/api/tickets/getTicketByEmail/${email}`, config,
 					)
 				.then((res)=> {
 					console.log(res)
@@ -66,10 +68,10 @@ const [tickets, setTickets] = useState([])
 				.catch((e)=>{
 					console.log(`${e}`)
 				})
-				}else{
-					setIsLoading(false)
-				}
-	  }
+				// }else{
+				// 	setIsLoading(false)
+				// }
+	  
 	} catch(e) {
 	  console.log(`${e}`)
 	}
@@ -130,7 +132,6 @@ const [tickets, setTickets] = useState([])
 		height:height*0.50, width:width*0.83, alignContent:"center", borderRadius:20, alignSelf:"center", backgroundColor:"#fff", top:200
 	}}>
  
- {tickets.length >=1?
 	<FlatList
 horizontal
 showsHorizontalScrollIndicator={false}
@@ -143,14 +144,15 @@ data={tickets}
 renderItem={({item, id})=><TicketCard ticket={item} key={id} navigation={navigation}/>}
 ListFooterComponent={renderLoader}
 />
-:
-   <View style={{top:150}}>
+
+
+   {/* <View style={{top:150}}>
 			  <Text style={{fontSize:13, fontWeight:"600", color:"red", fontFamily:"Poppins", alignSelf:"center"}}>
 				Pls You do not have any ticket purchased, kindly go ahead and purchase a ticket
 			  </Text>
 			  <Warning style={{alignSelf:"center", marginTop:30}} width={100} height={100} />
-			</View> 
-}
+			</View>  */}
+
 
 
 

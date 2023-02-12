@@ -4,12 +4,15 @@ import React, {useEffect, useState} from "react";
 import { Formik } from "formik";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import { Back } from "../constants/icons";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { FormInput } from "./FormInput";
 import * as Yup from "yup";
 import { Dropdown } from "react-native-element-dropdown";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import "intl";
+import "intl/locale-data/jsonp/en-GB";
+import { Calendar, Calendars, Time, Back } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import client from "../api/client";
@@ -26,22 +29,50 @@ campus:Yup.string().required("Campus is required!")
 });
 
 
-export const Form = () => {
+export const Form = ({component}) => {
 	const [userInfo, setUserInfo] = useState(null)
 	const [userToken, setUserToken]= useState(null)
 
 
-	const  getData = async () => {
+	const  getData = async (values) => {
 		try {
 		  const value = await AsyncStorage.getItem('userInfo')
 		  const token = await AsyncStorage.getItem("userToken")
-		  if(value !== null) {
+		  if(value !== null && token !==null)  {
 			console.log(value)
 			setUserInfo(JSON.parse(value))
-		  }
-		  if(token !==null){
-			console.log(token)
 			setUserToken(token)
+
+			const formData = new FormData();
+			formData.append("title", values.title);
+			 values.images.forEach(image => {
+			formData.append("images", {
+			   uri: image.uri,
+			 type: "image/jpeg",
+			 name: `${Date.now()}.jpeg`
+			  });
+			  });
+			formData.append("campus", values.campus);
+	  
+			  const token = userToken
+			  const config={
+				  headers: {
+					  Authorization: `Bearer ${token}`,
+					},
+			  }
+			  console.log(values)
+			  await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, config).then((res)=>{
+			  console.log(res)
+	  
+			  if(res.status === 201){
+				  // navigation.dispatch(StackActions.replace("Tab"))
+				  console.log("successful")
+			  }
+			  // if res is succesful, dispatch the user to home screen to see what he posted
+			  }).catch((e)=>{
+			   console.log(`${e}`)
+			  })
+
 		  }
 		} catch(e) {
 		  console.log(`${e}`)
@@ -105,37 +136,44 @@ export const Form = () => {
 				}
 	  }
 
-	  const postNews = async(values)=>{
-      const formData = new FormData();
-      formData.append("title", values.title);
-       values.images.forEach(image => {
-      formData.append("images", {
-         uri: image.uri,
-       type: "image/jpeg",
-       name: `${Date.now()}.jpeg`
-        });
-        });
-      formData.append("campus", values.campus);
+	//   const postNews = async(values)=>{
+    //   const formData = new FormData();
+    //   formData.append("title", values.title);
+    //    values.images.forEach(image => {
+    //   formData.append("images", {
+    //      uri: image.uri,
+    //    type: "image/jpeg",
+    //    name: `${Date.now()}.jpeg`
+    //     });
+    //     });
+    //   formData.append("campus", values.campus);
 
-		const token = userToken
-		const config={
-			headers: {
-				Authorization: `Bearer ${token}`,
-			  },
-		}
-		console.log(values)
-		await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, config).then((res)=>{
-        console.log(res)
+	// 	const token = userToken
+	// 	const config={
+	// 		headers: {
+	// 			Authorization: `Bearer ${token}`,
+	// 		  },
+	// 	}
+	// 	console.log(values)
+	// 	await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, config).then((res)=>{
+    //     console.log(res)
 
-		if(res.status === 201){
-			// navigation.dispatch(StackActions.replace("Tab"))
-			console.log("successful")
-		}
-		// if res is succesful, dispatch the user to home screen to see what he posted
-		}).catch((e)=>{
-         console.log(`${e}`)
-		})
-	  }
+	// 	if(res.status === 201){
+	// 		// navigation.dispatch(StackActions.replace("Tab"))
+	// 		console.log("successful")
+	// 	}
+	// 	// if res is succesful, dispatch the user to home screen to see what he posted
+	// 	}).catch((e)=>{
+    //      console.log(`${e}`)
+	// 	})
+
+	//   }
+
+
+
+	  const [mode, setMode] = useState("date");
+	const [date, setDate] = useState(new Date());
+	const [show, setShow] = useState(false);
 
 	return (
 
@@ -151,7 +189,7 @@ export const Form = () => {
 				>
 					<Back color={"#707070"} size={30} />
 				</TouchableOpacity>
-			<Text style={{fontFamily:"Poppins3", alignItems:"center", fontSize:28, position:"absolute", left:100}}>New Post</Text>
+			<Text style={{fontFamily:"Poppins3", alignItems:"center", fontSize:28, position:"absolute", left:100}}>New {component}</Text>
 			</View>
 
  <View>
@@ -163,12 +201,12 @@ export const Form = () => {
 				<View>
 			<Formik
 				initialValues={{
-					// content: "",
+					content: "",
 					title: "",
 					images:[],
 					campus:"",
 				}}
-				onSubmit={postNews}
+				onSubmit={getData}
 				validationSchema={validationSchema}
 			>
 				{({
@@ -182,7 +220,7 @@ export const Form = () => {
 				}) => {
 		          const { title, images, content, campus,} =values;
 					return(
-					<View style={{position:"absolute", top:60}}>
+					<View style={{position:"absolute", top:-120}}>
 						<FormInput
 						onChangeText={handleChange("title")}
 						onBlur={handleBlur("title")}
@@ -268,6 +306,77 @@ export const Form = () => {
 				// contentContainerStyle={{}}
 			/>
 		</View>
+
+
+		{component === "Event" ? (
+										<View>
+											{show && (
+												<DateTimePicker
+													value={date}
+													mode={mode}
+													is24Hour={false}
+													display="default"
+													onChange={(event, selectedDate) => {
+														const currentDate = selectedDate || date;
+														setDate(currentDate);
+														setShow(false);
+														setFieldValue(
+															"date",
+															new Intl.DateTimeFormat("en-GB").format(date)
+														);
+														setFieldValue("time", date.toLocaleTimeString());
+													}}
+												/>
+											)}
+											<View style={styles.Container}>
+												<View
+													style={[
+														styles.dateContainer,
+														{
+															justifyContent: "space-around",
+															flexDirection: "row",
+														},
+													]}
+												>
+													<Text
+														style={[styles.textContainer, { marginTop: 10 }]}
+													>
+														{new Intl.DateTimeFormat("en-GB").format(date)}
+													</Text>
+													<TouchableOpacity
+														onPress={() => {
+															setMode("date"), setShow(true);
+														}}
+													>
+														{Calendars}
+													</TouchableOpacity>
+												</View>
+												<View
+													style={[
+														styles.dateContainer,
+														{
+															justifyContent: "space-around",
+															flexDirection: "row",
+														},
+													]}
+												>
+													<Text
+														style={[styles.textContainer, { marginTop: 10 }]}
+													>
+														{date.toLocaleTimeString()}
+													</Text>
+													<TouchableOpacity
+														onPress={() => {
+															setMode("time"), setShow(true);
+														}}
+													>
+														{Time}
+													</TouchableOpacity>
+												</View>
+											</View>
+										</View>
+									) : null}
+
 						<Text style={{ fontSize: 22, paddingTop: 10, fontFamily:"Poppins3"}}>
 							Content
 						</Text>

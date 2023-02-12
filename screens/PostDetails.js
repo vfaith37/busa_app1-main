@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Image, ScrollView} from 'react-native'
 import React, {useState, useRef, useCallback} from 'react'
-import { useFonts } from 'expo-font'
 
 const {width, height}= Dimensions.get("window")
 
@@ -110,22 +109,7 @@ const PostImage=(props)=>{
 
 
 const PostAbout=(props)=>{
-  const [fontsLoaded] = useFonts({
-    'Poppins': require('../assets/fonts/Poppins-Light.ttf'),
-    'Poppins2':require('../assets/fonts/Poppins-Light.ttf'),
-'Poppins3': require('../assets/fonts/Poppins-SemiBold.ttf'),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
+ 
 return(
 <>
 <View 

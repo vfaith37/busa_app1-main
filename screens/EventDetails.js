@@ -217,7 +217,7 @@ return(
 
    </View>
 
-<Text style={{fontFamily:"Poppins2", fontWeight:"400",position:"absolute", left:2, bottom:-265, fontSize:18, lineHeight:22}}>{props.price}</Text>
+<Text style={{fontFamily:"Poppins2", fontWeight:"400",position:"absolute", left:2, bottom:-265, fontSize:18, lineHeight:22}}>{props.ticketPrice}</Text>
 
 <View style={{width:width*0.75, position:"absolute"}}>
 <Text style={{fontSize:10, fontFamily:"Poppins", fontWeight:"300", color:"#999999", position:"absolute", top:80, lineHeight:12.5}}>{props.description}</Text>

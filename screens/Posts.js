@@ -127,7 +127,7 @@ const PostImage=({post, navigation})=>{
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, height:height*0.375, width:width*0.93, borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
            onMomentumScrollEnd={()=>fadeOut()}
-        data={post.data}
+        data={post.image}
         horizontal
         bounces={false}
         onViewableItemsChanged={onViewableItemsChanged.current}
@@ -157,7 +157,7 @@ const PostImage=({post, navigation})=>{
                     height:height*0.375, width:width*0.93,borderRadius:20, resizeMode:'contain', alignSelf:"center",
                   }}
                   key={id}
-                  source={{uri:item.url}}
+                  source={{uri:item.image}}
                   />
                   </TouchableOpacity>
                   </View>

@@ -31,12 +31,11 @@ import * as Yup from "yup";
 import axios from "axios";
 import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import BottomSheet from "../Components/Bottomsheet";
-const { height, width } = Dimensions.get("screen");
+const {  width, height } = Dimensions.get("screen");
 
 export const Profile = () => {
 
 		const [actionTriggered, setActionTriggered] = useState("");
-		const [action, setAction] = useState("");
 	        const [isLoading, setIsLoading] = useState(false);
 			const bottomSheetRef = useRef();
 	  const pressHandler = useCallback(() => {
@@ -48,13 +47,12 @@ export const Profile = () => {
           const [userInfo, setUserInfo] = useState(null)
           const [userToken, setUserToken] = useState(null)
 
-
   const  getData = async () => {
 	try {
 	  const value = await AsyncStorage.getItem('userInfo')
 	  const userToken = await AsyncStorage.getItem("userToken")
 
-	  if(value !== null) {
+	  if(value !== null && userToken !==null) {
 		setUserInfo(JSON.parse(value))
 		setUserToken(userToken)
 	  }
@@ -74,6 +72,8 @@ export const Profile = () => {
 
 		const email = userInfo?.email
 	     const token = userToken
+		 console.log(token)
+
 		const config = {
 			headers: { Authorization: `Bearer ${token}` }
 		};
@@ -85,11 +85,12 @@ export const Profile = () => {
 
 		setIsLoading(true)
 	   axios.post("https://code-6z3x.onrender.com/api/tickets/verifyPassword",body,config
-		).then((res)=>{
-			if(res.status === 200){
-				setVisible(false)
-			setIsLoading(false)
-			navigation.navigate("TicketScreen")
+		).then(function (res) {
+			console.log(res);
+			if (res.status === 200) {
+				setVisible(false);
+				setIsLoading(false);
+				navigation.navigate("TicketScreen");
 			}
 		}).catch((e)=>{
 			console.log(`${e}`)
@@ -147,6 +148,7 @@ export const Profile = () => {
 							ButtonName={"Notification"}
 						/>
 					</TouchableOpacity>
+
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => {
@@ -189,10 +191,6 @@ export const Profile = () => {
 
 					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-200, right:15}}>
                      <Pressable
-					// onPress={() => {
-					// 	setVisible(true);
-					// 	setActionTriggered("Action_4");
-					// }}
 					onPress={()=>pressHandler()}
 					>
                      <Text style={{bottom:7, fontFamily:"Poppins", alignSelf:"center", fontSize:48, color:"#fff"}}>+</Text>
@@ -280,9 +278,6 @@ export const Profile = () => {
                              <Formik
 							 initialValues={{password:""}}
 							 validationSchema={validationSchema}
-							//  onSubmit={(values) => {
-							// 	console.log(values);
-							// }}
 							onSubmit={verifyPassword}
 							 >
 								{({
@@ -469,7 +464,7 @@ export const Profile = () => {
 							</>
 						) : null}
 
-
+{/* 
 						{actionTriggered === "Action_3" ?
                              <Formik
 							 initialValues={{password:""}}
@@ -535,7 +530,7 @@ export const Profile = () => {
 								selectionColor='#363BE8'
 								cursorColor='#363be8'
 	                        style={styles.password}
-/>
+/> */}
 							   {/* {/* <TouchableOpacity activeOpacity={0.7}
 								
 								onPress={handleSubmit}
@@ -565,7 +560,8 @@ export const Profile = () => {
 										</Text>
 									</View>
 								</TouchableOpacity>	 */}
-								{isLoading ? (
+
+								{/* {isLoading ? (
 								<View>
 									<ActivityIndicator size="large" color="#0000ff" />
 								</View>
@@ -575,14 +571,19 @@ export const Profile = () => {
 									onPress={handleSubmit}
 									title={"verify"}
 								/>
-							)}	
-								</>
+							)}	 */}
+
+
+								{/* </>
 									)
 								}
 							}
 			</Formik>
 			:
-			null}
+			null} */}
+
+
+
 					</ModalPopUp>	
 				</View>
 			</View>
