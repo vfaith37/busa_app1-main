@@ -32,7 +32,7 @@ const ScanTicketScreen = () =>{
       const value = await AsyncStorage.getItem('userInfo')
       const userToken = await AsyncStorage.getItem("userToken")
   
-      if(value !== null) {
+      if(value !== null && userToken !== null) {
       setUserInfo(JSON.parse(value))
       setUserToken(userToken)
       }
@@ -51,20 +51,20 @@ const ScanTicketScreen = () =>{
     // get the data from the qr code, send a post request to the backend with that data to verify it, if it's succesful
     // show a small lottie view animation with sucess
 
-    const token = userToken
-    console.log(token)
 
+       const token = userToken
+       console.log(data)
 
-    const config ={
-     headers:{ Authorization: `Bearer ${token}`}
-    }
-
+       console.log(token)
+         const config ={
+         headers:{ Authorization: `Bearer ${token}`}
+        }
 
     try {
       setScanned(true);
       const res = await client.post(`/tickets/scan`, {
         token: data,
-        eventTitle: "The Test"
+        eventTitle: "The Test2"
       }, config);
   
       if (res.status === 200) {
@@ -75,6 +75,59 @@ const ScanTicketScreen = () =>{
     } catch (e) {
       console.error(e);
     }
+ 
+
+
+
+
+
+
+
+
+
+    // const getData = async()=>{
+    //   try {
+    //     const value = await AsyncStorage.getItem('userInfo')
+    //     const userToken = await AsyncStorage.getItem("userToken")
+    
+    //     if(value !== null && userToken !== null) {
+    //     setUserInfo(JSON.parse(value))
+    //     setUserToken(userToken)
+    //     }
+  
+    //     const token = userToken
+    //     console.log(token)
+    
+    
+    //     const config ={
+    //      headers:{ Authorization: `Bearer ${token}`}
+    //     }
+    //     setScanned(true)
+
+    //     await client.post(`/tickets/scan`,{
+    //        token:data,
+    //        eventTitle:"The Test2"
+    //     }, config).then((res)=>{
+    //       console.log(res)
+    //       if(res.status === 200){
+    //         alert(`QR code has been succesfully scanned`)
+    //         setShowAnimation(true)
+    //       } else{
+    //         alert('QR not valid')
+    //       }
+    //       setScanned(false)
+    //     })
+  
+    //   } catch(e) {
+    //     console.log(`${e}`)
+    //   }
+    // }
+
+    // useEffect(()=>{
+    //   getData()
+    // },[])
+
+   
   
    
 

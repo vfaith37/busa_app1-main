@@ -1,14 +1,11 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { ScrollView } from 'react-native'
 import Posts from './Posts'
 import { SafeAreaView } from 'react-native'
-import { Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
 import { useEffect } from 'react'
-const {width, height} = Dimensions.get("window")
-import axios from 'axios'
 import { StatusBar } from 'expo-status-bar'
 import client from '../api/client'
 import { COLORS } from '../constants/theme'
@@ -45,7 +42,7 @@ const HomeScreen = () => {
       setIsLoading(true);
       await client
         .get(
-          `/news/getMainCampusNews/${currentPage}/2`,
+          `/news/getIperuCampusNews/${currentPage}/2`,
           config
         )
         .then((res) => {

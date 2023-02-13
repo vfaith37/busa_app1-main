@@ -85,7 +85,7 @@ export const Profile = () => {
 
 		setIsLoading(true)
 	   axios.post("https://code-6z3x.onrender.com/api/tickets/verifyPassword",body,config
-		).then(function (res) {
+		).then((res)=> {
 			console.log(res);
 			if (res.status === 200) {
 				setVisible(false);
@@ -95,9 +95,17 @@ export const Profile = () => {
 		}).catch((e)=>{
 			console.log(`${e}`)
 		})
+
+
 		// since i want to use the same functionality to dispatch the users, if the userrole is 1, it would navigate the user to
 		// scantickets, else navigate the user to check tickets
 	   }
+
+
+
+
+
+
 
 	   const validationSchema = Yup.object({
 		password: Yup.string()
@@ -151,10 +159,14 @@ export const Profile = () => {
 
 					<TouchableOpacity
 						activeOpacity={0.7}
-						onPress={() => {
+						onPress={() =>
+							
+							{
 							setVisible(true);
 							setActionTriggered("Action_1");
-						}}
+						}
+					
+					}
 					>
 						<SettingsButton icon={TicketIcon} ButtonName={"Ticket"} />
 					</TouchableOpacity>
@@ -169,26 +181,13 @@ export const Profile = () => {
 						<SettingsButton icon={Chat} ButtonName={"Feedback"} />
 					</TouchableOpacity>
                      
+
+					 
 					 
 					 { userInfo?.role === 2?
-					 
+					 // this user role is meant to be 1
 					 (
 						<>
-					 <TouchableOpacity
-						activeOpacity={0.7}
-						onPress={() => {
-							// setVisible(true);
-							//  setActionTriggered("Action_3")
-							navigation.navigate("ScanTicketScreen")
-							}}
-					>
-						
-                         <SettingsButton
-							icon={ScanTicket}
-							ButtonName={"Scan QR Code"}
-						/>
-					</TouchableOpacity>
-
 					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-200, right:15}}>
                      <Pressable
 					onPress={()=>pressHandler()}
@@ -199,7 +198,25 @@ export const Profile = () => {
 					</>
 	)
 					:
-		null
+
+			userInfo?.role === 1?
+			(
+                  <>
+				<TouchableOpacity
+				activeOpacity={0.7}
+				onPress={() => {
+					navigation.navigate("ScanTicketScreen")
+					}}
+			>
+				
+				 <SettingsButton
+					icon={ScanTicket}
+					ButtonName={"Scan QR Code"}
+				/>
+			</TouchableOpacity>
+			</>
+			): null
+		
 }
 
 
@@ -278,7 +295,7 @@ export const Profile = () => {
                              <Formik
 							 initialValues={{password:""}}
 							 validationSchema={validationSchema}
-							onSubmit={verifyPassword}
+							onSubmit={verifyPassword }
 							 >
 								{({
                                  values,

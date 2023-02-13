@@ -38,12 +38,15 @@ export const Form = ({component}) => {
 		try {
 		  const value = await AsyncStorage.getItem('userInfo')
 		  const token = await AsyncStorage.getItem("userToken")
+
 		  if(value !== null && token !==null)  {
-			console.log(value)
 			setUserInfo(JSON.parse(value))
 			setUserToken(token)
+		  }
+
 
 			const formData = new FormData();
+
 			formData.append("title", values.title);
 			 values.images.forEach(image => {
 			formData.append("images", {
@@ -53,15 +56,23 @@ export const Form = ({component}) => {
 			  });
 			  });
 			formData.append("campus", values.campus);
-	  
-			  const token = userToken
+			formData.append("content", values.content)
+			
+			if(component === "Event"){
+				const formData = new FormData()
+			formData.append("date", values.date)
+			formData.append("time", values.time)
+			}
+			
+
+	           const newToken = token
 			  const config={
 				  headers: {
-					  Authorization: `Bearer ${token}`,
+					  Authorization: `Bearer ${newToken}`,
 					},
 			  }
 			  console.log(values)
-			  await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, config).then((res)=>{
+			  await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, /*config*/).then((res)=>{
 			  console.log(res)
 	  
 			  if(res.status === 201){
@@ -74,7 +85,7 @@ export const Form = ({component}) => {
 			  })
 
 		  }
-		} catch(e) {
+		catch(e) {
 		  console.log(`${e}`)
 		}
 	  }
@@ -205,6 +216,8 @@ export const Form = ({component}) => {
 					title: "",
 					images:[],
 					campus:"",
+					date: "",
+					time: "",
 				}}
 				onSubmit={getData}
 				validationSchema={validationSchema}
@@ -221,6 +234,7 @@ export const Form = ({component}) => {
 		          const { title, images, content, campus,} =values;
 					return(
 					<View style={{position:"absolute", top:-120}}>
+
 						<FormInput
 						onChangeText={handleChange("title")}
 						onBlur={handleBlur("title")}

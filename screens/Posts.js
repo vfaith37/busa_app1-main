@@ -127,26 +127,22 @@ const PostImage=({post, navigation})=>{
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, height:height*0.375, width:width*0.93, borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
            onMomentumScrollEnd={()=>fadeOut()}
-        data={post.image}
+        data={post.images}
         horizontal
         bounces={false}
         onViewableItemsChanged={onViewableItemsChanged.current}
         viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        // onScroll={Animated.event(
-        //   [{nativeEvent: {contentOffset:{x:fadeAnim}}}],
-        //   {useNativeDriver:true }
-        //   )}
         scrollEventThrottle={32}
         scrollEnabled
-        keyExtractor={item => item.id}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({item}, id)=>(
           <View>
           <TouchableOpacity
           activeOpacity={1}
           onPress={()=>navigation.navigate("PostDetails", {
-            image:post.image,
+            image:post.images,
             title:post.title,
         date: post.date,
         fullDescription: post.fullDescription,
@@ -157,7 +153,7 @@ const PostImage=({post, navigation})=>{
                     height:height*0.375, width:width*0.93,borderRadius:20, resizeMode:'contain', alignSelf:"center",
                   }}
                   key={id}
-                  source={{uri:item.image}}
+                  source={{uri:item}}
                   />
                   </TouchableOpacity>
                   </View>
@@ -176,21 +172,7 @@ const PostImage=({post, navigation})=>{
 
 
 const PostFooter=({post})=>{ 
-  const [fontsLoaded] = useFonts({
-    'Poppins': require('../assets/fonts/Poppins-Bold.ttf'),
-    'Poppins2':require('../assets/fonts/Poppins-Light.ttf'),
-    'Poppins3': require('../assets/fonts/Poppins-SemiBold.ttf'),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
+ 
   return(
   <>
    <View style={{left:15,

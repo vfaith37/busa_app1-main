@@ -34,11 +34,11 @@ const EventDetails = ({route}) => {
 
 
 const EventAbout =(props)=>{
-    const {title, date, location, time, image, price, description} = props.route.params
+    const {title, date, venue, time, image, ticketPrice, description} = props.route.params
 return(
     <View style={{top:20}}>
     <EventImage image ={image}/>
-    <EventBody title={title} date={date} location={location} time={time} price={price} description={description}/>
+    <EventBody title={title} date={date} venue={venue} time={time} ticketPrice={ticketPrice} description={description}/>
     </View>
 )
 }
@@ -68,7 +68,7 @@ return(
           pagingEnabled
           scrollEventThrottle={35}
           scrollEnabled
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item}, id)=>(
             <View>
             <TouchableOpacity
@@ -79,7 +79,7 @@ return(
                       height:300, width:300,  alignSelf:"center", resizeMode:"contain", borderRadius:10
                     }}
                     key={id}
-                    source={{uri:item.image}}
+                    source={{uri:item}}
                     />
                     </TouchableOpacity>
                     </View>
@@ -212,7 +212,7 @@ return(
        />
    <Text style={{color:"#000", fontFamily:"Poppins2", fontSize:14, textTransform:"uppercase", position:"absolute", 
    top:-3
-   }}>{props.location}</Text>
+   }}>{props.venue}</Text>
    </View>
 
    </View>

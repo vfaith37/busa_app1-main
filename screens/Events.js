@@ -29,18 +29,18 @@ const EventImage=({event, navigation})=>{
           showsHorizontalScrollIndicator={false}
           pagingEnabled
           scrollEnabled
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item}, id)=>(
             <View>
             <TouchableOpacity
             activeOpacity={1}
             onPress={()=>navigation.navigate("EventDetails", {
-              image:event.image,
+              image:event.images,
               title:event.title,
               date: event.date,
               time:event.time,
-            location: event.location,
-            price:event.price,
+           venue : event.venue,
+            ticketPrice:event.ticketPrice,
             description:event.description,
             })}
             >
@@ -54,7 +54,7 @@ const EventImage=({event, navigation})=>{
                 
                     blurRadius={1.8}
                     key={id}
-                    source={{uri:item.images}}
+                    source={{uri:item}}
                     />
                     </TouchableOpacity>
                     </View>

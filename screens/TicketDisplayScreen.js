@@ -10,7 +10,7 @@ import { EVENTS } from '../data/eventData';
 import TicketCard from './TicketCard';
 const {height, width} = Dimensions.get("screen")
 
-const TicketDisplayScreen = async () =>{
+const TicketDisplayScreen = () =>{
 	const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
 
 
@@ -19,6 +19,7 @@ const TicketDisplayScreen = async () =>{
 		const currentIndex = Math.round(contentOffsetX / width);
 		setCurrentSlideIndex(currentIndex);
 	  };
+
 	  const [tickets, setTickets] = useState([])
 
 	const navigation = useNavigation();
@@ -34,18 +35,18 @@ const TicketDisplayScreen = async () =>{
 	  const value = await AsyncStorage.getItem('userInfo')
 	  const userToken = await AsyncStorage.getItem("userToken")
 
-	  if(value !== null) {
+	  if(value !== null && userToken !==null) {
 		console.log(value)
 		setUserInfo(JSON.parse(value))
 		setUserToken(userToken)
-	  }
+	  
 
 
 	  
 		// run the getTicketDetailsFunction
 		setIsLoading(true)
 		const email = userInfo?.email
-
+		
 		const token = userToken
 		const config ={
 				headers: {
@@ -71,6 +72,7 @@ const TicketDisplayScreen = async () =>{
 				// }else{
 				// 	setIsLoading(false)
 				// }
+			}
 	  
 	} catch(e) {
 	  console.log(`${e}`)
@@ -95,37 +97,37 @@ const TicketDisplayScreen = async () =>{
 		}
 
 
-		const TicketIndicator =({tickets})=>{
+		// const TicketIndicator =({tickets})=>{
 
-			return(
-				<View>
-		{ 
-		tickets.length > 1?
-		(
-			<View style={styles.pagination}>
-		   {tickets.map((_, index) => {
-			  return (
-				 <View
-				 key={index}
-				 style={[
-				   styles.dot,
-				currentSlideIndex == index && {
-					 backgroundColor: "#000",
-					 width: 7,
-					 height:7,
-					 borderRadius:10,
-				   }
-				 ]}
-			   />
-			   )
-			  })} 
-			  </View>
-		)
-		:null
-			}
-				</View>
-			)
-		}
+		// 	return(
+		// 		<View>
+		// { 
+		// tickets.length > 1?
+		// (
+		// 	<View style={styles.pagination}>
+		//    {tickets.map((_, index) => {
+		// 	  return (
+		// 		 <View
+		// 		 key={index}
+		// 		 style={[
+		// 		   styles.dot,
+		// 		currentSlideIndex == index && {
+		// 			 backgroundColor: "#000",
+		// 			 width: 7,
+		// 			 height:7,
+		// 			 borderRadius:10,
+		// 		   }
+		// 		 ]}
+		// 	   />
+		// 	   )
+		// 	  })} 
+		// 	  </View>
+		// )
+		// :null
+		// 	}
+		// 		</View>
+		// 	)
+		// }
 
  return(
 	<View style={{
@@ -160,11 +162,6 @@ ListFooterComponent={renderLoader}
  </View>
  )
 }
-
-
-
-
-
 
 
 export default TicketDisplayScreen

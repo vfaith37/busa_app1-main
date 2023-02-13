@@ -24,11 +24,11 @@ const PostDetails = ({route}) => {
 
 
 const About=(props)=>{
-const {image, title, date, fullDescription}= props.route.params
+const {image, title, date, content}= props.route.params
   return(
     <View>
 <PostImage image={image}/>
-<PostAbout title={title} date={date} fullDescription={fullDescription}/>
+<PostAbout title={title} date={date} content={content}/>
     </View>
   )
 
@@ -40,7 +40,6 @@ const PostImage=(props)=>{
   const onViewableItemsChanged = useRef((item)=>{
     const index = item.viewableItems[0].index
     setCurrentSlideIndex(index)
-    // const index = item.viewableItems
     console.log(index)
   })
   const viewabilityConfig = useRef({
@@ -60,7 +59,7 @@ const PostImage=(props)=>{
         pagingEnabled
         scrollEventThrottle={32}
         scrollEnabled
-        keyExtractor={item => item.id}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({item}, id)=>(
           <View>
           <TouchableOpacity
@@ -72,7 +71,7 @@ const PostImage=(props)=>{
                     resizeMode:'cover',
                   }}
                   key={id}
-                  source={{uri:item.image}}
+                  source={{uri:item}}
 
                   />
                   </TouchableOpacity>
@@ -136,7 +135,7 @@ bounces={false}
 top:10
 }}
 
->{props.fullDescription}</Text>
+>{props.content}</Text>
 
 </View>
 
