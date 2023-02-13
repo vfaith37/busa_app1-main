@@ -184,7 +184,7 @@ export const Profile = () => {
 
 					 
 					 
-					 { userInfo?.role === 2?
+					 { userInfo?.role === 0?
 					 // this user role is meant to be 1
 					 (
 						<>
@@ -199,7 +199,7 @@ export const Profile = () => {
 	)
 					:
 
-			userInfo?.role === 1?
+			userInfo?.role === 2?
 			(
                   <>
 				<TouchableOpacity

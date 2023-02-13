@@ -40,7 +40,7 @@ const EventImage=({event, navigation})=>{
               date: event.date,
               time:event.time,
            venue : event.venue,
-            ticketPrice:event.ticketPrice,
+            ticketPrice :event.ticketPrice,
             description:event.description,
             })}
             >

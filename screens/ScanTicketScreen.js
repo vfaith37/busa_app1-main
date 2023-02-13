@@ -162,7 +162,7 @@ const ScanTicketScreen = () =>{
 {showAnimation && (
   <LottieView
    source={require("../assets/animations/qr-scan.json")} 
-   speed={0.7}
+   speed={0.5}
    autoPlay
    loop={false}
    style={{width:100, height:100, bottom:280, position:"absolute", right:10}}

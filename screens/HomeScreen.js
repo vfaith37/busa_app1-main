@@ -10,6 +10,7 @@ import { StatusBar } from 'expo-status-bar'
 import client from '../api/client'
 import { COLORS } from '../constants/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import LottieView from 'lottie-react-native'
 
 
 const HomeScreen = () => {
@@ -40,6 +41,7 @@ const HomeScreen = () => {
       };
 
       setIsLoading(true);
+
       await client
         .get(
           `/news/getIperuCampusNews/${currentPage}/2`,
@@ -68,9 +70,27 @@ const HomeScreen = () => {
   const renderLoader=()=>{
     return(
       isLoading?
-      <View style={{marginVertical:16, alignItems:"center",}}>
-        <ActivityIndicator size="large" color="blue"/>
-      </View>
+      // <View
+      // // style={{marginVertical:16, alignItems:"center",}} 
+      // >
+        // <ActivityIndicator size="large" color="blue"/> 
+
+        (
+        <LottieView
+					source={require("../assets/animations/loader.json")}
+					style={{
+						// position: "absolute",
+						width: 400,
+						height: 400,
+						top: 30,
+						alignSelf: "center",
+					}}
+					loop={true}
+        speed={0.7}
+					autoPlay
+				/>
+        )
+
       : null
     )
   }
