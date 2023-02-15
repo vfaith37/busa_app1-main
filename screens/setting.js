@@ -184,7 +184,7 @@ export const Profile = () => {
 
 					 
 					 
-					 { userInfo?.role === 0?
+					 { userInfo?.role === 2?
 					 // this user role is meant to be 1
 					 (
 						<>

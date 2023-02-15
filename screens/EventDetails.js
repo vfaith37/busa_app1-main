@@ -33,7 +33,7 @@ const EventDetails = ({route}) => {
 }
 
 
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 // const EventAbout =(props)=>{
 //     const {title, date, venue, time, image, ticketPrice, description} = props.route.params
 // return(
@@ -253,6 +253,7 @@ import { useNavigation } from "@react-navigation/native";
 
 
 
+
 import * as React from "react";
 import {
 	StatusBar,
@@ -266,84 +267,87 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
-import { Icon } from "../constants/icons";
+import {Location, Time } from "../constants/icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width, height } = Dimensions.get("screen");
 
-const imageW = width * 0.9;
-const imageH = imageW * 1;
+const imageW = width * 0.83;
+// const imageH = imageW * 1;
+const imageH = 335
 
-const EventAbout =(props) => {
+const EventAbout = (props) => {
+	const { title, date, venue, time, image, ticketPrice, description } =
+		props.route.params;
 
-    const [userInfo, setUserInfo] = useState(null)
-  const [userToken, setUserToken] = useState(null)
-  const navigation= useNavigation()
+	const [userInfo, setUserInfo] = useState(null);
+	const [userToken, setUserToken] = useState(null);
+	const navigation = useNavigation();
 
-  //run the async to get email and also get title being passed as a prop
+	//run the async to get email and also get title being passed as a prop
 
-  const  getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('userInfo')
-      const userToken = await AsyncStorage.getItem(`userToken`)
-      if(value !== null && userToken!==null) {
-        console.log(userToken)
-      setUserInfo(JSON.parse(value))
-      setUserToken(userToken)
-      }
-    } catch(e) {
-      console.log(`${e}`)
-    }
-    }
-     React.useEffect(()=>{
-    getData()
-    },[])
+	const getData = async () => {
+		try {
+			const value = await AsyncStorage.getItem("userInfo");
+			const userToken = await AsyncStorage.getItem(`userToken`);
+			if (value !== null && userToken !== null) {
+				console.log(userToken);
+				setUserInfo(JSON.parse(value));
+				setUserToken(userToken);
+			}
+		} catch (e) {
+			console.log(`${e}`);
+		}
+	};
+	React.useEffect(() => {
+		getData();
+	}, []);
 
+	const pay = async () => {
+		const token = userToken;
+		const email = userInfo?.email;
 
-    const pay = async()=>{
-          const token = userToken
-          const email = userInfo?.email
-          const title = props.title
-          console.log(title)
-
- const config = {
-			headers: { Authorization: `Bearer ${token}` }
+		const config = {
+			headers: { Authorization: `Bearer ${token}` },
 		};
 
-        const body={
-          email:email,
-          title:title
-        }
+		const body = {
+			email: email,
+			title: title,
+		};
+		console.log(title)
 
-      axios.post("https://code-6z3x.onrender.com/api/pay/payForTicket",body,config)
-        .then((res)=>{
-  console.log(res)
+		axios
+			.post("https://code-6z3x.onrender.com/api/pay/payForTicket", body, config)
+			.then((res) => {
+				console.log(res);
 
-  if(res.status === 200){
-    navigation.dispatch(
-              StackActions.replace("CheckOutScreen"
-              , {
-             authorization_url: res.data.authorization_url
-              }
-              )
-              );
+				if (res.status === 200) {
+					navigation.dispatch(
+						StackActions.replace("CheckOutScreen", {
+							authorization_url: res.data.authorization_url,
+						})
+					);
+				}
+			})
+			.catch((e) => {
+				console.log(`The error is: ${e}`);
+			});
+	};
 
-  }
-}).catch((e)=>{
-  console.log(`The error is: ${e}`)
-})
-    }
+	
+	const num = ticketPrice / 100;
+	const formattedNumber = num.toLocaleString("en-NG", {
+		style: "currency",
+		currency: "NGN",
+	});
 
-    const {title, date, venue, time, image, ticketPrice, description} = props.route.params
-    const num = ticketPrice/100
- const formattedNumber = num.toLocaleString("en-NG", { style: "currency", currency: "NGN" });
-  
 	const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
 	const scrollX = React.useRef(new Animated.Value(0)).current;
 
 	const Indicator = ({ scrollx }) => {
 		return (
-			<View style={{ flexDirection: "row", alignSelf: "center" }}>
+			<View style={{ flexDirection: "row", alignSelf: "center", bottom:30 }}>
 				{image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
@@ -374,9 +378,8 @@ const EventAbout =(props) => {
 		);
 	};
 
-
 	return (
-		<View style={{ flex: 1, backgroundColor: "#000" }}>
+		<View>
 			<StatusBar hidden />
 			<View style={StyleSheet.absoluteFillObject}>
 				{image.map((image, index) => {
@@ -399,7 +402,6 @@ const EventAbout =(props) => {
 					);
 				})}
 			</View>
-			{/* <View style={{height: imageH, width: imageW}}> */}
 			<Animated.FlatList
 				showsHorizontalScrollIndicator={false}
 				data={image}
@@ -407,7 +409,8 @@ const EventAbout =(props) => {
 					[{ nativeEvent: { contentOffset: { x: scrollX } } }],
 					{ useNativeDriver: true }
 				)}
-				keyExtractor={(_, index) => index.toString}
+				// keyExtractor={(_, index) => index.toString}
+				keyExtractor={(item) => item.id}
 				horizontal
 				pagingEnabled
 				renderItem={({ item }) => {
@@ -429,7 +432,7 @@ const EventAbout =(props) => {
 									width: imageW,
 									height: imageH,
 									resizeMode: "cover",
-									borderRadius: 50,
+									borderRadius: 10,
 								}}
 							/>
 						</View>
@@ -437,13 +440,10 @@ const EventAbout =(props) => {
 				}}
 			/>
 			<Indicator scrollx={scrollX} />
-
-
-
-
 			<View
 				style={{
-					height: 350,
+					// marginTop: 20,
+					height: 320,
 					width: imageW,
 					borderRadius: 30,
 					backgroundColor: "#fff",
@@ -452,7 +452,7 @@ const EventAbout =(props) => {
 					alignSelf: "center",
 				}}
 			>
-				<View style={{ marginLeft: 13, marginVertical: 20 }}>
+				<View style={{ marginLeft: 10 }}>
 					<Text
 						style={{
 							color: "#1b5bff",
@@ -466,25 +466,15 @@ const EventAbout =(props) => {
 					</Text>
 					<Text
 						style={{
-							fontWeight: "700",
+							fontWeight: "500",
 							fontSize: 23,
 							color: "#000",
 							fontFamily: "Poppins2",
 							textTransform: "uppercase",
 						}}
 					>
-						 {title}
+						{title}
 					</Text>
-
-					<Icon
-								name="time-outline"
-								size={16}
-								style={{
-									color: "#000",
-									top: 2,
-									left: -3,
-								}}
-							/>
 					<Text
 						style={{
 							fontWeight: "600",
@@ -494,7 +484,10 @@ const EventAbout =(props) => {
 							textTransform: "uppercase",
 						}}
 					>
-						 {time}  
+						{Time}
+						{time} {"|"}
+						{Location}
+						{venue}
 					</Text>
 					<Text
 						style={{
@@ -507,40 +500,35 @@ const EventAbout =(props) => {
 							lineHeight: 12.5,
 						}}
 					>
-						 {description} 
+						{description}
 					</Text>
 					<View
 						style={{
 							position: "absolute",
-							top: 280,
-							// justifyContent: "space-between",
+							top: 275,
 							flexDirection: "row",
 						}}
 					>
 						<Text
 							style={{
-								// marginTop: 15,
 								paddingTop: 15,
 								fontFamily: "Poppins2",
-								fontWeight: "600",
-								fontSize: 24,
+								fontWeight: "500",
+								fontSize: 22,
 								lineHeight: 22,
 							}}
 						>
-							{formattedNumber} 
+							{formattedNumber}
 						</Text>
-						<TouchableOpacity
-							activeOpacity={0.1}
-							onPress={()=>pay()}
-						>
+						<TouchableOpacity activeOpacity={0.8} onPress={() => pay()}>
 							<View
 								style={{
-									width: 118,
+									width: 100,
 									height: 37,
 									borderRadius: 10,
 									backgroundColor: "#004fc7",
 									alignSelf: "center",
-									marginLeft: 100,
+									marginLeft: 80,
 								}}
 							>
 								<Text
@@ -562,29 +550,11 @@ const EventAbout =(props) => {
 					</View>
 				</View>
 			</View>
-
-			{/* </View> */}
 		</View>
 	);
 };
-const styles = StyleSheet.create({
-	dot: {
-		borderRadius: 10,
-		height: 7,
-		width: 7,
-		backgroundColor: "gray",
-		marginBottom: 3,
-		marginHorizontal: 3,
-		justifyContent: "center",
-	},
-	pagination: {
-		bottom: -6,
-		left: (width * 0.9) / 2,
-		position: "absolute",
-		flexDirection: "row",
-		justifyContent: "center",
-	},
-});
+
+export default EventDetails;
 
 
 
@@ -595,7 +565,10 @@ const styles = StyleSheet.create({
 
 
 
- export default EventDetails
+
+
+
+
 
 
 // const styles = StyleSheet.create({

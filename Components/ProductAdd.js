@@ -12,10 +12,9 @@ import { Dropdown } from "react-native-element-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import "intl";
 import "intl/locale-data/jsonp/en-GB";
-import { Calendar, Calendars, Time, Back } from "../constants/icons";
+import {  Calendars, Time, Back } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import client from "../api/client";
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,8 +23,12 @@ const validationSchema = Yup.object({
 		.required("Title is required!"),
 	content: Yup.string()
 		.required("Content is required!"),
-images: Yup.array().min(1, 'Please select at least one image').max(5, 'You can only select a maximum of 5 images'),
-campus:Yup.string().required("Campus is required!")
+		description: Yup.string()
+		.required("description is required!"),
+image: Yup.array().min(1, 'Please select at least one image').max(5, 'You can only select a maximum of 5 images'),
+campus:Yup.string().required("Campus is required!"),
+ticketPrice: Yup.string()
+		.required("price is required!"),
 });
 
 
@@ -35,6 +38,7 @@ export const Form = ({component}) => {
 
 
 	const  getData = async (values) => {
+
 		try {
 		  const value = await AsyncStorage.getItem('userInfo')
 		  const token = await AsyncStorage.getItem("userToken")
@@ -48,8 +52,9 @@ export const Form = ({component}) => {
 			const formData = new FormData();
 
 			formData.append("title", values.title);
-			 values.images.forEach(image => {
-			formData.append("images", {
+
+			 values.image.forEach(image => {
+			formData.append("image", {
 			   uri: image.uri,
 			 type: "image/jpeg",
 			 name: `${Date.now()}.jpeg`
@@ -62,8 +67,10 @@ export const Form = ({component}) => {
 				const formData = new FormData()
 			formData.append("date", values.date)
 			formData.append("time", values.time)
+			formData.append("ticketPrice", values.ticketPrice)
 			}
 			
+			console.log(formData)
 
 	           const newToken = token
 			  const config={
@@ -71,23 +78,25 @@ export const Form = ({component}) => {
 					  Authorization: `Bearer ${newToken}`,
 					},
 			  }
-			  console.log(values)
-			  await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, /*config*/).then((res)=>{
+
+			  await axios.post("https://code-6z3x.onrender.com/api/news/addNews",formData, /*config*/)
+			  .then((res)=>{
 			  console.log(res)
 	  
-			  if(res.status === 201){
-				  // navigation.dispatch(StackActions.replace("Tab"))
+			  if(res.status === 200){
+				  navigation.dispatch(StackActions.replace("Tab"))
 				  console.log("successful")
 			  }
 			  // if res is succesful, dispatch the user to home screen to see what he posted
 			  }).catch((e)=>{
 			   console.log(`${e}`)
 			  })
-
-		  }
+			}
+		  
 		catch(e) {
 		  console.log(`${e}`)
 		}
+		
 	  }
 	   useEffect(()=>{
 		getData()
@@ -109,7 +118,7 @@ export const Form = ({component}) => {
 		  ]
 
 	const navigation = useNavigation();
-	const [images, setImages] = useState([])
+	const [image, setImage] = useState([])
 	const [isLoading, setIsLoading] = useState(false);
 
 
@@ -137,8 +146,8 @@ export const Form = ({component}) => {
 			          uri: asset.uri,
 			          id: index,
 			        }));
-					setFieldValue('images', uris);
-			        setImages(prevImages => [...prevImages, ...uris]);
+					setFieldValue('image', uris);
+			        setImage(prevImages => [...prevImages, ...uris]);
 			      }
 				  setIsLoading(false)
 				  console.log(pickerResult.assets)
@@ -191,7 +200,7 @@ export const Form = ({component}) => {
 		// add status bar with the color
 
 		<View 
-		style={{ alignSelf: "center", width: width - 40, paddingTop: 55 }}
+		style={{ alignSelf: "center", width: width - 40, paddingTop: 55}}
 		>
 			<View style={{ flexDirection: "row", paddingBottom: 15,}}>
 				<TouchableOpacity
@@ -212,10 +221,11 @@ export const Form = ({component}) => {
 				<View>
 			<Formik
 				initialValues={{
-					content: "",
 					title: "",
-					images:[],
+					content: "",
+					image:[],
 					campus:"",
+					ticketPrice:"",
 					date: "",
 					time: "",
 				}}
@@ -231,7 +241,7 @@ export const Form = ({component}) => {
 					handleSubmit,
 					setFieldValue,
 				}) => {
-		          const { title, images, content, campus,} =values;
+		          const { title, image, content, campus, ticketPrice} =values;
 					return(
 					<View style={{position:"absolute", top:-120}}>
 
@@ -300,13 +310,13 @@ export const Form = ({component}) => {
 				)}
 			</View>
 
-		{errors.images && touched.images && 
+		{errors.image && touched.image && 
 		<Text style={{ color: 'red', fontFamily:"Poppins", fontSize:10, top:-13, alignSelf:"center" }}>
-			{errors.images}
+			{errors.image}
 			</Text>
 			}
 			<FlatList
-				data={images.slice(0,5)}
+				data={image.slice(0,5)}
 				horizontal
 				renderItem={({ item }) => (
 					<View style={{width:120, height:130}}>
@@ -317,7 +327,6 @@ export const Form = ({component}) => {
 					</View>
 				)}
 				keyExtractor={(item) => item.uri}
-				// contentContainerStyle={{}}
 			/>
 		</View>
 
@@ -375,7 +384,7 @@ export const Form = ({component}) => {
 													]}
 												>
 													<Text
-														style={[styles.textContainer, { marginTop: 10 }]}
+														style={[styles.textContainer, { marginTop: 15 }]}
 													>
 														{date.toLocaleTimeString()}
 													</Text>
@@ -388,6 +397,14 @@ export const Form = ({component}) => {
 													</TouchableOpacity>
 												</View>
 											</View>
+											<FormInput
+						                     TextInputStyle={[styles.input, {top:-30}]}
+											placeholder="Enter Price"
+											onChangeText={handleChange("ticketPrice")}
+											onBlur={handleBlur("ticketPrice")}
+											error={touched.ticketPrice && errors.ticketPrice}
+											value={ticketPrice}
+											/>
 										</View>
 									) : null}
 
@@ -401,7 +418,7 @@ export const Form = ({component}) => {
 			}
 						<TextInput
 							multiline
-							style={styles.TextInput2}
+							style={[styles.TextInput2,]}
 							placeholder="Type Something here..."
 							onChangeText={handleChange("content")}
 							onBlur={handleBlur("content")}
@@ -448,6 +465,7 @@ export const Form = ({component}) => {
 													borderRadius: 8,
 													marginTop: 13,
 													height: 37,
+													top:10
 												}}
 											>
 												<Text
@@ -455,7 +473,7 @@ export const Form = ({component}) => {
 														fontSize: 18,
 														fontWeight: "500",
 														color: "white",
-														fontFamily:"Poppins3"
+														fontFamily:"Poppins3",
 													}}
 												>
 													Post

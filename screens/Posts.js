@@ -216,7 +216,7 @@ const Posts = ({post, navigation}) => {
     >
       <StatusBar backgroundColor={COLORS.white}/>
          <PostImage post={post} navigation ={navigation}/>
-        {/* <PostFooter post={post}/> */}
+        <PostFooter post={post}/>
     </View>
   )
 }
