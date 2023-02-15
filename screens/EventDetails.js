@@ -21,17 +21,16 @@
 //   events:"#2b3b67"
 // }
 
-const EventDetails = ({route}) => {
-  return (
-    <>
-    {/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
-    {/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
-    <EventAbout route={route}/>
-    {/* </View> */}
-    </>
-  )
-}
-
+const EventDetails = ({ route }) => {
+	return (
+		<>
+			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
+			{/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
+			<EventAbout route={route} />
+			{/* </View> */}
+		</>
+	);
+};
 
 import { StackActions, useNavigation } from "@react-navigation/native";
 // const EventAbout =(props)=>{
@@ -43,7 +42,6 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 //     </View>
 // )
 // }
-
 
 // const EventImage=(props)=>{
 //     const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
@@ -84,11 +82,11 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 //                     />
 //                     </TouchableOpacity>
 //                     </View>
-    
+
 //     )}
 //   />
-//   </View> 
-  
+//   </View>
+
 //   <View style={styles.pagination}>
 //    {props.image.map((_, index) => {
 //       return (
@@ -104,13 +102,12 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 //            }
 //          ]}
 //        />
-//        ) 
-//       })} 
+//        )
+//       })}
 //       </View>
 //     </View>
 //     )
-  
-  
+
 //   }
 
 // const EventBody=(props)=>{
@@ -140,7 +137,6 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 //      useEffect(()=>{
 //     getData()
 //     },[])
-
 
 //     const pay = async()=>{
 //           const token = userToken
@@ -177,7 +173,6 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 
 //     }
 
-
 // return(
 //     <>
 //     <View style={{height:335, width:width*0.83, borderRadius:30, backgroundColor:"#fff", top:35, alignSelf:"center"}}>
@@ -185,7 +180,6 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 // <View style={{margin:13, left:10, marginVertical:20}}>
 // <Text style={{color:"#1b5bff", fontFamily:"Poppins2", fontSize:10, fontWeight:"300", position:"absolute", textTransform:"uppercase"}}>{props.date}</Text>
 // <Text style={{fontWeight:"600", fontSize:23, lineHeight:28, color:"#000", fontFamily:"Poppins2", position:"absolute", top:20}}>{props.title}</Text>
-
 
 // <View style={{bottom:-46, left:5}}>
 //     <View>
@@ -198,12 +192,11 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 //            left:-3
 //            }}
 //        />
-//    <Text style={{color:"#000", fontFamily:"Poppins2", fontSize:14, 
-//    position:"absolute", 
+//    <Text style={{color:"#000", fontFamily:"Poppins2", fontSize:14,
+//    position:"absolute",
 //    left:15
 //    }}>{props.time} {"|"}</Text>
 //    </View>
-
 
 //    <View style={{flexDirection:"row", justifyContent:"space-around", bottom:15, left:-25}}>
 //    <Icon
@@ -214,7 +207,7 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 //            left:-20
 //            }}
 //        />
-//    <Text style={{color:"#000", fontFamily:"Poppins2", fontSize:14, textTransform:"uppercase", position:"absolute", 
+//    <Text style={{color:"#000", fontFamily:"Poppins2", fontSize:14, textTransform:"uppercase", position:"absolute",
 //    top:-3
 //    }}>{props.venue}</Text>
 //    </View>
@@ -243,11 +236,9 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 // </View>
 
 //     </View>
-    
+
 //     </>
 // )
-
-
 
 // }
 
@@ -268,6 +259,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import {Location, Time } from "../constants/icons";
+
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width, height } = Dimensions.get("screen");
@@ -571,6 +563,7 @@ export default EventDetails;
 
 
 
+
 // const styles = StyleSheet.create({
 //     dot:{borderRadius:10, height:7, width:7, backgroundColor:"gray", marginBottom:3, marginHorizontal:3, justifyContent:"center" },
 //     pagination:{
@@ -580,6 +573,5 @@ export default EventDetails;
 //         flexDirection:"row",
 //         justifyContent:"center",
 //       },
-
 
 // })
