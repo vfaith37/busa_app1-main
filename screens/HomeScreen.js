@@ -44,7 +44,7 @@ const HomeScreen = () => {
 
       await client
         .get(
-          `/news/getMainCampusNews/${currentPage}/2`,
+          `/news/getMainCampusNews/${currentPage}/5`,
           config
         )
         .then((res) => {
