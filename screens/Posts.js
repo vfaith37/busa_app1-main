@@ -80,45 +80,45 @@ const PostImage=({post, navigation})=>{
         itemVisiblePercentThreshold:50,
       })
 
-  // const PostIndicator = ({post}) => {
+  const PostIndicator = ({post}) => {
   
-  //   return(
-  // <View style={styles.pagination}>
+    return(
+  <View style={styles.pagination}>
   
-  // {post.data.map((_, index) => {
+  {post.images.map((_, index) => {
   
-  //    return (
-  //     <>
-  //    <View
-  //    key={index}
-  //    style={[
-  //      styles.dot,
-  //      currentSlideIndex == index &&{
-  //        backgroundColor: "#000",
-  //        width: 7,
-  //        height:7,
-  //        borderRadius:10,
-  //      }
-  //    ]}
-  //  />
-  // {
-  //   currentSlideIndex==index &&(
-  //     <Animated.View style={{backgroundColor:"red", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
-  //     opacity:fadeAnim,
-  //   }}
-  //     >
-  //       <Text style={{color:"#ffff", fontFamily:"Poppins2", left:3, alignItems:"center", top:-2, position:"absolute",}} key={index}>{index+1}/{post.data.length}</Text>
-  //     </Animated.View>
-  //   )
-  // }
-  //   </>
-  //  ) 
-  // })
-  // } 
+     return (
+      <>
+     <View
+     key={index}
+     style={[
+       styles.dot,
+       currentSlideIndex == index &&{
+         backgroundColor: "#000",
+         width: 7,
+         height:7,
+         borderRadius:10,
+       }
+     ]}
+   />
+  {
+    currentSlideIndex==index &&(
+      <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
+      opacity:fadeAnim,
+    }}
+      >
+        <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} key={index}>{index+1}/{post.images.length}</Text>
+      </Animated.View>
+    )
+  }
+    </>
+   ) 
+  })
+  } 
   
-  // </View>
-  //   )
-  // }
+  </View>
+    )
+  }
 
 
 
@@ -145,7 +145,7 @@ const PostImage=({post, navigation})=>{
             image:post.images,
             title:post.title,
         date: post.date,
-        fullDescription: post.fullDescription,
+        content: post.content,
           })}
           >
               <Image
@@ -161,7 +161,7 @@ const PostImage=({post, navigation})=>{
   )}
 />
 </View> 
-{/* <PostIndicator post={post}/> */}
+<PostIndicator post={post}/>
 </View> 
 
   )
@@ -186,9 +186,9 @@ const PostFooter=({post})=>{
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
     <Text style={{fontWeight:"300", fontSize:10, color:"#303030",fontFamily:"Poppins2", lineHeight:13 }}>{post.date}</Text>
-    {/* <Text style={{fontWeight:"500", fontSize:10, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins2"}}>
-      {post.description.length > 125 ? post.description.charAt(0).toUpperCase()+ post.description.slice(1,124).toLowerCase()+'...' : post.description.charAt(0).toUpperCase()+ post.description.slice(1,`${post.description.length}`).toLowerCase()+'...'}
-      </Text> */}
+    <Text style={{fontWeight:"500", fontSize:10, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins"}}>
+      {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
+      </Text>
         </View>
   </>
   )
