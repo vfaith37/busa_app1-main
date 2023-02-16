@@ -39,7 +39,7 @@ const EventsScreen = () => {
             }
           }
 
-      await  axios.get(`https://code-6z3x.onrender.com/api/event/getMainCampusEvents/1/2`, config
+      await  axios.get(`https://code-6z3x.onrender.com/api/event/getMainCampusEvents/1/5`, config
       //${userInfo?.campus.charAt(0).toUppercase()}
        )
        .then((res)=>{

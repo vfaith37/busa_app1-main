@@ -30,13 +30,14 @@ const PostImage=({post, navigation})=>{
   var date = moment(time);
 
   var newTime = date.format('MMMM Do YYYY, h:mm:ss a')
+  console.log(newTime)
   // console.log(date.format('MMMM Do YYYY, h:mm:ss a'));
   
+  const presentDate = moment().format('MMMM Do YYYY, h:mm:ss a');
+
+  console.log(presentDate)
   
-  // const presentDate = moment().format('MMMM Do YYYY, h:mm:ss a');
-  // console.log(presentDate)
-  // // if timestamp = presentDate, show the recent tag
-  // if(date === presentDate){
+  // if(newTime === presentDate){
   //   return(
   //     <View>
   //       <Text>sdshsfhgs</Text>
@@ -90,9 +91,13 @@ const PostImage=({post, navigation})=>{
   const PostIndicator = ({post}) => {
   
     return(
-  <View style={styles.pagination}>
+  <View style={styles.pagination}
+  >
+
+
+
   
-  {post.images.map((_, index) => {
+  {post.images.map((_, index, id) => {
   
      return (
       <>
@@ -113,6 +118,7 @@ const PostImage=({post, navigation})=>{
       <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
       opacity:fadeAnim,
     }}
+    key={id.toString()}
       >
         <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} key={index}>{index+1}/{post.images.length}</Text>
       </Animated.View>
@@ -186,7 +192,7 @@ const PostFooter=({post})=>{
   
   var date = moment(time);
 
-  var newTime = date.format('MMMM Do YYYY, h:mm:ss a')
+  var newTime = date.format('MMMM Do YYYY')
  
   return(
   <>

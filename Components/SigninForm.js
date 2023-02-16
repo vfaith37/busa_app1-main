@@ -11,13 +11,13 @@ import axios from "axios";
 
 
 const validationSchema = Yup.object({
-	email: Yup.string()
-		.trim()
-		.matches(
-			/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
-			"School Email required"
-			)
-		.required("Email is required!"),
+	// email: Yup.string()
+	// 	.trim()
+	// 	.matches(
+	// 		/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
+	// 		"School Email required"
+	// 		)
+	// 	.required("Email is required!"),
 	password: Yup.string()
 	.trim()
 	.min(8, "Password not long enough!")
@@ -53,7 +53,7 @@ export const SignInForm = () => {
 				console.log(userInfo)
 	
 				setUserInfo(userInfo)
-				let token = res.data.token
+				let token = res.data.refreshToken
 				setUserToken(token)
 	
 				try{

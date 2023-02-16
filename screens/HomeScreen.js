@@ -43,7 +43,7 @@ const HomeScreen = () => {
 
       await client
         .get(
-          `/news/getMainCampusNews/${currentPage}/1`,
+          `/news/getMainCampusNews/${currentPage}/2`,
           config
         )
         .then((res) => {
@@ -63,7 +63,7 @@ const HomeScreen = () => {
 
   useEffect(()=>{
     getData()
-  },[])
+  },[currentPage])
 
   
   const renderLoader=()=>{

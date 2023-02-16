@@ -34,10 +34,17 @@ const { width, height } = Dimensions.get("window");
 const validationSchema = Yup.object({
 	title: Yup.string().required("Title is required!"),
 	content: Yup.string().required("Content is required!"),
-	images: Yup.array()
+	image: Yup.array()
 		.min(1, "Please select at least one image")
 		.max(5, "You can only select a maximum of 5 images"),
 	campus: Yup.string().required("Campus is required!"),
+	// date: Yup.string().required("Please select a date"),
+	// time: Yup.string().required("Please select a time"),
+	// endTime: Yup.string().required("Please select end time"),
+	// endDate: Yup.string().required("Please select end date"), // here, endDate is a string
+	// ticketPrice: Yup.string().required("price is required"),
+	// venue: Yup.string().required("venue is required"),
+	
 });
 
 export const Form = ({ component }) => {
@@ -67,25 +74,49 @@ export const Form = ({ component }) => {
 			formData.append("campus", values.campus);
 			formData.append("content", values.content);
 
-			if (component === "Event") {
-				const formData = new FormData();
-				formData.append("date", values.date);
+
+			formData.append("ticketPrice", values.ticketPrice)
+			formData.append("venue", values.venue)
+			formData.append("date", values.date);
 				formData.append("time", values.time);
-			}
+				formData.append("endDate", values.endDate);
+				formData.append("endTime", values.endTime);
+
 
 			const newToken = token;
-			// axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			 
-			
 			const config = {
 				headers: {
 					Authorization: `Bearer ${newToken}`,
 				},
-			};
+			}
 
-			// console.log(formData);
 			console.log(values)
-			await axios
+
+               if(component === "Event"){
+				await axios
+				.post(
+					"https://code-6z3x.onrender.com/api/event/uploadEvent",
+					formData ,config
+					
+				)
+				.then((res) => {
+					console.log(res);
+
+
+					if (res.status === 200) {
+						// navigation.dispatch(StackActions.replace("Tab"))
+						console.log("successful");
+					}
+					// if res is succesful, dispatch the user to home screen to see what he posted
+				})
+				.catch((e) => {
+					console.log(`${e}`);
+				});
+			   }
+			   
+			  else if(component ===" Post"){
+				await axios
 				.post(
 					"https://code-6z3x.onrender.com/api/news/addNews",
 					formData ,config
@@ -104,6 +135,10 @@ export const Form = ({ component }) => {
 				.catch((e) => {
 					console.log(`${e}`);
 				});
+			   }
+
+
+			
 			}
 		} catch (e) {
 			console.log(`${e}`);
@@ -165,11 +200,19 @@ export const Form = ({ component }) => {
 
 
 	const [mode, setMode] = useState("date");
+	const [newMode, setNewMode] = useState("date")
+
 	const [date, setDate] = useState(new Date());
+	// const [time, setTime] = useState(new date())
+	// const [endTime, setEndTime] = useState(new date())
+	const [endDate, setEndDate] = useState(new Date())
 	const [show, setShow] = useState(false);
+	const[view, setView] = useState(false)
 
 	return (
 		// add status bar with the color
+
+
 
 		<View style={{ alignSelf: "center", width: width - 40, paddingTop: 55 }}>
 			<View style={{ flexDirection: "row"}}>
@@ -196,6 +239,10 @@ export const Form = ({ component }) => {
 					campus: "",
 					date: "",
 					time: "",
+					venue:"",
+					endDate:"",
+					endTime:"",
+					ticketPrice:"",
 				}}
 				onSubmit={getData}
 				validationSchema={validationSchema}
@@ -209,9 +256,16 @@ export const Form = ({ component }) => {
 					handleSubmit,
 					setFieldValue,
 				}) => {
-					const { title, image, content, campus } = values;
+					const { title, image, content, campus, ticketPrice, venue } = values;
 					return (
-						<View style={{paddingTop:-10, position:"absolute"}}>
+
+
+                             <ScrollView
+							 showsVerticalScrollIndicator={false}
+							 bounces={false}
+							 contentContainerStyle={{height:height*1.42}}
+							 >
+						<View style={{top:-10}}>
 							<FormInput
 								onChangeText={handleChange("title")}
 								onBlur={handleBlur("title")}
@@ -302,6 +356,8 @@ export const Form = ({ component }) => {
 									)}
 								</View>
 
+                                        
+
 								{errors.image && touched.image && (
 									<Text
 										style={{
@@ -338,70 +394,223 @@ export const Form = ({ component }) => {
 								/>
 							</View>
 
-							{component === "Event" ? (
-								<View>
-									{show && (
-										<DateTimePicker
-											value={date}
-											mode={mode}
-											is24Hour={false}
-											display="default"
-											onChange={(event, selectedDate) => {
-												const currentDate = selectedDate || date;
-												setDate(currentDate);
-												setShow(false);
-												setFieldValue(
-													"date",
-													new Intl.DateTimeFormat("en-GB").format(date)
-												);
-												setFieldValue("time", date.toLocaleTimeString());
-											}}
-										/>
-									)}
-									<View style={styles.Container}>
-										<View
-											style={[
-												styles.dateContainer,
-												{
-													justifyContent: "space-around",
-													flexDirection: "row",
-												},
-											]}
-										>
-											<Text style={[styles.textContainer, { marginTop: 10 }]}>
-												{new Intl.DateTimeFormat("en-GB").format(date)}
-											</Text>
-											<TouchableOpacity
-												onPress={() => {
-													setMode("date"), setShow(true);
+									{component === "Event" ? (
+                              
+										<View style={{top:10, padding:3}}>
+
+                                              <View style={{flexDirection:"row", justifyContent:"space-between", paddingHorizontal:3}}>
+											<Text style={{fontFamily:"Poppins", color:"#000"}}>Start Date</Text>
+											<Text style={{fontFamily:"Poppins", color:"#000"}}>Start Time</Text>
+											</View>
+
+										{show && (
+											<DateTimePicker
+												value={date}
+												mode={mode}
+												is24Hour={false}
+												display="default"
+												onChange={(event, selectedDate) => {
+													const currentDate = selectedDate || date;
+													setDate(currentDate);
+													setShow(false);
+													setFieldValue(
+														"date",
+														new Intl.DateTimeFormat("en-GB").format(date)
+													);
+													setFieldValue("time", date.toLocaleTimeString());
 												}}
-											>
-												{Calendars}
-											</TouchableOpacity>
-										</View>
+											/>
+										)}
+
+
+
+
 										<View
-											style={[
-												styles.dateContainer,
-												{
-													justifyContent: "space-around",
-													flexDirection: "row",
-												},
-											]}
-										>
-											<Text style={[styles.textContainer, { marginTop: 10 }]}>
-												{date.toLocaleTimeString()}
-											</Text>
-											<TouchableOpacity
-												onPress={() => {
-													setMode("time"), setShow(true);
-												}}
+
+                                       style={{flexDirection:"row", justifyContent:"space-between", paddingHorizontal:10}}
+										 >
+											<View
+												style={[
+													styles.dateContainer,
+													{
+														justifyContent: "space-around",
+														flexDirection: "row",
+														right:5,
+														width:width/2.8,
+														height:50,
+														backgroundColor:"#d9d9d9",
+													},
+												]}
 											>
-												{Time}
-											</TouchableOpacity>
+												<Text
+													style={[styles.textContainer, { marginTop: 10 }]}
+												>
+													{new Intl.DateTimeFormat("en-GB").format(date)}
+												</Text>
+												<TouchableOpacity
+												activeOpacity={0.9}
+													onPress={() => {
+														setMode("date"), setShow(true);
+													}}
+												>
+													{Calendars}
+												</TouchableOpacity>
+											</View>
+							
+										<View
+												style={[
+													styles.dateContainer,
+													{
+														justifyContent: "space-around",
+														flexDirection: "row",
+														right:-3,
+														width:width/2.8,
+														height:50,
+														backgroundColor:"#d9d9d9"
+													},
+												]}
+											>
+												<Text
+													style={[styles.textContainer, { marginTop: 10 }]}
+												>
+													{date.toLocaleTimeString()}
+												</Text>
+												<TouchableOpacity
+													onPress={() => {
+														setMode("time"), setShow(true);
+													}}
+												>
+													{Time}
+												</TouchableOpacity>
+											</View>
 										</View>
+
+                                             
+
+                                                     
+
+												{/* for end Date and End Time */}
+
+
+												<View style={{top:10}}>
+
+                                           <View style={{flexDirection:"row", justifyContent:"space-between", paddingHorizontal:10}}>
+										  <Text style={{fontFamily:"Poppins"}}>End Date</Text>
+										  <Text style={{fontFamily:"Poppins"}}>End Time</Text>
+										  </View>
+
+										{view && (
+											<DateTimePicker
+												value={endDate}
+												mode={newMode}
+												is24Hour={false}
+												display="default"
+												onChange={(event, selectedDate) => {
+													const currentDate = selectedDate || endDate;
+													setEndDate(currentDate);
+													setView(false);
+													setFieldValue(
+														"endDate",
+														new Intl.DateTimeFormat("en-GB").format(endDate)
+													);
+													setFieldValue("endTime", endDate.toLocaleTimeString());
+												}}
+											/>
+										)} 
+
+
+
+										<View
+
+                                       style={{flexDirection:"row", justifyContent:"space-between", paddingHorizontal:10,}}
+										 >
+											<View
+												style={[
+													styles.dateContainer,
+													{
+														justifyContent: "space-around",
+														flexDirection: "row",
+														right:5,
+														width:width/2.8,
+														height:50,
+														backgroundColor:"#d9d9d9",
+													},
+												]}
+											>
+												<Text
+													style={[styles.textContainer, { marginTop: 10 }]}
+												>
+													{new Intl.DateTimeFormat("en-GB").format(endDate)}
+												</Text>
+												<TouchableOpacity
+												activeOpacity={0.9}
+													onPress={() => {
+														setNewMode("date"), setView(true);
+													}}
+												>
+													{Calendars}
+												</TouchableOpacity>
+											</View>
+											<View
+												style={[
+													styles.dateContainer,
+													{
+														justifyContent: "space-around",
+														flexDirection: "row",
+														right:-3,
+														width:width/2.8,
+														height:50,
+														backgroundColor:"#d9d9d9"
+													},
+												]}
+											>
+												<Text
+													style={[styles.textContainer, { marginTop: 10 }]}
+												>
+													{endDate.toLocaleTimeString()}
+												</Text>
+												<TouchableOpacity
+													onPress={() => {
+														setNewMode("time"), setView(true);
+													}}
+												>
+													{Time}
+												</TouchableOpacity>
+											</View>
+										</View>
+
+
 									</View>
+
+						<View style={{flexDirection:"row", justifyContent:"space-between", paddingRight:5, top:18}}>
+									<FormInput
+								onChangeText={handleChange("ticketPrice")}
+								onBlur={handleBlur("ticketPrice")}
+								error={touched.ticketPrice && errors.ticketPrice}
+								value={ticketPrice}
+								placeholder="Price"
+								TextInputStyle={[styles.venueInput,{right:14}]}
+							/>
+
+								<FormInput
+								onChangeText={handleChange("venue")}
+								onBlur={handleBlur("venue")}
+								error={touched.venue && errors.venue}
+								value={venue}
+								placeholder="venue"
+								TextInputStyle={styles.venueInput}
+							/>
 								</View>
+
+
+									</View>
+							
+							
 							) : null}
+						
+				
+
+				<View style={{top:30}}>
 
 							<Text
 								style={{
@@ -460,6 +669,12 @@ export const Form = ({ component }) => {
 								/>
 							</View>
 
+
+						
+
+
+
+
 							<Pressable onPress={handleSubmit}>
 								<View
 									style={{
@@ -485,7 +700,12 @@ export const Form = ({ component }) => {
 									</Text>
 								</View>
 							</Pressable>
+
+                           </View>
+
+
 						</View>
+						</ScrollView>
 					);
 				}}
 			</Formik>
@@ -504,6 +724,17 @@ const styles = StyleSheet.create({
 		textAlign: "left",
 		fontFamily: "Poppins",
 		width: width - 40,
+	},
+	venueInput:{
+		height: 43,
+		backgroundColor: "#d9d9d9",
+		borderRadius: 5,
+		marginTop: 10,
+		paddingLeft: 10,
+		fontSize: 16,
+		textAlign: "left",
+		fontFamily: "Poppins",
+		width: width/2.8
 	},
 	checkbox: {
 		alignSelf: "center",
@@ -596,3 +827,4 @@ const styles = StyleSheet.create({
 		top: 5,
 	},
 });
+
