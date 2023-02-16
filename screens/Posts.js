@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback} from 'react';
 import {useFonts} from 'expo-font'
 import { StatusBar } from 'expo-status-bar';
 import { FlatListInput } from '../Components/FlatListInput';
+import moment from 'moment/moment';
 const COLORS = {
   primary: "#004FC7", // blue
   secondary: "#F6F6F6",   // gray
@@ -21,8 +22,14 @@ const {width, height}= Dimensions.get("screen")
 
 const PostImage=({post, navigation})=>{
 
+  let time = post.addedAt
+
   // var timestamp = "2023-01-19T13:48:14.044+00:00";
-  // var date = moment(timestamp);
+
+  
+  var date = moment(time);
+
+  var newTime = date.format('MMMM Do YYYY, h:mm:ss a')
   // console.log(date.format('MMMM Do YYYY, h:mm:ss a'));
   
   
@@ -144,7 +151,7 @@ const PostImage=({post, navigation})=>{
           onPress={()=>navigation.navigate("PostDetails", {
             image:post.images,
             title:post.title,
-        date: post.date,
+        date: newTime,
         content: post.content,
           })}
           >
@@ -172,6 +179,14 @@ const PostImage=({post, navigation})=>{
 
 
 const PostFooter=({post})=>{ 
+  let time = post.addedAt
+
+  // var timestamp = "2023-01-19T13:48:14.044+00:00";
+
+  
+  var date = moment(time);
+
+  var newTime = date.format('MMMM Do YYYY, h:mm:ss a')
  
   return(
   <>
@@ -185,7 +200,7 @@ const PostFooter=({post})=>{
       // maxWidth:'70%', 
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
-    <Text style={{fontWeight:"300", fontSize:10, color:"#303030",fontFamily:"Poppins2", lineHeight:13 }}>{post.date}</Text>
+    <Text style={{fontWeight:"300", fontSize:10, color:"#303030",fontFamily:"Poppins2", lineHeight:13 }}> {newTime}</Text>
     <Text style={{fontWeight:"500", fontSize:10, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins"}}>
       {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>

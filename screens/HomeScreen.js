@@ -12,7 +12,6 @@ import { COLORS } from '../constants/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native'
 
-
 const HomeScreen = () => {
 
   const navigation = useNavigation()

@@ -75,6 +75,8 @@ export const Form = ({ component }) => {
 
 			const newToken = token;
 			// axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+			 
+			
 			const config = {
 				headers: {
 					Authorization: `Bearer ${newToken}`,
