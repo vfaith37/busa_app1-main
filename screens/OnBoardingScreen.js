@@ -232,6 +232,7 @@ const Posts = [
       animation: require("../assets/animations/animation2.json")
     },
     {
+      // this would be a future update
       id: "3",
       title: "Meet Trusted Sellers",
       animation: require("../assets/animations/marketing.json")

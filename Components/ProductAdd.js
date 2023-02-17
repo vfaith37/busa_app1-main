@@ -115,7 +115,7 @@ export const Form = ({ component }) => {
 				});
 			   }
 			   
-			  else if(component ===" Post"){
+			  else if(component === "Post"){
 				await axios
 				.post(
 					"https://code-6z3x.onrender.com/api/news/addNews",
@@ -125,7 +125,7 @@ export const Form = ({ component }) => {
 				.then((res) => {
 					console.log(res);
 
-
+                     
 					if (res.status === 201) {
 						// navigation.dispatch(StackActions.replace("Tab"))
 						console.log("successful");

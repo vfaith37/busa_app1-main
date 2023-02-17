@@ -1,4 +1,5 @@
-import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -10,6 +11,31 @@ import {
 const { width } = Dimensions.get("screen");
 
 export const AccordionItem = () => {
+
+const [userInfo, setUserInfo] = useState(null)
+
+const getData = async()=>{
+
+try{
+  const value = await AsyncStorage.getItem("userInfo")
+  if(value!==null){
+	setUserInfo(JSON.parse(value))
+	console.log(userInfo)
+  }
+}catch (e){
+	console.log(`${e}`)
+}
+
+}
+
+useEffect(()=>{
+	getData()
+},[])
+
+
+
+
+
 	const [showContent, setShowContent] = React.useState(false);
 	return (
 		<View style={styles.container}>
@@ -29,8 +55,9 @@ export const AccordionItem = () => {
 						<View>
 							<Text style={styles.text}>First Name</Text>
 							<TextInput
-								placeholder="Victor"
-								style={[styles.textInput, { width: 155 }]}
+							editable={false}
+								placeholder=  {userInfo?.firstname}
+								style={[styles.textInput, { width: 140 }]}
 								placeholderTextColor="#717171"
 							/>
 						</View>
@@ -38,8 +65,8 @@ export const AccordionItem = () => {
 							<Text style={styles.text}>Last Name</Text>
 							<TextInput
 								editable={false}
-								placeholder="Fagbohun"
-								style={[styles.textInput, { width: 155 }]}
+								placeholder=  {userInfo?.lastname}
+								style={[styles.textInput, { width: 140 }]}
 								placeholderTextColor="#717171"
 							/>
 						</View>
@@ -48,11 +75,11 @@ export const AccordionItem = () => {
 						<Text style={styles.text}>email</Text>
 						<TextInput
 							editable={false}
-							placeholder="Fagbohun5865"
-							style={styles.textInput}
+							placeholder= {userInfo?.email}
+							style={[styles.textInput, {fontSize:13}]}
 							placeholderTextColor="#717171"
 						/>
-						<Text
+						{/* <Text
 							style={{
 								alignSelf: "flex-end",
 								bottom: 30,
@@ -64,7 +91,7 @@ export const AccordionItem = () => {
 							}}
 						>
 							@student.babcock.edu.ng
-						</Text>
+						</Text> */}
 					</View>
 					<View
 						style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -73,8 +100,8 @@ export const AccordionItem = () => {
 							<Text style={styles.text}>Course of study</Text>
 							<TextInput
 								editable={false}
-								placeholder="Computer Science"
-								style={[styles.textInput, { width: 255 }]}
+								placeholder={userInfo?.course}
+								style={[styles.textInput, { width: 200, fontSize:11 }]}
 								placeholderTextColor="#717171"
 							/>
 						</View>
@@ -82,7 +109,7 @@ export const AccordionItem = () => {
 							<Text style={styles.text}>Gender</Text>
 							<TextInput
 								editable={false}
-								placeholder="Male"
+								placeholder={userInfo?.gender}
 								style={[styles.textInput, { width: 75 }]}
 								placeholderTextColor="#717171"
 							/>

@@ -40,13 +40,19 @@ const HomeScreen = () => {
       };
 
       setIsLoading(true);
-
+      
       await client
         .get(
           `/news/getMainCampusNews/${currentPage}/2`,
           config
         )
         .then((res) => {
+
+          if (res.data.data.length === 0) {
+            setIsLoading(false);
+            return; // Exit early if there are no more posts to fetch
+          }
+
           console.log(res.data.data);
           setIsLoading(false);
           setPosts([...posts, ...res.data.data]);
