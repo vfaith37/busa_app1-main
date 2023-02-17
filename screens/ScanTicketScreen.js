@@ -47,13 +47,15 @@ const ScanTicketScreen = () =>{
 
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    // setScanned(true);
+    setScanned(true);
     // get the data from the qr code, send a post request to the backend with that data to verify it, if it's succesful
     // show a small lottie view animation with sucess
 
 
        const token = userToken
+       const title = "Laptop"
        console.log(data)
+       console.log(token)
 
        console.log(token)
          const config ={
@@ -61,16 +63,17 @@ const ScanTicketScreen = () =>{
         }
 
     try {
-      setScanned(true);
+      // setScanned(true);
       const res = await client.post(`/tickets/scan`, {
         token: data,
-        eventTitle: "The Test2"
+        eventTitle:title
       }, config);
   
       if (res.status === 200) {
         alert(`QR code has been successfully scanned`);
         setShowAnimation(true);
       }
+      console.log(title)
       setScanned(false);
     } catch (e) {
       console.error(e);

@@ -5,6 +5,7 @@ import Events from './Events'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import client from '../api/client'
+import LottieView from 'lottie-react-native'
 
 //get the userInfo, and if the event.campus tallies, show the post
 
@@ -14,7 +15,8 @@ const EventsScreen = () => {
 
   const [events, setEvents] = useState([])
 
-
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [userInfo, setUserInfo] = useState(null)
   const [userToken, setUserToken] = useState(null)
@@ -29,7 +31,9 @@ const EventsScreen = () => {
       }
 
     
-      
+
+      const userInfo = JSON.parse((value)) 
+      console.log(userInfo.campus)
 
       const token = userToken
       console.log(token)
@@ -38,12 +42,21 @@ const EventsScreen = () => {
             Authorization: `Bearer ${token}`,
             }
           }
+          
+      setIsLoading(true);
 
-      await  axios.get(`https://code-6z3x.onrender.com/api/event/getMainCampusEvents/1/5`, config
+
+      await  axios.get(`https://code-6z3x.onrender.com/api/event/get${userInfo.campus}CampusEvents/${currentPage}/5`, config
       //${userInfo?.campus.charAt(0).toUppercase()}
        )
        .then((res)=>{
+        if (res.data.data.length === 0) {
+          setIsLoading(false);
+          return; // Exit early if there are no more posts to fetch
+        }
+
         console.log(res.data.data)
+        setIsLoading(false);
         setEvents([...events, ...res.data.data])
        })
        .catch((e)=>{
@@ -58,7 +71,41 @@ const EventsScreen = () => {
 
   useEffect(()=>{
     getEventData()
-  },[])
+  },[currentPage])
+
+  const loadMorePosts=()=>{
+    console.log("load more posts")
+    setCurrentPage(currentPage +1)
+  }
+
+
+  const renderLoader=()=>{
+    return(
+      isLoading?
+      // <View
+      // // style={{marginVertical:16, alignItems:"center",}} 
+      // >
+        // <ActivityIndicator size="large" color="blue"/> 
+
+        (
+        <LottieView
+					source={require("../assets/animations/loader.json")}
+					style={{
+						// position: "absolute",
+						width: 400,
+						height: 400,
+						top: 30,
+						alignSelf: "center",
+					}}
+					loop={true}
+        speed={0.7}
+					autoPlay
+				/>
+        )
+
+      : null
+    )
+  }
 
 
 
@@ -66,16 +113,14 @@ const EventsScreen = () => {
     return (
       <SafeAreaView style={{flex:1, top:40}}>
      <FlatList
-    //  onEndReachedThreshold={0.5}
-    //  ref={ref}
-    //  onMomentumScrollEnd={updateCurrentSlideIndex}
-  // onEndReached={}
-
+     onEndReachedThreshold={0.5}
+onEndReached={loadMorePosts}
      showsVerticalScrollIndicator={false}
      vertical
      data={events}
      bounces={false}
      decelerationRate={"fast"}
+       ListFooterComponent={renderLoader}
     //  keyExtractor={item=>item.id}
      renderItem={({item, id}) => 
     <Events event={item} key={id} navigation={navigation}/>

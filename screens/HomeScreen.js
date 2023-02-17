@@ -11,6 +11,7 @@ import client from '../api/client'
 import { COLORS } from '../constants/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native'
+import { validateYupSchema } from 'formik'
 
 const HomeScreen = () => {
 
@@ -32,6 +33,9 @@ const HomeScreen = () => {
       setUserToken(userToken)
          
           const token = userToken
+             
+          const userInfo = JSON.parse((value)) 
+          console.log(userInfo.campus)
 
       const config = {
         headers: {
@@ -43,7 +47,7 @@ const HomeScreen = () => {
       
       await client
         .get(
-          `/news/getIperuCampusNews/${currentPage}/2`,
+          `/news/get${userInfo?.campus}CampusNews/${currentPage}/5`,
           config
         )
         .then((res) => {
@@ -124,8 +128,6 @@ decelerationRate={"fast"}
 //  keyExtractor={item=>item.id}
 renderItem={({item, id}) => <Posts  post={item} key={id} navigation={navigation} />}
 ListFooterComponent={renderLoader}
-
-
 />
     </SafeAreaView>
     </>

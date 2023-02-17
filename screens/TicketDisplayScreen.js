@@ -40,8 +40,10 @@ const TicketDisplayScreen = () =>{
 		setUserInfo(JSON.parse(value))
 		setUserToken(userToken)
 	  
-
-
+          
+		const userInfo = JSON.parse((value))
+             
+		console.log(userInfo)
 	  
 		// run the getTicketDetailsFunction
 		setIsLoading(true)

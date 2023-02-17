@@ -67,7 +67,12 @@ export const SignInForm = () => {
 					console.log(`Async Storage error: ${e}`)
 				}
 				navigation.dispatch(StackActions.replace("Tab"));
+				setIsLoading(false)
 
+			}
+			else if (res.status === 401){
+				setIsLoading(false)
+				
 			}
 		}).catch((e)=>{
 			console.log(e)

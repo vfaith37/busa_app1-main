@@ -262,11 +262,12 @@ import {Location, Time } from "../constants/icons";
 
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 const { width, height } = Dimensions.get("screen");
 
-const imageW = width * 0.83;
+const imageW = width * 0.81;
 // const imageH = imageW * 1;
-const imageH = 335
+const imageH = 310
 
 const EventAbout = (props) => {
 	const { title, date, venue, time, image, ticketPrice, description } =
@@ -277,6 +278,12 @@ const EventAbout = (props) => {
 	const navigation = useNavigation();
 
 	//run the async to get email and also get title being passed as a prop
+
+
+	const newDate = date;
+const changedDate = moment(newDate, 'DD/MM/YYYY'); // parse the date string using the specified format
+
+const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as "Friday, 17 February"
 
 	const getData = async () => {
 		try {
@@ -423,7 +430,7 @@ const EventAbout = (props) => {
 								style={{
 									width: imageW,
 									height: imageH,
-									resizeMode: "cover",
+									resizeMode: "contain",
 									borderRadius: 10,
 								}}
 							/>
@@ -434,17 +441,16 @@ const EventAbout = (props) => {
 			<Indicator scrollx={scrollX} />
 			<View
 				style={{
-					// marginTop: 20,
 					height: 320,
 					width: imageW,
 					borderRadius: 30,
 					backgroundColor: "#fff",
-					// top: 35,
-					marginBottom: 20,
+					top: -5,
+					// marginBottom: 5,
 					alignSelf: "center",
 				}}
 			>
-				<View style={{ marginLeft: 10 }}>
+				<View style={{ marginLeft: 18 }}>
 					<Text
 						style={{
 							color: "#1b5bff",
@@ -452,9 +458,10 @@ const EventAbout = (props) => {
 							fontSize: 10,
 							fontWeight: "300",
 							textTransform: "uppercase",
+							top:10
 						}}
 					>
-						{date}
+						{formattedDate}
 					</Text>
 					<Text
 						style={{
@@ -463,6 +470,7 @@ const EventAbout = (props) => {
 							color: "#000",
 							fontFamily: "Poppins2",
 							textTransform: "uppercase",
+							top:6
 						}}
 					>
 						{title}
@@ -484,7 +492,7 @@ const EventAbout = (props) => {
 					<Text
 						style={{
 							marginTop: 5,
-							width: width * 0.8,
+							width: width * 0.7,
 							fontSize: 11,
 							fontFamily: "Poppins",
 							fontWeight: "300",

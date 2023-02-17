@@ -50,6 +50,11 @@ const validationSchema = Yup.object({
 export const Form = ({ component }) => {
 	const [userInfo, setUserInfo] = useState(null);
 	const [userToken, setUserToken] = useState(null);
+	const navigation = useNavigation();
+	const [image, setImage] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+
+	
 
 	const getData = async (values) => {
 		try {
@@ -105,8 +110,8 @@ export const Form = ({ component }) => {
 
 
 					if (res.status === 200) {
-						// navigation.dispatch(StackActions.replace("Tab"))
-						console.log("successful");
+						 navigation.dispatch(StackActions.replace("Tab"))
+						// navigation.navigate("EventScreen")
 					}
 					// if res is succesful, dispatch the user to home screen to see what he posted
 				})
@@ -126,8 +131,8 @@ export const Form = ({ component }) => {
 					console.log(res);
 
                      
-					if (res.status === 201) {
-						// navigation.dispatch(StackActions.replace("Tab"))
+					if (res.status === 200) {
+						navigation.dispatch(StackActions.replace("Tab"))
 						console.log("successful");
 					}
 					// if res is succesful, dispatch the user to home screen to see what he posted
@@ -159,9 +164,6 @@ export const Form = ({ component }) => {
 		// }
 	];
 
-	const navigation = useNavigation();
-	const [image, setImage] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
 
 	// const { width, height } = useWindowDimensions();
 
@@ -412,12 +414,13 @@ export const Form = ({ component }) => {
 												onChange={(event, selectedDate) => {
 													const currentDate = selectedDate || date;
 													setDate(currentDate);
-													setShow(false);
 													setFieldValue(
 														"date",
 														new Intl.DateTimeFormat("en-GB").format(date)
-													);
-													setFieldValue("time", date.toLocaleTimeString());
+														);
+														const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true});
+														setFieldValue("time", formattedTime);
+														setShow(false);
 												}}
 											/>
 										)}
@@ -513,7 +516,9 @@ export const Form = ({ component }) => {
 														"endDate",
 														new Intl.DateTimeFormat("en-GB").format(endDate)
 													);
-													setFieldValue("endTime", endDate.toLocaleTimeString());
+													const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true});
+
+													setFieldValue("endTime", formattedTime);
 												}}
 											/>
 										)} 

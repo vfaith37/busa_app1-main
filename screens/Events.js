@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 const {width, height} = Dimensions.get("window")
 import { useFonts } from 'expo-font'
 import { Icon } from '../constants/icons'
+import moment from 'moment'
 
 const Events = ({event}) => {
     const navigation = useNavigation()
@@ -67,13 +68,17 @@ const EventImage=({event, navigation})=>{
   }
 
   const EventItems=({event})=>{
-  
+    const newDate = event.date;
+    const changedDate = moment(newDate, 'DD/MM/YYYY'); // parse the date string using the specified format
+    
+    const formattedDay = changedDate.format('DD'); // format the date as "Friday, 17 February"
+    const formattedDMonth = changedDate.format('MMM'); 
 
     return(
     <>
 <View style={{width:56, height:62, borderRadius:20, backgroundColor:"#ffff", position:"absolute", right:40, top:20}}>
- {/* <Text style={{alignSelf:"center", fontWeight:"800", padding:5, fontSize:27, fontFamily:"Poppins2", color:"#000"}}>{event.miniDate.slice(0,2)+"\t"}</Text> */}
-{/* <Text style={{fontWeight:"700", fontSize:16, color:"#8c8c8c", lineHeight:23, alignSelf:"center", bottom:16, right:2, fontFamily:"Poppins2"}}>{ event.miniDate.charAt(3).toUpperCase()+event.miniDate.slice(4,`${event.miniDate.length}`)}</Text> */}
+ <Text style={{alignSelf:"center", fontWeight:"800", padding:5, fontSize:27, fontFamily:"Poppins2", color:"#000"}}>{formattedDay}</Text>
+<Text style={{fontWeight:"700", fontSize:16, color:"#8c8c8c", lineHeight:24, alignSelf:"center", bottom:16, right:2, fontFamily:"Poppins2"}}>{formattedDMonth}</Text>
  </View>
 
  <View>

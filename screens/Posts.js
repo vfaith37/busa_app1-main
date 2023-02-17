@@ -22,11 +22,27 @@ const {width, height}= Dimensions.get("screen")
 
 const PostImage=({post, navigation})=>{
 
+  const [isRecent, setIsRecent]= useState(false)
+
+  useEffect(() => {
+    const postDate = new Date(post.addedAt);
+    const currentDate = new Date();
+
+    // Calculate the difference in milliseconds between the post date and the current date
+    const diffInMs = currentDate.getTime() - postDate.getTime();
+
+    // Check if the post is less than 1 hour old
+    if (diffInMs < 3600000) {
+      setIsRecent(true);
+      // Remove the "recent" text after 1 hour
+      const timerId = setTimeout(() => setIsRecent(false), 3600000 - diffInMs);
+      return () => clearTimeout(timerId);
+    }
+  }, [post.addedAt]);
+
+
   let time = post.addedAt
 
-  // var timestamp = "2023-01-19T13:48:14.044+00:00";
-
-  
   var date = moment(time);
 
   var newTime = date.format('MMMM Do YYYY, h:mm:ss a')
@@ -37,13 +53,7 @@ const PostImage=({post, navigation})=>{
 
   console.log(presentDate)
   
-  // if(newTime === presentDate){
-  //   return(
-  //     <View>
-  //       <Text>sdshsfhgs</Text>
-  //     </View>
-  //   )
-  // }
+ 
 
 
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
@@ -57,13 +67,6 @@ const PostImage=({post, navigation})=>{
     // }).start(()=>fadeOut());
   }, [fadeAnim]);
 
-  // function fadeIn (){
-  //   Animated.timing(fadeAnim, {
-  //     toValue: 1,
-  //     duration: 90000,
-  //     useNativeDriver: true,
-  //   }).start;
-  // }
 
   function fadeOut (){
       Animated.timing(fadeAnim, {
@@ -71,10 +74,10 @@ const PostImage=({post, navigation})=>{
         duration: 10000,
         useNativeDriver: true,
       }).start
-      
-      // .start(()=>fadeIn());
-  
   }
+
+
+
 
  const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
   const onViewableItemsChanged = useRef((item)=>{
@@ -89,102 +92,109 @@ const PostImage=({post, navigation})=>{
       })
 
  
-      const PostIndicator = ({post}) => {
-  
-        return(
-      <View style={styles.pagination}
-      >
-    
-      {post.images.map((_, index, id) => {
-      
-         return (
-          <>
-         <View
-         key={index}
-         style={[
-           styles.dot,
-           currentSlideIndex == index &&{
-             backgroundColor: "#000",
-             width: 7,
-             height:7,
-             borderRadius:10,
-           }
-         ]}
-       />
-      {
-        currentSlideIndex==index &&(
-          <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
-          opacity:fadeAnim,
-        }}
-        key={id.toString()}
-          >
-            <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} key={index}>{index+1}/{post.images.length}</Text>
-          </Animated.View>
-        )
-      }
-        </>
-       ) 
-      })
-      } 
-      
-      </View>
-        )
-      }
-
       // const PostIndicator = ({post}) => {
-      //   return (
-      //     <View style={styles.pagination}>
-      //       {post.images.length > 1 && post.images.map((_, index) => (
-      //         <View
-      //         key={index}>
-      //           <View
-      //             style={[
-      //               styles.dot,
-      //               currentSlideIndex === index && {
-      //                 backgroundColor: "#000",
-      //                 width: 7,
-      //                 height: 7,
-      //                 borderRadius: 10,
-      //               },
-      //             ]}
-      //           />
-      //           {currentSlideIndex === index && (
-      //             <Animated.View
-      //               style={{
-      //                 backgroundColor: "#d9d9d9",
-      //                 width: 30,
-      //                 height: 15,
-      //                 borderRadius: 20,
-      //                 bottom: 250,
-      //                 position: "absolute",
-      //                 right: -130,
-      //                 opacity: fadeAnim,
-      //               }}
-      //               key={index.toString()}
-      //             >
-      //               <Text
-      //                 style={{
-      //                   color: "#000",
-      //                   fontFamily: "Poppins",
-      //                   left: 3,
-      //                   alignItems: "center",
-      //                   top: -2,
-      //                   position: "absolute",
-      //                 }}
-      //               >
-      //                 {index + 1}/{post.images.length}
-      //               </Text>
-      //             </Animated.View>
-      //           )}
-      //         </View>
-      //       ))}
+  
+      //   return(
+      // <View style={styles.pagination}
+      // >
+    
+      // {post.images.map((_, index, id) => {
+      //    return (
+      //     <>
+      //     {post.images.length>=1 ?
+      //      <View
+      //      key={index}
+      //      style={[
+      //        styles.dot,
+      //        currentSlideIndex == index &&{
+      //          backgroundColor: "#000",
+      //          width: 7,
+      //          height:7,
+      //          borderRadius:10,
+      //        }
+      //      ]}
+      //    />
+          
+      //     : null
+      //     }
+      
 
-      //       {/* <View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130}}>
-      //         <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute"}}>{currentSlideIndex + 1}/{post.images.length}</Text>
-      //       </View> */}
-      //     </View>
-      //   );
-      // };
+      // {
+      //   currentSlideIndex==index &&(
+      //     <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
+      //     opacity:fadeAnim,
+      //   }}
+      //   key={id.toString()}
+      //     >
+      //       <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} key={index}>{index+1}/{post.images.length}</Text>
+      //     </Animated.View>
+      //   )
+      // }
+      //   </>
+      //  ) 
+      // })
+      // } 
+      
+      // </View>
+      //   )
+      // }
+
+      const PostIndicator = ({post}) => {
+        return (
+          <View style={styles.pagination}>
+            {post.images.length > 1 && post.images.map((_, index) => (
+              <View
+              key={index}>
+                <View
+                  style={[
+                    styles.dot,
+                    currentSlideIndex === index && {
+                      backgroundColor: "#000",
+                      width: 7,
+                      height: 7,
+                      borderRadius: 10,
+                    },
+                  ]}
+                />
+                {currentSlideIndex === index && (
+                  <Animated.View
+                    style={{
+                      backgroundColor: "#d9d9d9",
+                      width: 30,
+                      height: 15,
+                      borderRadius: 20,
+                      bottom: 250,
+                      position: "absolute",
+                      right: -150,
+                      opacity: fadeAnim,
+                    }}
+                    key={index.toString()}
+                  >
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontFamily: "Poppins",
+                        left: 3,
+                        alignItems: "center",
+                        top: -2,
+                        position: "absolute",
+                      }}
+                    >
+                      {index + 1}/{post.images.length}
+                    </Text>
+                  </Animated.View>
+                )}
+              </View>
+            ))}
+{/* 
+{post.images.length ===1 &&
+            <View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130}}>
+              <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute"}}>{currentSlideIndex + 1}/{post.images.length}</Text>
+            </View>
+            } */}
+          </View>
+        );
+      };
       
 
 
@@ -231,6 +241,11 @@ const PostImage=({post, navigation})=>{
 />
 </View> 
 <PostIndicator post={post}/>
+{isRecent && 
+<View style={{width:55, height:18, backgroundColor:"#fff", borderRadius:2, left:30, position:"absolute", top:40,}}>
+<Text style={{color:"#000", fontSize:10, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
+</View>
+}
 </View> 
 
   )
@@ -241,14 +256,12 @@ const PostImage=({post, navigation})=>{
 
 
 const PostFooter=({post})=>{ 
+  
   let time = post.addedAt
 
-  // var timestamp = "2023-01-19T13:48:14.044+00:00";
-
-  
   var date = moment(time);
-
-  var newTime = date.format('MMMM Do YYYY')
+  
+  var newTime = date.format('MMM D, YYYY')
  
   return(
   <>
@@ -264,7 +277,7 @@ const PostFooter=({post})=>{
     }}>{post.title}</Text> 
     <Text style={{fontWeight:"300", fontSize:10, color:"#303030",fontFamily:"Poppins2", lineHeight:13 }}> {newTime}</Text>
     <Text style={{fontWeight:"500", fontSize:10, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins"}}>
-      {/* {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'} */}
+      {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>
         </View>
   </>
@@ -285,15 +298,18 @@ export const Header=()=>{
 
 
 const Posts = ({post, navigation}) => {
+
+
   return (
     <View
     style={{flex:1,
-     marginBottom:110
-      }}
+marginBottom:110      }}
     >
       <StatusBar backgroundColor={COLORS.white}/>
+      <View>
          <PostImage post={post} navigation ={navigation}/>
         <PostFooter post={post}/>
+        </View>
     </View>
   )
 }
