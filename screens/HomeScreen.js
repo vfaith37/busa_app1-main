@@ -43,7 +43,7 @@ const HomeScreen = () => {
       
       await client
         .get(
-          `/news/getMainCampusNews/${currentPage}/2`,
+          `/news/getIperuCampusNews/${currentPage}/2`,
           config
         )
         .then((res) => {
@@ -112,7 +112,7 @@ const HomeScreen = () => {
       <StatusBar backgroundColor={COLORS.white}/>
     <SafeAreaView style={{flex:1, top:100}}>
 <FlatList
- onEndReachedThreshold={0.5}
+ onEndReachedThreshold={0.7}
 //  ref={ref}
 //  onMomentumScrollEnd={updateCurrentSlideIndex}
 onEndReached={loadMorePosts}
