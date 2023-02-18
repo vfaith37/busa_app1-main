@@ -516,8 +516,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 								paddingTop: 15,
 								fontFamily: "Poppins2",
 								fontWeight: "500",
-								fontSize: 22,
-								lineHeight: 22,
+								fontSize: 20,
+								lineHeight: 20,
 							}}
 						>
 							{formattedNumber}
@@ -530,7 +530,9 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 									borderRadius: 10,
 									backgroundColor: "#004fc7",
 									alignSelf: "center",
-									marginLeft: 80,
+									// marginRight: -30,
+									left:60,
+									position:"absolute"
 								}}
 							>
 								<Text

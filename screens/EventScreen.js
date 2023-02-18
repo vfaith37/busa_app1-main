@@ -46,8 +46,11 @@ const EventsScreen = () => {
       setIsLoading(true);
 
 
-      await  axios.get(`https://code-6z3x.onrender.com/api/event/get${userInfo.campus}CampusEvents/${currentPage}/5`, config
-      //${userInfo?.campus.charAt(0).toUppercase()}
+      await 
+       axios.get(
+        // `https://code-6z3x.onrender.com/api/event/get${userInfo.campus}CampusEvents/${currentPage}/5`, config
+        `https://code-6z3x.onrender.com/api/event/getMainCampusEvents/${currentPage}/5`, config
+    
        )
        .then((res)=>{
         if (res.data.data.length === 0) {

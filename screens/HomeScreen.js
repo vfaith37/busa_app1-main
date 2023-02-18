@@ -11,7 +11,6 @@ import client from '../api/client'
 import { COLORS } from '../constants/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native'
-import { validateYupSchema } from 'formik'
 
 const HomeScreen = () => {
 
@@ -47,7 +46,9 @@ const HomeScreen = () => {
       
       await client
         .get(
-          `/news/get${userInfo?.campus}CampusNews/${currentPage}/5`,
+          // `/news/get${userInfo?.campus}CampusNews/${currentPage}/5`,
+          `/news/getMainCampusNews/${currentPage}/5`,
+
           config
         )
         .then((res) => {

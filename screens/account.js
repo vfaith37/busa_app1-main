@@ -107,7 +107,7 @@ export const Account = () => {
 					activeOpacity={0.7}
 					onPress={() => {
 						setVisible(true);
-						setActionTriggered("Action_1");
+						setActionTriggered("Action_3");
 					}}
 				>
 					<View style={styles.titleContainer}>
@@ -184,7 +184,7 @@ export const Account = () => {
 										/>
 										<FormInput
 											value={confirmPassword}
-											error={touched.confirmPassword && errors.confirmPassword}
+											error={touched.confirmpassword && errors.confirmpassword}
 											onChangeText={handleChange("confirmPassword")}
 											onBlur={handleBlur("confirmPassword")}
 											autoCapitalize="none"
@@ -254,7 +254,10 @@ export const Account = () => {
 								Are you sure you want to deactivate your account? This will
 								erase all data you have on this app.
 							</Text>
-							<TouchableOpacity onPress={() => setVisible(false)}>
+
+
+						
+						<View>
 								<View
 									style={{
 										flexDirection: "row",
@@ -262,6 +265,11 @@ export const Account = () => {
 										marginTop: 10,
 									}}
 								>
+
+									<TouchableOpacity
+									onPress={() => setVisible(false)}
+									activeOpacity={0.5}
+									>
 									<View
 										style={{
 											width: 126,
@@ -278,6 +286,10 @@ export const Account = () => {
 											Cancel
 										</Text>
 									</View>
+                                    </TouchableOpacity>
+
+
+									<TouchableOpacity>
 									<View
 										style={{
 											width: 126,
@@ -295,8 +307,9 @@ export const Account = () => {
 											Confirm
 										</Text>
 									</View>
+									</TouchableOpacity>
 								</View>
-							</TouchableOpacity>
+								</View>
 						</View>
 					</>
 				) : null}
