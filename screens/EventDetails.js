@@ -270,7 +270,7 @@ const imageW = width * 0.81;
 const imageH = 310
 
 const EventAbout = (props) => {
-	const { title, date, venue, time, image, ticketPrice, description } =
+	const { title, date, venue, time, image, ticketPrice, content } =
 		props.route.params;
 
 	const [userInfo, setUserInfo] = useState(null);
@@ -489,6 +489,7 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 						{Location}
 						{venue}
 					</Text>
+            {/* if the text should prob be in a scroll view */}
 					<Text
 						style={{
 							marginTop: 5,
@@ -500,8 +501,9 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 							lineHeight: 12.5,
 						}}
 					>
-						{description}
+						{content}
 					</Text>
+
 					<View
 						style={{
 							position: "absolute",

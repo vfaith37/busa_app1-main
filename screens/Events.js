@@ -61,7 +61,7 @@ const EventImage = ({ event, navigation }) => {
 										time: event.time,
 										venue: event.venue,
 										ticketPrice: event.ticketPrice,
-										description: event.description,
+										content: event.content,
 									})
 								}
 							>

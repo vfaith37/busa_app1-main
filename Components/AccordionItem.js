@@ -78,7 +78,7 @@ export const AccordionItem = () => {
 							<Text style={styles.text}>Course of study</Text>
 							<TextInput
 								editable={false}
-								placeholder="Computer Science"
+								placeholder={userInfo?.course}
 								style={[styles.textInput, { width: 205 }]}
 								placeholderTextColor="#717171"
 							/>
@@ -87,7 +87,7 @@ export const AccordionItem = () => {
 							<Text style={styles.text}>Gender</Text>
 							<TextInput
 								editable={false}
-								placeholder="Male"
+								placeholder= {userInfo?.gender}
 								style={[styles.textInput, { width: 75 }]}
 								placeholderTextColor="#717171"
 							/>
