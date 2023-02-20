@@ -113,7 +113,7 @@ const Next = async (values) => {
   try {
     const title = values.eventTitle
     console.log(title)
-         const time = "5:15PM"
+         const time = "11:45PM"
          console.log(time)
 
    await  AsyncStorage.setItem("eventTitle", title)
