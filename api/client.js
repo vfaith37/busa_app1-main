@@ -7,7 +7,7 @@ import axios from 'axios';
 // });
 
 export default axios.create(
-    { baseURL: 'https://code-6z3x.onrender.com/api' , 
+    { baseURL: 'https://finalissima.onrender.com/api' , 
     // adapter: cache.adapter,
 },
     

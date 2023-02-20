@@ -11,13 +11,15 @@ export const AuthProvider =({children})=>{
     const [isLoading, setIsLoading] = useState(false)
     const  [userToken, setUserToken]= useState(null)
    const [userInfo, setUserInfo] = useState(null)
-
+   const [eventTitle, setEventTitle] = useState(null)
+   const [eventTime, setEventTime] = useState(null)
 
     const login = async (email,password) => {
     const navigation = useNavigation()
     const [isLoading, setIsLoading] = useState(false);
     const [userToken, setUserToken]= useState(null)
     const [userInfos, setUserInfo] = useState(null)
+    
 
     await axios.post("https://no-vex-abeg.onrender.com/api/signin", {
        email, password
@@ -64,14 +66,20 @@ export const AuthProvider =({children})=>{
 };
 
 
+
    
 
    const logout = async()=>{
     setIsLoading(true)
     setUserToken(null)
+    setEventTime(null)
+    setEventTitle(null)
+
     try{
   await  AsyncStorage.removeItem("userToken")
    await AsyncStorage.removeItem("userInfo")
+   await AsyncStorage.removeItem("eventTitle")
+   await AsyncStorage.removeItem("eventTime")
 }catch(e){
     console.log(`${e}`)
 }

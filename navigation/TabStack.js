@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { EventStack } from "./EventStack";
-import { ProfileStack } from "./ProfileStack";
+import  ProfileStack  from "./ProfileStack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { COLORS } from "../constants/theme";
 import {HomeStack} from "./HomeStack"

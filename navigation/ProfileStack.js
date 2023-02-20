@@ -1,15 +1,49 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Profile } from "../screens/setting";
-import { Form } from "../Components/ProductAdd"
 import { Notification } from "../Components/Notification";
 import { Account } from "../screens/account";
 import UploadEventScreen from "../screens/UploadEventScreen";
 import UploadPostScreen from "../screens/UploadPostScreen";
 import ScanTicketScreen from "../screens/ScanTicketScreen";
 import TicketDisplayScreen from "../screens/TicketDisplayScreen";
+import EventsListScreen from "../screens/EventsListScreen";
+import EventsScreen from "../screens/EventScreen";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
+
+
+// here the dunctionality is checked
 
 const Stack = createStackNavigator();
-export function ProfileStack() {
+
+
+const ProfileStack = ()=> {
+
+// const [eventTitle, setEventTitle] = useState(null)
+// const [eventTime, setEventTime] = useState(null)
+
+// const checkEventTitleandTIme = async()=>{
+// 	try{
+//  const eventTitle = await AsyncStorage.getItem("eventTitle")
+//  const eventTime = await AsyncStorage.getItem("eventTime")
+//  console.log(eventTitle)
+//  console.log(eventTime)
+
+//  if(eventTitle !== null && eventTime !== null){
+// 	setEventTime(eventTime)
+// 	setEventTitle(eventTitle)
+//  }
+
+// 	}catch(e){
+// 		console.log(`${e}`)
+// 	}
+// }
+// useEffect(()=>{
+// 	checkEventTitleandTIme()
+// },[])
+
 	return (
 		<Stack.Navigator
 			// initialRouteName="ProfileScreen"
@@ -18,12 +52,14 @@ export function ProfileStack() {
 			<Stack.Screen component={Profile} name="ProfileScreen" />
 			<Stack.Screen component={Account} name="AccountScreen" />
 			<Stack.Screen component={Notification} name="NotificationScreen"/> 
-			<Stack.Screen component={ScanTicketScreen} name="ScanTicketScreen"/> 
 			<Stack.Screen component={TicketDisplayScreen} name="TicketScreen"/> 
 			<Stack.Screen component={UploadPostScreen} name="UploadPostScreen"/> 
 			<Stack.Screen component={UploadEventScreen} name="UploadEventScreen"/> 
-
-			
+			<Stack.Screen component={EventsScreen} name="EventScreen"/> 
+			<Stack.Screen component={EventsListScreen} name="EventList"/> 
+            <Stack.Screen component={ScanTicketScreen} name="ScanTicketScreen"/>	
 		</Stack.Navigator>
 	);
 }
+
+export default ProfileStack

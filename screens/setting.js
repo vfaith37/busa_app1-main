@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect,  useRef, useState } from "react";
 import {
 	Dimensions,
 	StyleSheet,
@@ -31,6 +31,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import BottomSheet from "../Components/Bottomsheet";
+import moment from "moment";
 const {  width, height } = Dimensions.get("screen");
 
 export const Profile = () => {
@@ -42,15 +43,23 @@ export const Profile = () => {
 		bottomSheetRef.current.expand();
 	  }, []);
 
-	
+	  const navigation = useNavigation();
 		const [visible, setVisible] = useState(false);
           const [userInfo, setUserInfo] = useState(null)
           const [userToken, setUserToken] = useState(null)
+		  const [eventTitle, setEventTitle] = useState(null)
+           const [eventTime, setEventTime] = useState(null)
+
+
 
   const  getData = async () => {
 	try {
 	  const value = await AsyncStorage.getItem('userInfo')
 	  const userToken = await AsyncStorage.getItem("userToken")
+
+
+	  // since async storage is global, get eventTitle and eventTime are stored on async storage
+	  //
 
 	  if(value !== null && userToken !==null) {
 		setUserInfo(JSON.parse(value))
@@ -65,7 +74,87 @@ export const Profile = () => {
 	getData()
 	},[])
 
-	const navigation = useNavigation();
+
+	/* const scanLogic=()=>{
+
+		// remember, there must be a protect function here to make sure this guy has a role of 2
+		
+
+
+		try{
+			// here the item is gotten
+
+		}catch(e){
+			console.log(`${e})
+		}
+
+		// since async storage is global, they are retrieved here {eventTitle and eventTime}
+
+
+       // presentTime = actual time
+	   // evenTime =eventTime
+	   // presentTime > eventTime  ; (eventTime has elapsed)
+	   setEventTime(null)
+
+
+		// here event title is used
+		for every event Title, there must be an eventTime attached with it
+
+		// if users eventTitle!==null and eventTime hasn't elapsed  (eventTime !==null)
+		// navigate the user to scanTicketscreen  ==here user has picked what he's scanning for and the time hasn't elapsed
+
+
+
+		else if eventTitle ==null and eventTime ==null  
+		 navigate to see list of events i.e initial landing. 
+		here, the user hasn't picked anything, so he is navigated to this screen, to check list of events if they are open
+
+                                                  
+		// else if time has elapsed (eventTime ==null), that means there must be an eventTitle {eventTitle !==null}, therefore setEventTitle and eventTime to null, navigate the user to see the list of events (EventsList page)
+
+	}
+		
+		*/
+               
+
+		const checkEvent = async () => {
+			try {
+			  const eventTitle = await AsyncStorage.getItem('eventTitle');
+			  const eventTime = await AsyncStorage.getItem('eventTime');
+			  
+			  if (eventTitle !== null && eventTime !== null) {
+				const endTime = moment(eventTime, 'h:mmA');
+				console.log(eventTime)
+				console.log(endTime)
+
+				const currentTime = moment();
+				if (currentTime.isAfter(endTime)) {
+				  // The time for the event has ended, navigate to event list
+				  setEventTime(null);
+				  setEventTitle(null);
+				  try {
+					await AsyncStorage.removeItem('eventTime');
+					await AsyncStorage.removeItem('eventTitle');
+				  } catch (e) {
+					console.log(e);
+				  }
+				  navigation.navigate('EventList');
+				} else {
+				  // The event is ongoing, navigate to scan ticket screen
+				  setEventTime(eventTime);
+				  setEventTitle(eventTitle);
+				  navigation.navigate('ScanTicketScreen');
+				}
+			  } else {
+				// The user has not picked anything yet, navigate to event list
+				navigation.navigate('EventList');
+			  }
+			} catch (e) {
+			  console.log(e);
+			}
+		  };
+		  
+		  
 
 
 	const verifyPassword = async(values)=>{
@@ -205,9 +294,8 @@ export const Profile = () => {
                   <>
 				<TouchableOpacity
 				activeOpacity={0.7}
-				onPress={() => {
-					navigation.navigate("ScanTicketScreen")
-					}}
+					// here the functionality is chehcked before he is navigated. of 
+					onPress ={()=> checkEvent()}
 			>
 				
 				 <SettingsButton

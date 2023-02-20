@@ -110,10 +110,10 @@ export const Form = ({ component }) => {
 
 
 					if (res.status === 200) {
-						 navigation.dispatch(StackActions.replace("Tab"))
-						// navigation.navigate("EventScreen")
+						 navigation.dispatch(StackActions.replace("EventScreen"))
+	
+						 // if res is succesful, dispatch the user to event screen to see what he posted
 					}
-					// if res is succesful, dispatch the user to home screen to see what he posted
 				})
 				.catch((e) => {
 					console.log(`${e}`);
@@ -205,8 +205,6 @@ export const Form = ({ component }) => {
 	const [newMode, setNewMode] = useState("date")
 
 	const [date, setDate] = useState(new Date());
-	// const [time, setTime] = useState(new date())
-	// const [endTime, setEndTime] = useState(new date())
 	const [endDate, setEndDate] = useState(new Date())
 	const [show, setShow] = useState(false);
 	const[view, setView] = useState(false)
@@ -418,7 +416,7 @@ export const Form = ({ component }) => {
 														"date",
 														new Intl.DateTimeFormat("en-GB").format(date)
 														);
-														const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true});
+														const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true}).replace(" ", "");
 														setFieldValue("time", formattedTime);
 														setShow(false);
 												}}
@@ -516,7 +514,7 @@ export const Form = ({ component }) => {
 														"endDate",
 														new Intl.DateTimeFormat("en-GB").format(endDate)
 													);
-													const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true});
+													const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true}).replace(" ", "");
 
 													setFieldValue("endTime", formattedTime);
 												}}
