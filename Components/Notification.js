@@ -1,17 +1,95 @@
-import { View, Text, Dimensions, Switch } from "react-native";
-import React from "react";
-import { Back } from "../constants/icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	Switch,
+	TouchableOpacity,
+	Dimensions,
+	Platform,
+} from "react-native";
+import * as Notifications from "expo-notifications";
 import { COLORS } from "../constants/theme";
+import { Back } from "../constants/icons";
 const { width } = Dimensions.get("screen");
+
 export const Notification = () => {
-	const navigation = useNavigation();
-	const [isEnabled, setIsEnabled] = React.useState(false);
-	const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+	const [isEnabled, setIsEnabled] = useState(true);
+	const [expoPushToken, setExpoPushToken] = useState(null);
+	const [notification, setNotification] = useState(false);
+
+	useEffect(() => {
+		// Get the current permission status
+		Notifications.getPermissionsAsync().then((statusObj) => {
+			setIsEnabled(statusObj.granted);
+		});
+
+		// Listen for incoming notifications
+		Notifications.addNotificationReceivedListener((notification) => {
+			setNotification(notification);
+		});
+
+		// Get the Expo push token
+		Notifications.getExpoPushTokenAsync().then((pushToken) => {
+			console.log(pushToken);
+			setExpoPushToken(pushToken);
+			// Send the Expo push token to the backend
+			sendPushTokenToBackend(pushToken);
+		});
+
+		// Remove the listener when the component is unmounted
+		return () => {
+			Notifications.removeNotificationSubscription(listener.current);
+		};
+	}, []);
+
+	const toggleSwitch = () => {
+		setIsEnabled((previousState) => !previousState);
+		if (!isEnabled) {
+			// Request permission to display notifications
+			Notifications.requestPermissionsAsync().then((statusObj) => {
+				console.log("Permission:", statusObj);
+				console.log(expoPushToken);
+			});
+		} else {
+			// Revoke permission to display notifications
+			Notifications.setNotificationHandler({
+				handleNotification: async () => ({
+					shouldShowAlert: false,
+					shouldPlaySound: false,
+					shouldSetBadge: false,
+				}),
+			});
+		}
+	};
+
+	const sendPushTokenToBackend = async (pushToken) => {
+		try {
+			const response = await fetch("https://example.com/push-token", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					pushToken: pushToken,
+					OS: Platform.OS,
+				}),
+			});
+			console.log("Push token sent:", response.status);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	return (
 		<View style={{ marginLeft: 30, marginRight: 30, top: 40 }}>
-			<View style={{ flexDirection: "row", paddingTop: 20, justifyContent: "space-between" }}>
+			<View
+				style={{
+					flexDirection: "row",
+					paddingTop: 20,
+					justifyContent: "space-between",
+				}}
+			>
 				<TouchableOpacity
 					activeOpacity={0.7}
 					onPress={() => navigation.goBack()}
@@ -24,9 +102,9 @@ export const Notification = () => {
 						fontWeight: "600",
 						textAlign: "center",
 						color: COLORS.black,
-                        marginRight: width / 6 ,
+						marginRight: width / 6,
 						paddingBottom: 20,
-						fontFamily:"Poppins3",
+						fontFamily: "Poppins3",
 						// alignContent:"y"
 					}}
 				>
@@ -39,7 +117,7 @@ export const Notification = () => {
 					fontWeight: "600",
 					paddingBottom: 5,
 					color: COLORS.black,
-					fontFamily:"Poppins2"
+					fontFamily: "Poppins2",
 				}}
 			>
 				Notification Settings
@@ -51,7 +129,7 @@ export const Notification = () => {
 					paddingBottom: 5,
 					fontWeight: "300",
 					color: COLORS.black,
-					fontFamily:"Poppins"
+					fontFamily: "Poppins",
 				}}
 			>
 				We may still send you important notifications about your account outside
@@ -63,7 +141,7 @@ export const Notification = () => {
 					paddingBottom: 8,
 					color: COLORS.black,
 					fontWeight: "500",
-					fontFamily:"Poppins"
+					fontFamily: "Poppins",
 				}}
 			>
 				Interactions
@@ -85,7 +163,7 @@ export const Notification = () => {
 						fontWeight: "600",
 						color: COLORS.black,
 						marginLeft: 5,
-						fontFamily:"Poppins"
+						fontFamily: "Poppins",
 					}}
 				>
 					Notifications
@@ -101,3 +179,17 @@ export const Notification = () => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	permission: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginVertical: 10,
+	},
+});
