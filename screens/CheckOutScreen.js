@@ -12,31 +12,27 @@ const CheckOutScreen =  ({route}) => {
 }
 
 
-const CheckOutModal =(props)=>{
-  const navigation= useNavigation()
-  const {authorization_url} = props.route.params
+const CheckOutModal = (props) => {
+  const navigation = useNavigation();
+  const { authorization_url } = props.route.params;
 
-  // const navigateBack = async()=>{
-  //   const res = await axios.get("",{
+  const handleNavigationStateChange = (newState) => {
+    const url = newState.url;
+    if (url.includes("success")) {
+      navigation.replace("EventScreen");
+    }
+  };
 
-  // }).then((res)=>{
-  //      if(res ===)
-
-  // })
   
+  return (
+    <WebView
+      source={{ uri: authorization_url }}
+      style={{ marginTop: 40 }}
+      onNavigationStateChange={handleNavigationStateChange}
+    />
+  );
+};
 
-   
-    
-
-return(
-  <WebView 
-  source={{ uri: authorization_url }}
-  style={{ marginTop: 40 }}
-  // onNavigationStateChange={}
-/>
-)
-
-}
  
 
 export default CheckOutScreen

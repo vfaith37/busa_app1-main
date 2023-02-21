@@ -237,7 +237,7 @@ const EventsScreen = () => {
 
   const renderItem = useCallback(
     ({ item, index }) => (
-      <Events event={item} key={index} navigation={navigation} />
+      <Events event={item} key={item.id} navigation={navigation} />
     ),
     [navigation]
   );
@@ -252,7 +252,7 @@ const EventsScreen = () => {
         bounces={false}
         decelerationRate={'fast'}
         ListFooterComponent={renderLoader}
-         keyExtractor={item => item.id}
+        //  keyExtractor={item => item.id}
         renderItem={renderItem}
       />
     </SafeAreaView>
