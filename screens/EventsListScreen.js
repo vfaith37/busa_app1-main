@@ -22,7 +22,7 @@ const EventsListScreen = () => {
   const [events, setEvents] = useState([])
   const [userInfo, setUserInfo] = useState(null);
 	const [userToken, setUserToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation()
 	
@@ -35,77 +35,193 @@ const EventsListScreen = () => {
 
 
 //here, the auth role is also checked before he can be allowed to scan
-const getListofEVents = async()=>{
 
-  const today = moment().format('DD/MM/YYYY');
-  console.log(today)
+// const getListofEVents = async()=>{
 
-  try{
+//   const today = moment().format('DD/MM/YYYY');
+//   console.log(today)
+
+//   try{
      
-    const value = await AsyncStorage.getItem('userInfo')
-	  const token = await AsyncStorage.getItem('userToken')
+//     const value = await AsyncStorage.getItem('userInfo')
+// 	  const token = await AsyncStorage.getItem('userToken')
 
-    if (value !== null && token !== null) {
-      setUserInfo(JSON.parse(value));
-      setUserToken(token);
+//     if (value !== null && token !== null) {
+//       setUserInfo(JSON.parse(value));
+//       setUserToken(token);
     
+//      const userInfo = JSON.parse((value))
 
-    const formData = new FormData();
-    formData.append("date", today);
+// 	 console.log(userInfo.campus)
+// 	  const newToken = token
+// 	  console.log(newToken)
 
-          const newToken = token
+
+
+
+
+//     const formData = new FormData();
+//     formData.append("date", today);
+// 	formData.append("campus", userInfo.campus);
+	
+
 
      
-    const config = {
-      headers: {
-        Authorization: `Bearer ${newToken}`,
-      },
-    }
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${newToken}`,
+//       },
+//     }
 
 
-      await client
-      .get(
-        `event/getEventByDate`,
-      config, formData
+// 	// request is made based on user's campus and StartDate of the event
+//       await client
+//       .post(
+//         `event/getEventByDate`, formData,
+//       config,
         
-      )
-      .then((res) => {
-        console.log(res);
+//       )
+//       .then(async (res) => {
+//         console.log(res.data.data);
 
-
-
-        if (res.data.data.length === 0) {
-          setEvents([]);
-        }
+// 		 if(res.status === 200){
+ 
+// 		if (res.data.data.length === 0) {
+//           setEvents([]);
+//         }
         
-        else {
+//         else {
 
-          const eventsList = res.data.data.map((event) => ({
-            label: event.title,
-            value: event.title,
-            endTime : event.endTIme
-          }
-          ));
-          setEvents(eventsList);
-          // AsyncStorage.setItem("eventTime", eventsList.endTime)
-        }
+// 			if(res.data.data.length ===1){
+// 				const items=[
+// 					{
+// 					label: res.data.data.title,
+// 					value: res.data.data.title,
+// 					endTIme: res.data.data.endTime
+// 					}
+
+// 				]
+// 				setEvents(items)
+// 				await AsyncStorage.setItem("eventTime", items.endTime)
+
+
+// 			}
+		
+// 			if(res.data.data.length >1){
+
+// 				const eventsList = res.data.data.map((event) => ({
+// 				  label: event.title,
+// 				  value: event.title,
+// 				  endTime : event.endTIme
+// 				}
+// 				));
+// 				setEvents(eventsList);
+//           await AsyncStorage.setItem("eventTime", eventsList.endTime)
+
+// 			}
+
+          
+
+//         }
+// 		 }
+
+
+      
        
-      })
-      .catch((e) => {
-        console.log(`${e}`);
-      });
-       }
+//       })
+//       .catch((e) => {
+//         console.log(`${e}`);
+//       });
+//        }
 
-  }catch(e){
+//   }catch(e){
 
-    console.log(`${e}`)
-  }
+//     console.log(`${e}`)
+//   }
 
-}
+// }
 
-useEffect(()=>{
-  getListofEVents()
-}, [])
+
+
+
+
+
+const getListofEVents = async () => {
+	const today = moment().format('DD/MM/YYYY');
+  
+	try {
+	  const value = await AsyncStorage.getItem('userInfo');
+	  const token = await AsyncStorage.getItem('userToken');
+  
+	  if (value !== null && token !== null) {
+		setUserInfo(JSON.parse(value));
+		setUserToken(token);
+  
+		const userInfo = JSON.parse(value);
+		const newToken = token;
+  
+		const formData = new FormData();
+		formData.append('date', today);
+		formData.append('campus', userInfo.campus);
+  
+		const config = {
+		  headers: {
+			Authorization: `Bearer ${newToken}`,
+		  },
+		};
+
+		setIsLoading(true)
+  
+		await client
+		  .post('event/getEventByDate', formData, config)
+		  .then(async (res) => {
+			console.log(res.data.data)
+			if (res.status === 200) {
+
+			  if (res.data.data.length === 0) {
+				setEvents([]);
+				setIsLoading(false)
+			  } else {
+
+				if (res.data.data.length === 1) {
+				  const items = [
+					{
+					  label: res.data.data[0].title,
+					  value: res.data.data[0].title,
+					  endTime: res.data.data[0].endTime,
+					},
+				  ];
+				  setEvents(items);
+				  await AsyncStorage.setItem('eventTime', items[0].endTime);
+				  setIsLoading(false)
+				} 
+				
+				else if (res.data.data.length > 1) {
+				  const eventsList = res.data.data.map((event) => ({
+					label: event.title,
+					value: event.title,
+					endTime: event.endTime,
+				  }));
+				  setEvents(eventsList);
+				setIsLoading(false)
+				}
+			  }
+			}
+			setIsLoading(false)
+		  })
+		  .catch((e) => {
+			console.log(e);
+		  });
+	  }
+	} catch (e) {
+	  console.log(e);
+	}
+  };
+  
+  useEffect(() => {
+	getListofEVents();
+  }, []);
+  
 
 
 
@@ -113,11 +229,9 @@ const Next = async (values) => {
   try {
     const title = values.eventTitle
     console.log(title)
-         const time = "11:45PM"
-         console.log(time)
 
    await  AsyncStorage.setItem("eventTitle", title)
-   await AsyncStorage.setItem("eventTime",time )
+   
     console.log(values)
 
 navigation.dispatch(StackActions.replace("ScanTicketScreen",{
@@ -151,12 +265,16 @@ const EventsList =[
 
   return (
 
+
+	
+
     <View>
 
-       {/* {isLoading 
+       {
+	   isLoading 
        ?
         (
-             <View>
+             <View style={{top:150}}>
       <ActivityIndicator size="large" color="#0000ff"/>
       </View>
     )
@@ -164,10 +282,12 @@ const EventsList =[
       events.length === 0 ? (
           
         <View>
-      <Text> No events available for Today</Text>
+		{/* possibly add more designs */}
+      <Text style={{color:"red", top:150, left:20, fontFamily:"Poppins", alignItems:"center"}}> No events available for Today! pls check back</Text>
       </View>
 
-    ) : ( */}
+    ) : (
+
 
       <Formik
 				initialValues={{
@@ -200,8 +320,7 @@ const EventsList =[
 									inputSearchStyle={styles.inputSearchStyle}
 									iconStyle={styles.iconStyle}
 									itemTextStyle={styles.textItem}
-									data={EventsList}
-                  // items ={events}
+									data={events}
 									maxHeight={300}
 									labelField="label"
 									valueField="value"
@@ -210,7 +329,11 @@ const EventsList =[
                   searchPlaceholder="Search..."
 									value={eventTitle}
 									onChangeText={handleChange("eventTitle")}
-									onChange={(value) => setFieldValue("eventTitle", value.value)}
+									onChange={
+										(value) =>{ setFieldValue("eventTitle", value.value)
+										AsyncStorage.setItem("eventTime", value.endTime);
+								}
+							}
 								/>
 							</View>
 
@@ -241,10 +364,21 @@ const EventsList =[
 							</Pressable>
               </View>    
 					);
-				}}
+				}
+				
+				
+				}
+
+
+
+
 			</Formik>
 
-      {/* // )} */}
+      )} 
+
+
+
+	  
     </View>
   )
 }

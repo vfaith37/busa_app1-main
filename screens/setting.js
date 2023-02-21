@@ -273,7 +273,7 @@ export const Profile = () => {
 
 					 
 					 
-					 { userInfo?.role === 1?
+					 {/* { userInfo?.role === 1?
 					 // this user role is meant to be 1
 					 (
 						<>
@@ -306,8 +306,40 @@ export const Profile = () => {
 			</>
 			): null
 		
-}
+} */}
 
+
+
+                           <>
+					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-200, right:15}}>
+                     <Pressable
+					onPress={()=>pressHandler()}
+					>
+                     <Text style={{bottom:7, fontFamily:"Poppins", alignSelf:"center", fontSize:48, color:"#fff"}}>+</Text>
+					</Pressable>
+					</View>
+					</>
+
+ 
+                        <>
+				<TouchableOpacity
+				activeOpacity={0.7}
+					// here the functionality is chehcked before he is navigated. of 
+					onPress ={()=> checkEvent()}
+			>
+				
+				 <SettingsButton
+					icon={ScanTicket}
+					ButtonName={"Scan QR Code"}
+				/>
+			</TouchableOpacity>
+			</>
+
+
+
+
+
+			
 
                  <BottomSheet
 						ref={bottomSheetRef}

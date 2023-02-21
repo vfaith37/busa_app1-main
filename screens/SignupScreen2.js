@@ -112,7 +112,7 @@ await client.put(`/user/${userInfo?._id}`,{
 .then(async(res)=>{
 console.log(res)
 
-if(res.status === 201){
+if(res.status === 200){
   console.log(res.data)
   // get the response. if it conatins all the userdata,
 

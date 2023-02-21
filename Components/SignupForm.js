@@ -24,13 +24,13 @@ const validationSchema = Yup.object({
 		.trim()
 		.min(3, "Invalid Name")
 		.required("Last Name is required!"),
-	email: Yup.string()
-		.trim()
-		.matches(
-			/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
-			"School Email required"
-		)
-		.required("Email is required!"),
+	// email: Yup.string()
+	// 	.trim()
+	// 	.matches(
+	// 		/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
+	// 		"School Email required"
+	// 	)
+	// 	.required("Email is required!"),
 	password: Yup.string()
 		.trim()
 		.min(8, "Password not long enough!")

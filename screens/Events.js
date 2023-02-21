@@ -206,6 +206,6 @@ const EventItems = ({ event }) => {
 	);
 };
 
-export default  React.memo(Events);
+export default  Events;
 
 const styles = StyleSheet.create({});

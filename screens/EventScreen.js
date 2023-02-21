@@ -252,7 +252,7 @@ const EventsScreen = () => {
         bounces={false}
         decelerationRate={'fast'}
         ListFooterComponent={renderLoader}
-        // keyExtractor={item => item.id}
+         keyExtractor={item => item.id}
         renderItem={renderItem}
       />
     </SafeAreaView>

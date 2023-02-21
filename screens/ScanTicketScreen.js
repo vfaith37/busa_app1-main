@@ -112,20 +112,63 @@ const ScanLogic = (props) => {
           const formData = new FormData()
            formData.append("token", data)
            formData.append("eventTitle", title)
-	    try {
-	      const res = await client.post(`/tickets/scan`, formData, config);
 
-	      if (res.status === 200) {
-	        alert(`QR code has been successfully scanned`);
-	        setShowAnimation(true);
-	      }
-	      console.log(title)
-	      setScanned(false);
-	    } catch (e) {
-	      console.error(e);
-	    }
+         
+
+
+	    // try {
+	    //   const res = await client.post(`/tickets/scan`, formData, config);
+
+	    //   if (res.status === 200) {
+	    //     alert(`QR code has been successfully scanned`);
+	    //     setShowAnimation(true);
+	    //   }
+
+		//    if (res.status === 400){
+		// 	alert(`QR code Has already been scanned!`);
+		//   }
+	    //   console.log(title)
+	    //   setScanned(false);
+	    // } catch (e) {
+	    //   console.error(e);
+	    // }
+
+
+		try{
+			await client.post(`/tickets/scan`, formData, config)
+			.then((res)=>{
+				if(res.status === 200){
+					try{
+						alert (`QR code has been successfully scanned`)
+						setShowAnimation(true)
+						setScanned(false)
+					}catch(e){
+						console.log(`${e}`)
+					}
+				}
+				else if(res.status === 400){
+					alert (`QR code has already been scanned`)
+					setScanned(false)
+				}
+				console.log(title)
+				 setScanned(false);
+			})
+
+		}catch(e){
+        console.error(e)
+		}
+
+		
+
+	
+
+
 
 	  };
+
+
+
+
 
 	  if (hasPermission === null) {
 	    return <Text>Requesting for camera permission</Text>;

@@ -45,13 +45,13 @@ const PostImage=({post, navigation})=>{
 
   var date = moment(time);
 
-  var newTime = date.format('MMMM Do YYYY, h:mm:ss a')
-  console.log(newTime)
+  var newTime = date.format('MMMM Do YYYY,')
+  // console.log(newTime)
   // console.log(date.format('MMMM Do YYYY, h:mm:ss a'));
   
   const presentDate = moment().format('MMMM Do YYYY, h:mm:ss a');
 
-  console.log(presentDate)
+  // console.log(presentDate)
   
  
 

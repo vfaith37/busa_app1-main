@@ -57,7 +57,7 @@ export const SignInForm = () => {
 				setUserToken(token)
 	
 				try{
-					axios.defaults.headers.common.Authorization = `Bearer ${token}`
+					//axios.defaults.headers.common.Authorization = `Bearer ${token}`
 					// stringify the user object
 					await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
 					 

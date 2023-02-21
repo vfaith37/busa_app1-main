@@ -302,9 +302,12 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 		getData();
 	}, []);
 
+
 	const pay = async () => {
 		const token = userToken;
 		const email = userInfo?.email;
+
+		
 
 		const config = {
 			headers: { Authorization: `Bearer ${token}` },
@@ -484,7 +487,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 							textTransform: "uppercase",
 						}}
 					>
-						{Time}
+		           <Time size={15}/>
+						
 						{time} {"|"}
 						{Location}
 						{venue}

@@ -209,6 +209,7 @@ export const Form = ({ component }) => {
 	const [show, setShow] = useState(false);
 	const[view, setView] = useState(false)
 
+
 	return (
 		// add status bar with the color
 
@@ -293,7 +294,7 @@ export const Form = ({ component }) => {
 										width: 0.9 * width,
 									}}
 								>
-									You can only add a maximum of five image per post
+									You can only add a maximum of five images per post
 								</Text>
 							</View>
 							<View
@@ -410,6 +411,7 @@ export const Form = ({ component }) => {
 												is24Hour={false}
 												display="default"
 												onChange={(event, selectedDate) => {
+													console.log("onChange called"); // add this line
 													const currentDate = selectedDate || date;
 													setDate(currentDate);
 													setFieldValue(
@@ -422,8 +424,8 @@ export const Form = ({ component }) => {
 												}}
 											/>
 										)}
-
-
+										
+                                        {/* {console.log("show:", show)} */}
 
 
 										<View
@@ -481,7 +483,7 @@ export const Form = ({ component }) => {
 														setMode("time"), setShow(true);
 													}}
 												>
-													{Time}
+													 <Time size={25}/>
 												</TouchableOpacity>
 											</View>
 										</View>
@@ -509,7 +511,7 @@ export const Form = ({ component }) => {
 												onChange={(event, selectedDate) => {
 													const currentDate = selectedDate || endDate;
 													setEndDate(currentDate);
-													setView(false);
+													// setView(false);
 													setFieldValue(
 														"endDate",
 														new Intl.DateTimeFormat("en-GB").format(endDate)
@@ -517,10 +519,11 @@ export const Form = ({ component }) => {
 													const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true}).replace(" ", "");
 
 													setFieldValue("endTime", formattedTime);
+													setView(false);
 												}}
 											/>
 										)} 
-
+                                      
 
 
 										<View
@@ -577,7 +580,7 @@ export const Form = ({ component }) => {
 														setNewMode("time"), setView(true);
 													}}
 												>
-													{Time}
+													 <Time size={25}/>
 												</TouchableOpacity>
 											</View>
 										</View>

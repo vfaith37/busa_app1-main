@@ -32,9 +32,10 @@ const HomeScreen = () => {
       setUserToken(userToken)
          
           const token = userToken
+          // console.log(token)
              
           const userInfo = JSON.parse((value)) 
-          console.log(userInfo.campus)
+          // console.log(userInfo.campus)
 
       const config = {
         headers: {
@@ -117,7 +118,7 @@ const HomeScreen = () => {
       <StatusBar backgroundColor={COLORS.white}/>
     <SafeAreaView style={{flex:1, top:100}}>
 <FlatList
- onEndReachedThreshold={0.7}
+ onEndReachedThreshold={1}
 //  ref={ref}
 //  onMomentumScrollEnd={updateCurrentSlideIndex}
 onEndReached={loadMorePosts}
