@@ -11,6 +11,7 @@ import client from '../api/client'
 import { COLORS } from '../constants/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native'
+import DailyTips from "../Components/DailyTips";
 
 const HomeScreen = () => {
 
@@ -116,6 +117,7 @@ const HomeScreen = () => {
     <>
       <StatusBar backgroundColor={COLORS.white}/>
     <SafeAreaView style={{flex:1, top:100}}>
+	    <DailyTips />
 <FlatList
  onEndReachedThreshold={0.7}
 //  ref={ref}
