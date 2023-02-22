@@ -161,7 +161,7 @@ const getListofEVents = async () => {
 		const newToken = token;
   
 		const formData = new FormData();
-		formData.append('date', today);
+		formData.append('date', "21/02/2023");
 		formData.append('campus', userInfo.campus);
   
 		const config = {
@@ -242,23 +242,6 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
   }
 
 };
-
-
-const EventsList =[
-// on landing, a get request is made from the backend to retrive list of open events and their endTime. the backend only returns events for that particular day the request is made
-
-  {
-    label: "Laptop",
-    value: "Laptop",
-  },
-  {
-    label: "Laphas",
-    value: "Laphas",
-  },
-]
-
-
-
 // eventTitle is passed through props to the scanTicketScreen
 
     // here in this logic, check from the backend if the array is empty. if it is, display no events avaliable
@@ -325,8 +308,8 @@ const EventsList =[
 									labelField="label"
 									valueField="value"
 									placeholder="Pick Event"
-                  search
-                  searchPlaceholder="Search..."
+                                   search
+                                  searchPlaceholder="Search..."
 									value={eventTitle}
 									onChangeText={handleChange("eventTitle")}
 									onChange={

@@ -90,121 +90,43 @@ const ScanLogic = (props) => {
 	    getData()
 	    },[])
 
-
-
-	//   const handleBarCodeScanned = async ({ type, data }) => {
-	//     setScanned(true);
-	//     // get the data from the qr code, send a post request to the backend with that data to verify it, if it's succesful
-	//     // show a small lottie view animation with sucess
-
-	//        const token = userToken
-    //      const title = eventTitle
-
-	//        console.log(data)
-	//        console.log(token)
-	//         console.log(title)
-
-	//        console.log(token)
-	//          const config ={
-	//          headers:{ Authorization: `Bearer ${token}`}
-	//         }
-
-    //       const formData = new FormData()
-    //        formData.append("token", data)
-    //        formData.append("eventTitle", title)
-
-         
-
-
-	//     // try {
-	//     //   const res = await client.post(`/tickets/scan`, formData, config);
-
-	//     //   if (res.status === 200) {
-	//     //     alert(`QR code has been successfully scanned`);
-	//     //     setShowAnimation(true);
-	//     //   }
-
-	// 	//    if (res.status === 400){
-	// 	// 	alert(`QR code Has already been scanned!`);
-	// 	//   }
-	//     //   console.log(title)
-	//     //   setScanned(false);
-	//     // } catch (e) {
-	//     //   console.error(e);
-	//     // }
-
-
-	// 	try{
-	// 		await client.post(`/tickets/scan`, formData, config)
-	// 		.then((res)=>{
-	// 			if(res.status === 200){
-	// 				try{
-	// 					alert (`QR code has been successfully scanned`)
-	// 					setShowAnimation(true)
-	// 					setScanned(false)
-	// 				}catch(e){
-	// 					console.log(`${e}`)
-	// 				}
-	// 			}
-	// 			else if(res.status === 400){
-	// 				alert (`QR code has already been scanned`)
-	// 				setScanned(false)
-	// 			}
-	// 			console.log(title)
-	// 			 setScanned(false);
-	// 		})
-
-	// 	}catch(e){
-    //     console.error(e)
-	// 	}
-
-		
-
-	
-
-
-
-	//   };
-
-
-
-	
-
-	const handleBarCodeScanned = async ({ type, data }) => {
-		setScanned(true);
-		const token = userToken;
-		const title = eventTitle;
-	  
-		console.log(data);
-		console.log(token);
-		console.log(title);
-	  
-		const config = {
-		  headers: { Authorization: `Bearer ${token}` },
-		};
-	  
-		const formData = new FormData();
-		formData.append("token", data);
-		formData.append("eventTitle", title);
-	  
-		try {
-		  const res = await client.post(`/tickets/scan`, formData, config);
-	  
-		  if (res.status === 200) {
-			alert(`QR code has been successfully scanned`);
-			setShowAnimation(true);
-		  } else if (res.status === 400) {
-			alert(`QR code Has already been scanned!`);
-		  }
-	  
-		  console.log(title);
-		  setScanned(false);
-		} catch (e) {
-		  console.error(e);
-		  setScanned(false);
-		}
-	  };
-	  
+		const handleBarCodeScanned = async ({ type, data }) => {
+			const token = userToken;
+			const title = eventTitle;
+		  
+			console.log(data);
+			console.log(token);
+			console.log(title);
+		  
+			const config = {
+			  headers: { Authorization: `Bearer ${token}` },
+			};
+		  
+			const formData = new FormData();
+			formData.append("token", data);
+			formData.append("eventTitle", title);
+		  
+			try {
+			  setScanned(true);
+		  
+			  const res = await client.post(`/tickets/scan`, formData, config);
+			  console.log(res.status);
+			  if (res.status === 200) {
+				alert(`QR code has been successfully scanned`);
+				// setShowAnimation(true);
+				setScanned(false);
+			  } else if (res.status === 400) {
+				console.log("QR code has already been scanned");
+				alert(`QR code Has already been scanned!`);
+				setScanned(false);
+			  }
+		  
+			} catch (e) {
+			  console.error(e);
+			  setScanned(false);
+			}
+		  };
+		  
 
 
 

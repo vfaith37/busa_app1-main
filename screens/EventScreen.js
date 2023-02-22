@@ -184,6 +184,8 @@ const EventsScreen = () => {
         config
       );
 
+      console.log (res.data.data)
+      
       if (res.data.data.length === 0) {
         setIsLoading(false);
         return; // Exit early if there are no more posts to fetch

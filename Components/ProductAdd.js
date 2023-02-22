@@ -773,16 +773,14 @@ const styles = StyleSheet.create({
 	TextInput2: {
 		borderWidth: 2,
 		borderColor: "#d9d9d9",
-		width: width - 40,
+		width: width - 45,
 		height: height / 4.3,
-		paddingBottom: 100,
+		// paddingBottom: 100,
 		marginTop: 5,
 		borderRadius: 20,
 		fontFamily: "Poppins",
 		fontSize: 13,
-		textAlign: "left",
 		paddingLeft: 11,
-		// height:180
 	},
 	dropdown: {
 		margin: 15,
