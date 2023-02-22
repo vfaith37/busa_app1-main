@@ -92,71 +92,71 @@ const ScanLogic = (props) => {
 
 
 
-	  const handleBarCodeScanned = async ({ type, data }) => {
-	    setScanned(true);
-	    // get the data from the qr code, send a post request to the backend with that data to verify it, if it's succesful
-	    // show a small lottie view animation with sucess
+	//   const handleBarCodeScanned = async ({ type, data }) => {
+	//     setScanned(true);
+	//     // get the data from the qr code, send a post request to the backend with that data to verify it, if it's succesful
+	//     // show a small lottie view animation with sucess
 
-	       const token = userToken
-         const title = eventTitle
+	//        const token = userToken
+    //      const title = eventTitle
 
-	       console.log(data)
-	       console.log(token)
-	        console.log(title)
+	//        console.log(data)
+	//        console.log(token)
+	//         console.log(title)
 
-	       console.log(token)
-	         const config ={
-	         headers:{ Authorization: `Bearer ${token}`}
-	        }
+	//        console.log(token)
+	//          const config ={
+	//          headers:{ Authorization: `Bearer ${token}`}
+	//         }
 
-          const formData = new FormData()
-           formData.append("token", data)
-           formData.append("eventTitle", title)
+    //       const formData = new FormData()
+    //        formData.append("token", data)
+    //        formData.append("eventTitle", title)
 
          
 
 
-	    // try {
-	    //   const res = await client.post(`/tickets/scan`, formData, config);
+	//     // try {
+	//     //   const res = await client.post(`/tickets/scan`, formData, config);
 
-	    //   if (res.status === 200) {
-	    //     alert(`QR code has been successfully scanned`);
-	    //     setShowAnimation(true);
-	    //   }
+	//     //   if (res.status === 200) {
+	//     //     alert(`QR code has been successfully scanned`);
+	//     //     setShowAnimation(true);
+	//     //   }
 
-		//    if (res.status === 400){
-		// 	alert(`QR code Has already been scanned!`);
-		//   }
-	    //   console.log(title)
-	    //   setScanned(false);
-	    // } catch (e) {
-	    //   console.error(e);
-	    // }
+	// 	//    if (res.status === 400){
+	// 	// 	alert(`QR code Has already been scanned!`);
+	// 	//   }
+	//     //   console.log(title)
+	//     //   setScanned(false);
+	//     // } catch (e) {
+	//     //   console.error(e);
+	//     // }
 
 
-		try{
-			await client.post(`/tickets/scan`, formData, config)
-			.then((res)=>{
-				if(res.status === 200){
-					try{
-						alert (`QR code has been successfully scanned`)
-						setShowAnimation(true)
-						setScanned(false)
-					}catch(e){
-						console.log(`${e}`)
-					}
-				}
-				else if(res.status === 400){
-					alert (`QR code has already been scanned`)
-					setScanned(false)
-				}
-				console.log(title)
-				 setScanned(false);
-			})
+	// 	try{
+	// 		await client.post(`/tickets/scan`, formData, config)
+	// 		.then((res)=>{
+	// 			if(res.status === 200){
+	// 				try{
+	// 					alert (`QR code has been successfully scanned`)
+	// 					setShowAnimation(true)
+	// 					setScanned(false)
+	// 				}catch(e){
+	// 					console.log(`${e}`)
+	// 				}
+	// 			}
+	// 			else if(res.status === 400){
+	// 				alert (`QR code has already been scanned`)
+	// 				setScanned(false)
+	// 			}
+	// 			console.log(title)
+	// 			 setScanned(false);
+	// 		})
 
-		}catch(e){
-        console.error(e)
-		}
+	// 	}catch(e){
+    //     console.error(e)
+	// 	}
 
 		
 
@@ -164,7 +164,47 @@ const ScanLogic = (props) => {
 
 
 
+	//   };
+
+
+
+	
+
+	const handleBarCodeScanned = async ({ type, data }) => {
+		setScanned(true);
+		const token = userToken;
+		const title = eventTitle;
+	  
+		console.log(data);
+		console.log(token);
+		console.log(title);
+	  
+		const config = {
+		  headers: { Authorization: `Bearer ${token}` },
+		};
+	  
+		const formData = new FormData();
+		formData.append("token", data);
+		formData.append("eventTitle", title);
+	  
+		try {
+		  const res = await client.post(`/tickets/scan`, formData, config);
+	  
+		  if (res.status === 200) {
+			alert(`QR code has been successfully scanned`);
+			setShowAnimation(true);
+		  } else if (res.status === 400) {
+			alert(`QR code Has already been scanned!`);
+		  }
+	  
+		  console.log(title);
+		  setScanned(false);
+		} catch (e) {
+		  console.error(e);
+		  setScanned(false);
+		}
 	  };
+	  
 
 
 

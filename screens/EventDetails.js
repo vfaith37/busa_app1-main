@@ -290,7 +290,6 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 			const value = await AsyncStorage.getItem("userInfo");
 			const userToken = await AsyncStorage.getItem(`userToken`);
 			if (value !== null && userToken !== null) {
-				console.log(userToken);
 				setUserInfo(JSON.parse(value));
 				setUserToken(userToken);
 			}

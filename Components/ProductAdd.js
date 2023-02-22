@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation, CommonActions } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { FormInput } from "./FormInput";
 import * as Yup from "yup";
@@ -110,9 +110,20 @@ export const Form = ({ component }) => {
 
 
 					if (res.status === 200) {
-						 navigation.dispatch(StackActions.replace("EventScreen"))
-	
-						 // if res is succesful, dispatch the user to event screen to see what he posted
+						navigation.dispatch(
+							CommonActions.navigate({
+							  name: 'Event',
+							  params: {
+								screen: 'EventScreen',
+							  },
+							}),
+						  );
+
+						  navigation.goBack();
+
+						// res is succesful, dispatch the user to event screen to see what he posted
+					 
+
 					}
 				})
 				.catch((e) => {
