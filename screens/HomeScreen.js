@@ -1,170 +1,131 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
-import React from 'react'
-import { ScrollView } from 'react-native'
-import Posts from './Posts'
-import { SafeAreaView } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { StatusBar } from 'expo-status-bar'
-import client from '../api/client'
-import { COLORS } from '../constants/theme'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import LottieView from 'lottie-react-native'
-import DailyTips from "../Components/DailyTips";
+import React, { useState, useEffect, useCallback } from 'react';
+import { SafeAreaView, FlatList, ActivityIndicator, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import LottieView from 'lottie-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Posts from './Posts';
+ import client from '../api/client'
+import { COLORS } from '../constants/theme';
+import DailyTips from "../Components/DailyTips"
+
+const PAGE_SIZE = 5;
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
 
-  const navigation = useNavigation()
-  const [posts, setPosts] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [isLoading, setIsLoading] = useState(false)
-  const [userToken, setUserToken] = useState(null)
-  const [userInfo, setUserInfo] = useState(null)
+  const [posts, SetPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [userToken, setUserToken] = useState(null);
 
-
-  const getData = async()=>{
+  const getPostData = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const value = await AsyncStorage.getItem('userInfo')
-      const userToken = await AsyncStorage.getItem('userToken')
+      const value = await AsyncStorage.getItem('userInfo');
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (value !== null && userToken !== null) {
+        const userInfo = JSON.parse(value);
+        setUserInfo(userInfo);
+        setUserToken(userToken);
 
-      if(value !== null && userToken !== null) {
-      setUserInfo(JSON.parse(value))
-      setUserToken(userToken)
-         
-          const token = userToken
-          // console.log(token)
-             
-          const userInfo = JSON.parse((value)) 
-          // console.log(userInfo.campus)
+        console.log(userInfo.campus)
 
+      const token = userToken;
       const config = {
         headers: {
-          Authorization :`Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
       };
 
-      setIsLoading(true);
-      
-      await client
-        .get(
-          // `/news/get${userInfo?.campus}CampusNews/${currentPage}/5`,
-          `/news/getMainCampusNews/${currentPage}/5`,
+      const res = await client.get(
+`/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
 
-          config
-        )
-        .then((res) => {
+       config
+      );
 
-          if (res.data.data.length === 0) {
-            setIsLoading(false);
-            return; // Exit early if there are no more posts to fetch
-          }
-
-          console.log(res.data.data);
-          setIsLoading(false);
-          setPosts([...posts, ...res.data.data]);
-        })
-        .catch((e) => {
-          console.log(`${e}`);
-        });
+      if (res.data.data.length === 0) {
+        setIsLoading(false);
+        return; // Exit early if there are no more posts to fetch
       }
 
-    } catch(e) {
-      console.log(`${e}`)
+      setIsLoading(false);
+      SetPosts((prevposts) => [...prevposts, ...res.data.data]);
+      setCurrentPage((prevPage) => prevPage + 1);
+
     }
-  }
+    } catch (e) {
+      console.log({e});
+      alert(`${e}`)
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, userToken]);
 
-  useEffect(()=>{
-    getData()
-  },[currentPage])
+  useEffect(() => {
+    getPostData();
+  }, [getPostData]);
 
-  
-  const renderLoader=()=>{
-    return(
-      isLoading?
-      // <View
-      // // style={{marginVertical:16, alignItems:"center",}} 
-      // >
-        // <ActivityIndicator size="large" color="blue"/> 
+  const loadMorePosts = useCallback(() => {
+    if (posts.length % PAGE_SIZE === 0) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  }, [posts]);
 
-        (
-        <LottieView
-					source={require("../assets/animations/loader.json")}
-					style={{
-						// position: "absolute",
-						width: 400,
-						height: 400,
-						top: 30,
-						alignSelf: "center",
-					}}
-					loop={true}
+  const renderLoader = useCallback(() => {
+    return isLoading ? (
+      <LottieView
+        source={require('../assets/animations/loader.json')}
+        style={{
+          width: 400,
+          height: 400,
+          top: 30,
+          alignSelf: 'center',
+        }}
+        loop
         speed={0.7}
-					autoPlay
-				/>
-        )
+        autoPlay
+      />
+    ) : null;
+  }, [isLoading]);
 
-      : null
-    )
-  }
-  
-  const loadMorePosts=()=>{
-    console.log("load more posts")
-    setCurrentPage(currentPage +1)
-  }
-  
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <Posts post={item} key={item.id} navigation={navigation} />
+    ),
+    [navigation]
+  );
 
-  
-  return ( 
-    <>
+  const handleRefresh = useCallback(() => {
+    SetPosts([]);
+    setCurrentPage(1);
+  }, []);
+
+  return (
+    <SafeAreaView style={{ flex: 1, top: 40 }}>
       <StatusBar backgroundColor={COLORS.white}/>
-    <SafeAreaView style={{flex:1, top:100}}>
-	    <DailyTips />
-<FlatList
- onEndReachedThreshold={1}
-//  ref={ref}
-//  onMomentumScrollEnd={updateCurrentSlideIndex}
-onEndReached={loadMorePosts}
-showsVerticalScrollIndicator={false}
-vertical
- data={posts}
-bounces={false}
-decelerationRate={"fast"}
-//  keyExtractor={item=>item.id}
-renderItem={({item, id}) => <Posts  post={item} key={id} navigation={navigation} />}
-ListFooterComponent={renderLoader}
-/>
+   <DailyTips/>
+      <FlatList
+        onEndReachedThreshold={0.1}
+        onEndReached={loadMorePosts}
+        showsVerticalScrollIndicator={false}
+        data={posts}
+        bounces={false}
+        decelerationRate={'fast'}
+        ListFooterComponent={renderLoader}
+        // keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        refreshing={isLoading && posts.length === 0}
+        onRefresh={handleRefresh}
+      />
     </SafeAreaView>
-    </>
-  )
-}
+  );
+};
 
-
-
-export default HomeScreen
-
-const styles = StyleSheet.create({})
+export default HomeScreen;
 
 
 
 
 
-{/* <ScrollView showsVerticalScrollIndicator={false} bounces={false}
->
-{POSTS.map((post, id)=>(
-<TouchableOpacity
-   key={id}
-   activeOpacity={1}
-  //  onPress={()=>navigation.navigate("PostDetails"
-  // //   {
-    // //   image:post.image,
-  // //   title:post.title,
-  // //   date: post.date,
-  // //   fullDescription: post.fullDescription,
-  // //  }
-  //  )}
-   >
-
-     <Posts post={post} key={id} navigation={navigation}/>
-   </TouchableOpacity>
-))}
-</ScrollView> */}

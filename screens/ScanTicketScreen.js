@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Dimensions } from "react-native";
+import { Text, View, StyleSheet, Button, Dimensions, FlatList } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import axios from "axios";
 import LottieView from "lottie-react-native";
@@ -16,12 +16,9 @@ const ScanTicketScreen = ({route}) => {
 };
 
 const ScanLogic = (props) => {
-	// const {eventTitle} = props.route.params;
 
   // alert the user time has elapsed
   // write functionality that after time has elapsed, take him back to the settings page
-
-
 	  const [hasPermission, setHasPermission] = useState(null);
 	   const [scanned, setScanned] = useState(false);
 	  const [showAnimation, setShowAnimation] = useState(false);
@@ -29,6 +26,8 @@ const ScanLogic = (props) => {
 	  const [userInfo, setUserInfo] = useState(null)
     const [eventTitle, setEventTitle] = useState(null)
     const [eventTime, setEventTime] = useState(null)
+	const [scannedTickets, setScannedTickets] = useState([]);
+
 
     const navigation = useNavigation()
 
@@ -90,54 +89,67 @@ const ScanLogic = (props) => {
 	    getData()
 	    },[])
 
+		let scanning = false;
+
 		const handleBarCodeScanned = async ({ type, data }) => {
-			const token = userToken;
-			const title = eventTitle;
-		  
-			console.log(data);
-			console.log(token);
-			console.log(title);
-		  
-			const config = {
-			  headers: { Authorization: `Bearer ${token}` },
-			};
-		  
-			const formData = new FormData();
-			formData.append("token", data);
-			formData.append("eventTitle", title);
-		  
-			try {
-			  setScanned(true);
-		  
-			  const res = await client.post(`/tickets/scan`, formData, config);
-			  console.log(res.status);
-			  if (res.status === 200) {
-				alert(`QR code has been successfully scanned`);
-				// setShowAnimation(true);
-				setScanned(false);
-			  } else if (res.status === 400) {
-				console.log("QR code has already been scanned");
-				alert(`QR code Has already been scanned!`);
-				setScanned(false);
-			  }
-		  
-			} catch (e) {
-			  console.error(e);
-			  setScanned(false);
-			}
+		  if (scanning) {
+			// Function is already running, don't execute again
+			return;
+		  }
+		
+		  scanning = true; // Set flag to indicate function is running
+		
+		  const token = userToken;
+		  const title = eventTitle;
+		
+		  console.log(data);
+		  console.log(token);
+		  console.log(title);
+		
+		  const config = {
+			headers: { Authorization: `Bearer ${token}` },
 		  };
+		
+		  const formData = new FormData();
+		  formData.append("token", data);
+		  formData.append("eventTitle", title);
+		
+		  try {
+			const res = await client.post(`/tickets/scan`, formData, config);
+			console.log(res.status);
+			console.log(res.data);
+		
+			if (res.status === 200) {
+			  alert(`QR code has been successfully scanned`);
+			} 
+			setScanned(false);
+			console.log("QR code has already been scanned");
+		  } catch (error) {
+			console.log(error)
+			if (error.response.status === 400) {
+			  console.log("scanning canceled");
+			  alert(error.response.data.message)
+			} else {
+			  console.log(error);
+			  alert("Error scanning QR code. Please try again.");
+			}
+			setScanned(false);
+		  } finally {
+			scanning = false; // Set flag to indicate function is no longer running
+		  }
+		};
+		
 		  
-
-
-
-
-
 	  if (hasPermission === null) {
 	    return <Text>Requesting for camera permission</Text>;
 	  }
 	  if (hasPermission === false) {
 	    return <Text>No access to camera</Text>;
 	  }
+
+
+
+
 
 	  return (
 	    <>
@@ -148,11 +160,11 @@ const ScanLogic = (props) => {
 	        style={StyleSheet.absoluteFillObject}
 	      />
 
-	      {scanned &&
+	      {/* {scanned &&
 	      <View style={{backgroundColor:"white", width:100, height:30, position:"absolute", alignItems:"center", bottom:height/10, left:width/3}}>
 	    <Text style={{fontFamily:"Poppins3", fontSize:18, color:"blue", position:"absolute", bottom:-2, alignSelf:"center",}} onPress={()=>setScanned(false)}>Re-scan</Text>
 	    </View>
-	    }
+	    } */}
 	    </View>
 	    <View style={{height:347, width:300, backgroundColor:"transparent", position:"absolute", alignSelf:"center", bottom:height/6, borderColor:"white", borderRadius:20, borderWidth:3, alignContent:"center"}}/>
 
@@ -167,7 +179,6 @@ const ScanLogic = (props) => {
 	  onAnimationFinish={()=> setShowAnimation(false)}
 	  />
 	)}
-
 	</View>
 	 </>
 	   );

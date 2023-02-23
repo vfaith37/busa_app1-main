@@ -65,7 +65,7 @@ export const Notification = () => {
 
 	const sendPushTokenToBackend = async (pushToken) => {
 		try {
-			const response = await fetch("https://example.com/push-token", {
+			const response = await fetch("https://finalissima.onrender.com/api/registerDevice", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -80,6 +80,8 @@ export const Notification = () => {
 			console.error(error);
 		}
 	};
+
+
 
 	return (
 		<View style={{ marginLeft: 30, marginRight: 30, top: 40 }}>

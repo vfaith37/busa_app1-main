@@ -31,21 +31,6 @@ import client from "../api/client";
 
 const { width, height } = Dimensions.get("window");
 
-const validationSchema = Yup.object({
-	title: Yup.string().required("Title is required!"),
-	content: Yup.string().required("Content is required!"),
-	image: Yup.array()
-		.min(1, "Please select at least one image")
-		.max(5, "You can only select a maximum of 5 images"),
-	campus: Yup.string().required("Campus is required!"),
-	// date: Yup.string().required("Please select a date"),
-	// time: Yup.string().required("Please select a time"),
-	// endTime: Yup.string().required("Please select end time"),
-	// endDate: Yup.string().required("Please select end date"), // here, endDate is a string
-	// ticketPrice: Yup.string().required("price is required"),
-	// venue: Yup.string().required("venue is required"),
-	
-});
 
 export const Form = ({ component }) => {
 	const [userInfo, setUserInfo] = useState(null);
@@ -53,8 +38,34 @@ export const Form = ({ component }) => {
 	const navigation = useNavigation();
 	const [image, setImage] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-
+	const [loading, setLoading] = useState(false)
 	
+	
+	const validationSchema = Yup.object({
+		title: Yup.string().required("Title is required!"),
+		content: Yup.string().required("Content is required!"),
+		image: Yup.array()
+			.min(1, "Please select at least one image")
+			.max(5, "You can only select a maximum of 5 images"),
+		campus: Yup.string().required("Campus is required!"),
+	});
+
+	const validationSchemaEvent = Yup.object({
+		title: Yup.string().required("Title is required!"),
+		content: Yup.string().required("Content is required!"),
+		image: Yup.array()
+			.min(1, "Please select at least one image")
+			.max(5, "You can only select a maximum of 5 images"),
+		campus: Yup.string().required("Campus is required!"),
+
+		date: Yup.string().required("Please select a date"),
+		time: Yup.string().required("Please select a time"),
+		endTime: Yup.string().required("Please select end time"),
+		endDate: Yup.string().required("Please select end date"), // here, endDate is a string
+		ticketPrice: Yup.string().required("price is required"),
+		venue: Yup.string().required("venue is required"),
+		
+	});
 
 	const getData = async (values) => {
 		try {
@@ -99,6 +110,7 @@ export const Form = ({ component }) => {
 			console.log(values)
 
                if(component === "Event"){
+           setLoading(true)
 				await axios
 				.post(
 					"https://code-6z3x.onrender.com/api/event/uploadEvent",
@@ -122,16 +134,18 @@ export const Form = ({ component }) => {
 						  navigation.goBack();
 
 						// res is succesful, dispatch the user to event screen to see what he posted
-					 
-
 					}
+						  setLoading(false)
+                  
 				})
 				.catch((e) => {
 					console.log(`${e}`);
 				});
+				setLoading(false)
 			   }
 			   
 			  else if(component === "Post"){
+				setLoading(true)
 				await axios
 				.post(
 					"https://code-6z3x.onrender.com/api/news/addNews",
@@ -146,13 +160,14 @@ export const Form = ({ component }) => {
 						navigation.dispatch(StackActions.replace("Tab"))
 						console.log("successful");
 					}
+					setLoading(false)
 					// if res is succesful, dispatch the user to home screen to see what he posted
 				})
 				.catch((e) => {
 					console.log(`${e}`);
 				});
+				setLoading(false)
 			   }
-
 
 			
 			}
@@ -258,9 +273,11 @@ export const Form = ({ component }) => {
 					endDate:"",
 					endTime:"",
 					ticketPrice:"",
+					
 				}}
 				onSubmit={getData}
-				validationSchema={validationSchema}
+				// validationSchema={validationSchema}
+				validationSchema ={component === "Post" ? validationSchema :validationSchemaEvent}
 			>
 				{({
 					values,
@@ -691,35 +708,46 @@ export const Form = ({ component }) => {
 
 
 						
+  {loading? (
+	<View>
+ <ActivityIndicator size="large" color="#0000ff" />
+
+		</View>
+
+  )
+:
+	<TouchableOpacity activeOpacity={0.7}
+	onPress={handleSubmit}
+	>
+<View
+	style={{
+		backgroundColor: "#004fc7",
+		width: 113,
+		justifyContent: "center",
+		alignSelf: "center",
+		alignItems: "center",
+		borderRadius: 8,
+		marginTop: 13,
+		height: 37,
+	}}
+>
+	<Text
+		style={{
+			fontSize: 18,
+			fontWeight: "500",
+			color: "white",
+			fontFamily: "Poppins3",
+		}}
+	>
+		Post
+	</Text>
+</View>
+</TouchableOpacity>
+}
 
 
 
-
-							<Pressable onPress={handleSubmit}>
-								<View
-									style={{
-										backgroundColor: "#004fc7",
-										width: 113,
-										justifyContent: "center",
-										alignSelf: "center",
-										alignItems: "center",
-										borderRadius: 8,
-										marginTop: 13,
-										height: 37,
-									}}
-								>
-									<Text
-										style={{
-											fontSize: 18,
-											fontWeight: "500",
-											color: "white",
-											fontFamily: "Poppins3",
-										}}
-									>
-										Post
-									</Text>
-								</View>
-							</Pressable>
+						
 
                            </View>
 

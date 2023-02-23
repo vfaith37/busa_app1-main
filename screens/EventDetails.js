@@ -337,7 +337,7 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 	};
 
 	
-	const num = ticketPrice / 100;
+	const num = ticketPrice;
 	const formattedNumber = num.toLocaleString("en-NG", {
 		style: "currency",
 		currency: "NGN",

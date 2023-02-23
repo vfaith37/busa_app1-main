@@ -36,115 +36,6 @@ const EventsListScreen = () => {
 
 //here, the auth role is also checked before he can be allowed to scan
 
-// const getListofEVents = async()=>{
-
-//   const today = moment().format('DD/MM/YYYY');
-//   console.log(today)
-
-//   try{
-     
-//     const value = await AsyncStorage.getItem('userInfo')
-// 	  const token = await AsyncStorage.getItem('userToken')
-
-//     if (value !== null && token !== null) {
-//       setUserInfo(JSON.parse(value));
-//       setUserToken(token);
-    
-//      const userInfo = JSON.parse((value))
-
-// 	 console.log(userInfo.campus)
-// 	  const newToken = token
-// 	  console.log(newToken)
-
-
-
-
-
-//     const formData = new FormData();
-//     formData.append("date", today);
-// 	formData.append("campus", userInfo.campus);
-	
-
-
-     
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${newToken}`,
-//       },
-//     }
-
-
-// 	// request is made based on user's campus and StartDate of the event
-//       await client
-//       .post(
-//         `event/getEventByDate`, formData,
-//       config,
-        
-//       )
-//       .then(async (res) => {
-//         console.log(res.data.data);
-
-// 		 if(res.status === 200){
- 
-// 		if (res.data.data.length === 0) {
-//           setEvents([]);
-//         }
-        
-//         else {
-
-// 			if(res.data.data.length ===1){
-// 				const items=[
-// 					{
-// 					label: res.data.data.title,
-// 					value: res.data.data.title,
-// 					endTIme: res.data.data.endTime
-// 					}
-
-// 				]
-// 				setEvents(items)
-// 				await AsyncStorage.setItem("eventTime", items.endTime)
-
-
-// 			}
-		
-// 			if(res.data.data.length >1){
-
-// 				const eventsList = res.data.data.map((event) => ({
-// 				  label: event.title,
-// 				  value: event.title,
-// 				  endTime : event.endTIme
-// 				}
-// 				));
-// 				setEvents(eventsList);
-//           await AsyncStorage.setItem("eventTime", eventsList.endTime)
-
-// 			}
-
-          
-
-//         }
-// 		 }
-
-
-      
-       
-//       })
-//       .catch((e) => {
-//         console.log(`${e}`);
-//       });
-//        }
-
-//   }catch(e){
-
-//     console.log(`${e}`)
-//   }
-
-// }
-
-
-
-
-
 
 const getListofEVents = async () => {
 	const today = moment().format('DD/MM/YYYY');
@@ -158,10 +49,11 @@ const getListofEVents = async () => {
 		setUserToken(token);
   
 		const userInfo = JSON.parse(value);
+		console.log(userInfo.campus)
 		const newToken = token;
   
 		const formData = new FormData();
-		formData.append('date', "21/02/2023");
+		formData.append('date', today);
 		formData.append('campus', userInfo.campus);
   
 		const config = {
@@ -262,11 +154,12 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
       </View>
     )
      :
+
       events.length === 0 ? (
           
         <View>
 		{/* possibly add more designs */}
-      <Text style={{color:"red", top:150, left:20, fontFamily:"Poppins", alignItems:"center"}}> No events available for Today! pls check back</Text>
+      <Text style={{color:"red", top:150, left:20, fontFamily:"Poppins", alignItems:"center"}}> No events available Today! pls check back</Text>
       </View>
 
     ) : (
@@ -290,8 +183,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
 				}) => {
 					const {eventTitle} = values;
 					return (
-
-                  <View style={{top:100}}>
+                  <View style={{top:200}}>
 							<View style={{alignSelf:"center"}}>
 								{errors.eventTitle && touched.eventTitle && (
 									<Text style={styles.error}>{errors.eventTitle}</Text>
