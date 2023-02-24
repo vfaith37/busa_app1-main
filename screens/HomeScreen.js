@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList, ActivityIndicator, StatusBar } from 'react-native';
+import { SafeAreaView, FlatList,StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Posts from './Posts';
