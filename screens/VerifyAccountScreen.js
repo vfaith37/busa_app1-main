@@ -30,7 +30,6 @@ const VerifyAccountScreen =({route})=>{
 
 
 
-
 const VerifyLogic = (props) => {
 	const {email, password} = props.route.params
 

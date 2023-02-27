@@ -336,7 +336,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
     useEffect(() => {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 10000,
+        duration: 7000,
         useNativeDriver: true,
       }).start()
       // }).start(()=>fadeOut());

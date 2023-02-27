@@ -76,8 +76,8 @@ export const SignInForm = () => {
 			}
 		}).catch((e)=>{
 			console.log(e)
+			setIsLoading(false)
 		}
-		
 		)
 		
 	}
