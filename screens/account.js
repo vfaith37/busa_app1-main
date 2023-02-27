@@ -12,27 +12,10 @@ import { ModalPopUp } from "../Components/Modal";
 import { AccordionItem } from "../Components/AccordionItem";
 import { COLORS } from "../constants/theme";
 import { AuthContext } from "../context/AuthContext";
-import { Formik } from "formik";
-import { FormInput } from "../Components/FormInput";
-import { FormSubmitBtn } from "../Components/FormSubmitBtn";
-import * as Yup from "yup";
-import { useNavigation } from "@react-navigation/native";
 import { Back } from "../constants/icons";
+import ChangePassword from "../Components/ChangePassword";
 
-const validationSchema = Yup.object({
-	oldPassword: Yup.string()
-		.trim()
-		.min(8, "Password not long enough!")
-		.required("Password required!"),
-	password: Yup.string()
-		.trim()
-		.min(8, "Password not long enough!")
-		.required("Password required!"),
-	confirmPassword: Yup.string().equals(
-		[Yup.ref("password"), null],
-		"Password does not match"
-	),
-});
+
 
 const { width } = Dimensions.get("screen");
 export const Account = () => {
@@ -40,31 +23,6 @@ export const Account = () => {
 	const [actionTriggered, setActionTriggered] = useState("");
 	// const [colour, setColour] = useState();
 	const { logout } = useContext(AuthContext);
-
-	const navigation = useNavigation();
-	const [isLoading, setIsLoading] = React.useState(false);
-	const [isDisabled, setDisabled] = React.useState(true);
-	const userInfo = {
-		oldPassword: "",
-		password: "",
-		confirmpassword: "",
-	};
-	const resetPassword = async (values, formikActions) => {
-		setIsLoading(true);
-		console.log(values);
-		setIsLoading(false);
-		setVisible(false);
-		// const res = await client.post("/resetpassword", {
-		// 	...values,
-		// });
-
-		// if (res.data.success) {
-		// 	navigation.dispatch(StackActions.replace("ProfileScreen"));
-		// 	setVisible(false);
-		// 	console.log(res.data);
-		// }
-	};
-
 	return (
 		<SafeAreaView style={{ paddingTop: 40 }}>
 			<View style={{ alignSelf: "center", paddingBottom: 15 }}>
@@ -141,87 +99,7 @@ export const Account = () => {
 								Change Password
 							</Text>
 						</View>
-						<Formik
-							initialValues={userInfo}
-							validationSchema={validationSchema}
-							onSubmit={resetPassword}
-						>
-							{({
-								values,
-								errors,
-								touched,
-								isSubmitting,
-								handleChange,
-								handleBlur,
-								handleSubmit,
-							}) => {
-								const { oldPassword, password, confirmPassword } = values;
-								return (
-									<>
-										<FormInput
-											value={oldPassword}
-											error={touched.oldPassword && errors.oldPassword}
-											onChangeText={handleChange("oldPassword")}
-											onBlur={handleBlur("oldPassword")}
-											autoCapitalize="none"
-											secureTextEntry
-											// label="Current Password"
-											placeholder="Current Password"
-											style={styles.text}
-											TextInputStyle={styles.textInput}
-										/>
-										<FormInput
-											value={password}
-											error={touched.password && errors.password}
-											onChangeText={handleChange("password")}
-											onBlur={handleBlur("password")}
-											autoCapitalize="none"
-											secureTextEntry
-											// label="Password"
-											placeholder="Password"
-											style={styles.text}
-											TextInputStyle={styles.textInput}
-										/>
-										<FormInput
-											value={confirmPassword}
-											error={touched.confirmpassword && errors.confirmpassword}
-											onChangeText={handleChange("confirmPassword")}
-											onBlur={handleBlur("confirmPassword")}
-											autoCapitalize="none"
-											secureTextEntry
-											// label="Confirm Password"
-											placeholder="Confirm Password"
-											style={styles.text}
-											TextInputStyle={styles.textInput}
-										/>
-										{errors === null ? setDisabled(true) : setDisabled(false)}
-										{console.log(12, errors)}
-										{isLoading ? (
-											<View
-												style={{
-													width: width - 130,
-													height: 50,
-													alignSelf: "center",
-													borderRadius: 10,
-													justifyContent: "center",
-													marginTop: 10,
-													backgroundColor: "#0000ff",
-												}}
-											>
-												<ActivityIndicator size="large" color="#FFF" />
-											</View>
-										) : (
-											<FormSubmitBtn
-												disabled={isDisabled}
-												Submitting={isSubmitting}
-												onPress={handleSubmit}
-												title={"Change Password"}
-											/>
-										)}
-									</>
-								);
-							}}
-						</Formik>
+						<ChangePassword/>
 					</View>
 				) : null}
 				{actionTriggered === "Action_2" ? (

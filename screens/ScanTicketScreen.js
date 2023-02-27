@@ -91,54 +91,61 @@ const ScanLogic = (props) => {
 
 		let scanning = false;
 
-		const handleBarCodeScanned = async ({ type, data }) => {
-		  if (scanning) {
-			// Function is already running, don't execute again
-			return;
-		  }
-		
-		  scanning = true; // Set flag to indicate function is running
-		
-		  const token = userToken;
-		  const title = eventTitle;
-		
-		  console.log(data);
-		  console.log(token);
-		  console.log(title);
-		
-		  const config = {
-			headers: { Authorization: `Bearer ${token}` },
-		  };
-		
-		  const formData = new FormData();
-		  formData.append("token", data);
-		  formData.append("eventTitle", title);
-		
-		  try {
-			const res = await client.post(`/tickets/scan`, formData, config);
-			console.log(res.status);
-			console.log(res.data);
-		
-			if (res.status === 200) {
-			  alert(`QR code has been successfully scanned`);
-			} 
-			setScanned(false);
-			console.log("QR code has already been scanned");
-		  } catch (error) {
-			console.log(error)
-			if (error.response.status === 400) {
-			  console.log("scanning canceled");
-			  alert(error.response.data.message)
-			} else {
-			  console.log(error);
-			  alert("Error scanning QR code. Please try again.");
+		  const handleBarCodeScanned = async ({ type, data }) => {
+			if (scanning) {
+			  // Function is already running, don't execute again
+			  return;
 			}
-			setScanned(false);
-		  } finally {
-			scanning = false; // Set flag to indicate function is no longer running
-		  }
-		};
-		
+		  
+			scanning = true; // Set flag to indicate function is running
+		  
+			const token = userToken;
+			const title = eventTitle;
+		  
+			console.log(data);
+			console.log(token);
+			console.log(title);
+		  
+			const config = {
+			  headers: { Authorization: `Bearer ${token}` },
+			};
+		  
+			const formData = new FormData();
+			formData.append("token", data);
+			formData.append("eventTitle", title);
+		  
+			try {
+			//   await new Promise(resolve => {
+			// 	alert(`QR code scanned. Press OK to continue.`); // show alert and wait for user to click OK
+			// 	resolve();
+			//   });
+			  const res = await client.post(`/tickets/scan`, formData, config);
+			  console.log(res.status);
+			  console.log(res.data);
+		  
+			  if (res.status === 200) {
+				alert(`QR code has been successfully scanned`);
+			  } else {
+				alert(`Error scanning QR code. Please try again.`);
+			  }
+			} catch (error) {
+			  console.log(error)
+			  if (error.response && error.response.status === 400) {
+				console.log("scanning canceled");
+				alert(error.response.data.message)
+			  } else {
+				console.log(error);
+				alert("Error scanning QR code. Please try again.");
+			  }
+			} finally {
+			  scanning = false; // Set flag to indicate function is no longer running
+			  setScanned(false);
+			}
+		  };
+		  
+		  
+
+
 		  
 	  if (hasPermission === null) {
 	    return <Text>Requesting for camera permission</Text>;

@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {SignUpForm} from "../Components/SignupForm";
-import LoginScreen from "./LoginScreen";
+import AppForm from "../Components/AppForm";
 
 const { width } = Dimensions.get("screen");
 const ArrowBack = (
@@ -35,11 +35,10 @@ export const SignUp = () => {
 	return (
 		<View style={{ flex: 1, backgroundColor: "#0D13E3", paddingTop: 55 }}>
 			<Bg />
+			{/* <SignUpForm /> */}
 
-			{/* {ArrowBack} */}
-			{/* <SignInForm /> */}
-			{/* <LoginScreen /> */}
-			<SignUpForm />
+			<AppForm/>
+
 			<StatusBar hidden />
 		</View>
 	);

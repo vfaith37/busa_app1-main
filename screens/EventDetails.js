@@ -256,6 +256,7 @@ import {
 	Dimensions,
 	StyleSheet,
 	TouchableOpacity,
+	ActivityIndicator
 } from "react-native";
 import { useState } from "react";
 import {Location, Time } from "../constants/icons";
@@ -263,6 +264,7 @@ import {Location, Time } from "../constants/icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+
 const { width, height } = Dimensions.get("screen");
 
 const imageW = width * 0.81;
@@ -275,6 +277,7 @@ const EventAbout = (props) => {
 
 	const [userInfo, setUserInfo] = useState(null);
 	const [userToken, setUserToken] = useState(null);
+	const [isLoading, setIsLoading] = useState(false)
 	const navigation = useNavigation();
 
 	//run the async to get email and also get title being passed as a prop
@@ -318,6 +321,9 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 		};
 		console.log(title)
 
+      
+		setIsLoading(true)
+
 		axios
 			.post("https://code-6z3x.onrender.com/api/pay/payForTicket", body, config)
 			.then((res) => {
@@ -330,10 +336,12 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 						})
 					);
 				}
+				setIsLoading(false)
 			})
 			.catch((e) => {
 				console.log(`The error is: ${e}`);
 			});
+			setIsLoading(false)
 	};
 
 	
@@ -525,7 +533,13 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 						>
 							{formattedNumber}
 						</Text>
-						<TouchableOpacity activeOpacity={0.8} onPress={() => pay()}>
+
+{isLoading?
+ <View>
+ <ActivityIndicator size="large" color="#0000ff" />
+</View>
+ : 
+<TouchableOpacity activeOpacity={0.8} onPress={() => pay()}>
 							<View
 								style={{
 									width: 100,
@@ -554,6 +568,7 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 								</Text>
 							</View>
 						</TouchableOpacity>
+}
 					</View>
 				</View>
 			</View>

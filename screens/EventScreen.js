@@ -9,14 +9,81 @@ import client from '../api/client';
 
 const PAGE_SIZE = 5;
 
+// const EventsScreen = () => {
+//   const navigation = useNavigation();
+
+//   const [events, setEvents] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [userInfo, setUserInfo] = useState(null);
+//   const [userToken, setUserToken] = useState(null);
+
+//   const getEventData = useCallback(async () => {
+//     setIsLoading(true);
+//     try {
+//       const value = await AsyncStorage.getItem('userInfo');
+//       const userToken = await AsyncStorage.getItem('userToken');
+//       if (value !== null && userToken !== null) {
+//         const userInfo = JSON.parse(value);
+//         setUserInfo(userInfo);
+//         setUserToken(userToken);
+//       }
+
+//       const token = userToken;
+//       const config = {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       };
+
+//       const res = await client.get(
+//         `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
+//         config
+//       );
+
+//       if (res.data.data.length === 0) {
+//         setIsLoading(false);
+//         return; // Exit early if there are no more events to fetch
+//       }
+
+//       setIsLoading(false);
+//       setEvents((prevEvents) => [...prevEvents, ...res.data.data]);
+//       setCurrentPage((prevPage) => prevPage + 1);
+
+//     } catch (e) {
+//       console.log(`${e}`);
+//       alert(`${e}`)
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   }, [currentPage, userToken]);
+
+
+
+
+
 const EventsScreen = () => {
   const navigation = useNavigation();
-
+  
+  
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
+
+
+  const updateCachedData = async (newData) => {
+    try {
+      const cachedData = await AsyncStorage.getItem('events');
+      const parsedData = cachedData ? JSON.parse(cachedData) : [];
+      const updatedData = [...parsedData, ...newData];
+      await AsyncStorage.setItem('events', JSON.stringify(updatedData));
+    } catch (e) {
+      console.log(`Error updating cached data: ${e}`);
+    }
+  }
+
 
   const getEventData = useCallback(async () => {
     setIsLoading(true);
@@ -36,6 +103,14 @@ const EventsScreen = () => {
         },
       };
 
+      // Check if there's cached data in AsyncStorage
+      const cachedData = await AsyncStorage.getItem('events');
+      if (cachedData) {
+        setEvents(JSON.parse(cachedData));
+        setIsLoading(false);
+        return;
+      }
+
       const res = await client.get(
         `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
         config
@@ -47,9 +122,16 @@ const EventsScreen = () => {
       }
 
       setIsLoading(false);
-      setEvents((prevEvents) => [...prevEvents, ...res.data.data]);
+      // setEvents((prevEvents) => [...prevEvents, ...res.data.data]);
+      setEvents((prevEvents) => {
+        const newEvents = [...prevEvents, ...res.data.data];
+        updateCachedData(newEvents); // Update cached data with new events
+        return newEvents;
+      });
       setCurrentPage((prevPage) => prevPage + 1);
 
+      // Cache the response data in AsyncStorage
+      await AsyncStorage.setItem('events', JSON.stringify(events));
     } catch (e) {
       console.log(`${e}`);
       alert(`${e}`)
@@ -58,9 +140,12 @@ const EventsScreen = () => {
     }
   }, [currentPage, userToken]);
 
+
   useEffect(() => {
     getEventData();
   }, [getEventData]);
+
+
 
   const loadMorePosts = useCallback(() => {
     if (events.length % PAGE_SIZE === 0) {
