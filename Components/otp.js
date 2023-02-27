@@ -8,7 +8,7 @@ const initCodes = [];
 export default function OTP({
 	containerStyle,
 	otpStyles,
-	codeCount = 5,
+	codeCount = 4,
 	onTyping,
 	onFinish,
 	...props

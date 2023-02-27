@@ -48,6 +48,8 @@ const VerifyLogic = (props) => {
 			console.log(res)
 				if (res.status === 200) {
                //since the response was succesful, then email and password is valid
+			   // get the refreshtoken and run the login function
+			   
 
 				 // run the login function
 
@@ -63,9 +65,9 @@ const VerifyLogic = (props) => {
 						console.log(userInfo)
 			
 						setUserInfo(userInfo)
-						let token = res.data.token
+						let token = res.data.refreshToken
 						setUserToken(token)
-			
+
 						try{
 							axios.defaults.headers.common.Authorization = `Bearer ${token}`
 							// stringify the user object
@@ -123,7 +125,7 @@ const VerifyLogic = (props) => {
 	  <View style={{marginTop:60}}>
 	  <View style={{width:315, height:172, backgroundColor:"#ffff", borderRadius:10, alignSelf:"center"}}>
                             <OTP
-							codeCount={5}
+							codeCount={4}
 							containerStyle={{ marginTop: 65 }}
 							otpStyles={{ backgroundColor: "#fff" }}
 						onFinish={(value) => verify(value)}

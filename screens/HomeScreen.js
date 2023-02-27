@@ -29,7 +29,7 @@ const HomeScreen = () => {
         setUserInfo(userInfo);
         setUserToken(userToken);
 
-        console.log(userInfo.campus)
+        // console.log(userInfo.campus)
 
       const token = userToken;
       const config = {
@@ -43,6 +43,7 @@ const HomeScreen = () => {
 
        config
       );
+      console.log (res)
 
       if (res.data.data.length === 0) {
         setIsLoading(false);
@@ -98,7 +99,7 @@ const HomeScreen = () => {
 
   const handleRefresh = useCallback(() => {
     SetPosts([]);
-    setCurrentPage(1);
+   setCurrentPage(1);
   }, []);
 
   return (

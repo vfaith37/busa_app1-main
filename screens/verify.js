@@ -123,7 +123,7 @@ const Login = ({ navigation }) => {
 
 						{isVerifyingCode && (
 							<View style={{ marginVertical: 20 }}>
-								<ActivityIndicator size={50} />
+								<ActivityIndicator size={50} color="#000" />
 							</View>
 						)}
 					</View>

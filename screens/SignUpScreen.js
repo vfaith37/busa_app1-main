@@ -35,9 +35,9 @@ export const SignUp = () => {
 	return (
 		<View style={{ flex: 1, backgroundColor: "#0D13E3", paddingTop: 55 }}>
 			<Bg />
-			{/* <SignUpForm /> */}
+			<SignUpForm />
 
-			<AppForm/>
+			{/* <AppForm/> */}
 
 			<StatusBar hidden />
 		</View>

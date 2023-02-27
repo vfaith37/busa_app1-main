@@ -12,14 +12,17 @@ import client from '../api/client';
 
 const DropdownComponent=()=>{
   const [userInfo, setUserInfo] = useState(null)
+  const [userToken, setUserToken] = useState(null)
   const navigation = useNavigation()
 
   const getUserId = async()=>{
     try {
       const value = await AsyncStorage.getItem('userInfo')
-      if(value !== null) {
-      // console.log(value)
+			const userToken = await AsyncStorage.getItem(`userToken`);
+
+      if(value !== null && userToken !==null) {
       setUserInfo(JSON.parse(value))
+      setUserToken(userToken)
       }
     } catch(e) {
       console.log(`${e}`)
@@ -103,24 +106,30 @@ const level = values.level.value
 const campus = values.campus.value
 const course = values.course.value
 
+const token = userToken;
+const config = {
+  headers: { Authorization: `Bearer ${token}` },
+};
+
+
 await client.put(`/user/${userInfo?._id}`,{
  gender:gender,
  level:level,
  campus:campus,
  course:course
-})
-.then(async(res)=>{
+}, config)
+.then(async res =>{
 console.log(res)
 
-if(res.status === 200){
-  console.log(res.data)
+if(res.status === 201){
+
+  console.log(res.data.data)
   // get the response. if it conatins all the userdata,
 
-  const userData = res.data.data
+  let userData = res.data.data
   //await the async storage and update the userInfo to get the current userdata.
 
   try{
-    // axios.defaults.headers.common.Authorization = `Bearer ${token}`
     // stringify the userData object
     await AsyncStorage.setItem("userInfo", JSON.stringify(userData))
   }catch(e){

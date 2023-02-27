@@ -9,59 +9,6 @@ import client from '../api/client';
 
 const PAGE_SIZE = 5;
 
-// const EventsScreen = () => {
-//   const navigation = useNavigation();
-
-//   const [events, setEvents] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [userInfo, setUserInfo] = useState(null);
-//   const [userToken, setUserToken] = useState(null);
-
-//   const getEventData = useCallback(async () => {
-//     setIsLoading(true);
-//     try {
-//       const value = await AsyncStorage.getItem('userInfo');
-//       const userToken = await AsyncStorage.getItem('userToken');
-//       if (value !== null && userToken !== null) {
-//         const userInfo = JSON.parse(value);
-//         setUserInfo(userInfo);
-//         setUserToken(userToken);
-//       }
-
-//       const token = userToken;
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       };
-
-//       const res = await client.get(
-//         `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
-//         config
-//       );
-
-//       if (res.data.data.length === 0) {
-//         setIsLoading(false);
-//         return; // Exit early if there are no more events to fetch
-//       }
-
-//       setIsLoading(false);
-//       setEvents((prevEvents) => [...prevEvents, ...res.data.data]);
-//       setCurrentPage((prevPage) => prevPage + 1);
-
-//     } catch (e) {
-//       console.log(`${e}`);
-//       alert(`${e}`)
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   }, [currentPage, userToken]);
-
-
-
-
-
 const EventsScreen = () => {
   const navigation = useNavigation();
   
@@ -71,19 +18,7 @@ const EventsScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
-
-
-  const updateCachedData = async (newData) => {
-    try {
-      const cachedData = await AsyncStorage.getItem('events');
-      const parsedData = cachedData ? JSON.parse(cachedData) : [];
-      const updatedData = [...parsedData, ...newData];
-      await AsyncStorage.setItem('events', JSON.stringify(updatedData));
-    } catch (e) {
-      console.log(`Error updating cached data: ${e}`);
-    }
-  }
-
+  const [hasMoreData, setHasMoreData] = useState(true);
 
   const getEventData = useCallback(async () => {
     setIsLoading(true);
@@ -94,67 +29,62 @@ const EventsScreen = () => {
         const userInfo = JSON.parse(value);
         setUserInfo(userInfo);
         setUserToken(userToken);
+
+    
+
+        const token = userToken;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        // Check if there's cached data in AsyncStorage
+        const cachedData = await AsyncStorage.getItem('events');
+        if (currentPage === 1 && cachedData) {
+          setEvents(JSON.parse(cachedData));
+          return;
+        }
+
+        const res = await client.get(
+          `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
+          config
+        );
+        
+console.log(res)
+
+        if (res.data.data.length === 0) {
+          setIsLoading(false)
+          setHasMoreData(false);
+          return; // Exit early if there are no more events to fetch
+        }
+
+        const newEvents = currentPage === 1 ? res.data.data : [...events, ...res.data.data];
+        setEvents(newEvents);
+        await AsyncStorage.setItem('events', JSON.stringify(newEvents)); // Cache the response data in AsyncStorage
+        setCurrentPage((prevPage) => prevPage + 1);
       }
-
-      const token = userToken;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      // Check if there's cached data in AsyncStorage
-      const cachedData = await AsyncStorage.getItem('events');
-      if (cachedData) {
-        setEvents(JSON.parse(cachedData));
-        setIsLoading(false);
-        return;
-      }
-
-      const res = await client.get(
-        `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
-        config
-      );
-
-      if (res.data.data.length === 0) {
-        setIsLoading(false);
-        return; // Exit early if there are no more events to fetch
-      }
-
-      setIsLoading(false);
-      // setEvents((prevEvents) => [...prevEvents, ...res.data.data]);
-      setEvents((prevEvents) => {
-        const newEvents = [...prevEvents, ...res.data.data];
-        updateCachedData(newEvents); // Update cached data with new events
-        return newEvents;
-      });
-      setCurrentPage((prevPage) => prevPage + 1);
-
-      // Cache the response data in AsyncStorage
-      await AsyncStorage.setItem('events', JSON.stringify(events));
     } catch (e) {
       console.log(`${e}`);
-      alert(`${e}`)
+      alert(`${e}`);
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, userToken]);
-
+  }, [currentPage, userToken, events]);
 
   useEffect(() => {
     getEventData();
   }, [getEventData]);
 
-
-
+  
   const loadMorePosts = useCallback(() => {
-    if (events.length % PAGE_SIZE === 0) {
+    if (events.length % PAGE_SIZE === 0  && hasMoreData)  {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   }, [events]);
 
   const renderLoader = useCallback(() => {
-    return isLoading ? (
+    return isLoading  ? (
       <LottieView
         source={require('../assets/animations/loader.json')}
         style={{
@@ -177,25 +107,42 @@ const EventsScreen = () => {
     [navigation]
   );
 
-  const handleRefresh = useCallback(() => {
+  const renderFooter = useCallback(() => {
+    if (!hasMoreData) {
+      return (
+        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
+          You have been caught up!
+        </Text>
+      );
+    }
+    return renderLoader();
+  }, [hasMoreData, renderLoader]);
+
+
+  const handleRefresh = useCallback(async () => {
     setEvents([]);
-    setCurrentPage(1);
-  }, []);
+    setCurrentPage(1); // Reset currentPage to 1 when refreshing
+    setIsLoading(true);
+    await getEventData();
+    setIsLoading(false);
+  }, [getEventData]);
+
 
   return (
     <SafeAreaView style={{ flex: 1, top: 40 }}>
       <FlatList
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
         data={events}
         bounces={false}
         decelerationRate={'fast'}
-        ListFooterComponent={renderLoader}
-        // keyExtractor={(item) => item.id.toString()}
+        // ListFooterComponent={renderLoader}
+        //  keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
+        ListFooterComponent={renderFooter}
       />
     </SafeAreaView>
   );
