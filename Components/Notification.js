@@ -55,13 +55,15 @@ export const Notification = () => {
 			// Revoke permission to display notifications
 			Notifications.setNotificationHandler({
 				handleNotification: async () => ({
-					shouldShowAlert: false,
+					shouldShowAlert: true,
 					shouldPlaySound: false,
 					shouldSetBadge: false,
 				}),
 			});
 		}
 	};
+
+
 
 	const sendPushTokenToBackend = async (pushToken) => {
 		try {
@@ -80,6 +82,8 @@ export const Notification = () => {
 			console.error(error);
 		}
 	};
+
+
 
 
 

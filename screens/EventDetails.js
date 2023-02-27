@@ -344,12 +344,14 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 			setIsLoading(false)
 	};
 
-	
+
 	const num = ticketPrice;
-	const formattedNumber = num.toLocaleString("en-NG", {
-		style: "currency",
-		currency: "NGN",
-	});
+const formatter = new Intl.NumberFormat('en-NG', {
+  style: 'currency',
+  currency: 'NGN',
+});
+
+const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 
 	const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
 	const scrollX = React.useRef(new Animated.Value(0)).current;
@@ -418,8 +420,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 					[{ nativeEvent: { contentOffset: { x: scrollX } } }],
 					{ useNativeDriver: true }
 				)}
-				// keyExtractor={(_, index) => index.toString}
-				keyExtractor={(item) => item.id}
+				keyExtractor={(_, index) => index.toString}
+				// keyExtractor={(item) => item.id}
 				horizontal
 				pagingEnabled
 				renderItem={({ item }) => {

@@ -68,7 +68,7 @@ const PostImage=(props)=>{
               <Image
                   style={{
                     height:341, width:width, 
-                    resizeMode:'contain',
+                    resizeMode:"cover"
                   }}
                   key={id}
                   source={{uri:item}}

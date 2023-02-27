@@ -62,8 +62,8 @@ export const Form = ({ component }) => {
 		time: Yup.string().required("Please select a time"),
 		endTime: Yup.string().required("Please select end time"),
 		endDate: Yup.string().required("Please select end date"), // here, endDate is a string
-		ticketPrice: Yup.string().required("price is required"),
-		venue: Yup.string().required("venue is required"),
+		ticketPrice: Yup.string().required("price required"),
+		venue: Yup.string().required("venue required"),
 		
 	});
 
@@ -193,39 +193,77 @@ export const Form = ({ component }) => {
 
 	// const { width, height } = useWindowDimensions();
 
+	// const pickImage = async (setFieldValue) => {
+	// 	try {
+	// 		const permissionResult =
+	// 			await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+	// 		if (permissionResult.granted === false) {
+	// 			alert("Permission to access camera roll is required!");
+	// 			return;
+	// 		}
+	// 		setIsLoading(true);
+
+	// 		const pickerResult = await ImagePicker.launchImageLibraryAsync({
+	// 			allowsMultipleSelection: true,
+	// 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+	// 			quality: 1,
+	// 			selectionLimit: 5, //for IOS 14+
+	// 		});
+
+	// 		if (!pickerResult.canceled) {
+	// 			const uris = pickerResult.assets.map((asset, index) => ({
+	// 				uri: asset.uri,
+	// 				id: index,
+	// 			}));
+	// 			// setFieldValue("image", uris);
+	// 			setFieldValue("image", (prevImages) => [...prevImages, ...uris]);
+	// 			setImage((previmage) => [...previmage, ...uris]);
+	// 		}
+	// 		setIsLoading(false);
+	// 		console.log(pickerResult.assets);
+	// 	} catch (e) {
+	// 		console.log(`${e}`);
+	// 	}
+	// };
+
+
+
 	const pickImage = async (setFieldValue) => {
 		try {
-			const permissionResult =
-				await ImagePicker.requestMediaLibraryPermissionsAsync();
+		  const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+	  
+		  if (permissionResult.granted === false) {
+			alert("Permission to access camera roll is required!");
+			return;
+		  }
+		  setIsLoading(true);
+	  
+		  const pickerResult = await ImagePicker.launchImageLibraryAsync({
+			allowsMultipleSelection: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			quality: 1,
+			selectionLimit: 5, //for IOS 14+
+		  });
+	  
+		  if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
+			const uris = pickerResult.assets.map((asset, index) => ({
+			  uri: asset.uri,
+			  id: index,
+			}));
+			 setFieldValue("image", uris);
 
-			if (permissionResult.granted === false) {
-				alert("Permission to access camera roll is required!");
-				return;
-			}
-			setIsLoading(true);
+		//  setImage((previmage) => [...previmage, ...uris]);
+		setImage([...image, ...uris])
 
-			const pickerResult = await ImagePicker.launchImageLibraryAsync({
-				allowsMultipleSelection: true,
-				mediaTypes: ImagePicker.MediaTypeOptions.Images,
-				quality: 1,
-				selectionLimit: 5, //for IOS 14+
-			});
-
-			if (!pickerResult.canceled) {
-				const uris = pickerResult.assets.map((asset, index) => ({
-					uri: asset.uri,
-					id: index,
-				}));
-				setFieldValue("image", uris);
-				setImage((previmage) => [...previmage, ...uris]);
-			}
-			setIsLoading(false);
-			console.log(pickerResult.assets);
+		  }
+		  setIsLoading(false);
+		  console.log(pickerResult.assets);
 		} catch (e) {
-			console.log(`${e}`);
+		  console.log(`${e}`);
 		}
-	};
-
+	  };
+	  
 
 
 	  
@@ -276,7 +314,6 @@ export const Form = ({ component }) => {
 					
 				}}
 				onSubmit={getData}
-				// validationSchema={validationSchema}
 				validationSchema ={component === "Post" ? validationSchema :validationSchemaEvent}
 			>
 				{({
@@ -405,6 +442,7 @@ export const Form = ({ component }) => {
 								)}
 								<FlatList
 									data={image.slice(0, 5)}
+									// data={image}
 									horizontal
 									renderItem={({ item }) => (
 										<View style={{ width: 120, height: 130 }}>
@@ -422,7 +460,6 @@ export const Form = ({ component }) => {
 										</View>
 									)}
 									keyExtractor={(item) => item.uri}
-									// contentContainerStyle={{}}
 								/>
 							</View>
 
@@ -442,6 +479,7 @@ export const Form = ({ component }) => {
 												is24Hour={false}
 												display="default"
 												onChange={(event, selectedDate) => {
+													setShow(false);
 													console.log("onChange called"); // add this line
 													const currentDate = selectedDate || date;
 													setDate(currentDate);
@@ -451,12 +489,10 @@ export const Form = ({ component }) => {
 														);
 														const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true}).replace(" ", "");
 														setFieldValue("time", formattedTime);
-														setShow(false);
 												}}
 											/>
 										)}
 										
-                                        {/* {console.log("show:", show)} */}
 
 
 										<View
@@ -533,16 +569,17 @@ export const Form = ({ component }) => {
 										  <Text style={{fontFamily:"Poppins"}}>End Time</Text>
 										  </View>
 
-										{view && (
+										{view &&(
 											<DateTimePicker
 												value={endDate}
 												mode={newMode}
 												is24Hour={false}
 												display="default"
 												onChange={(event, selectedDate) => {
+													setView(false);
 													const currentDate = selectedDate || endDate;
 													setEndDate(currentDate);
-													// setView(false);
+											
 													setFieldValue(
 														"endDate",
 														new Intl.DateTimeFormat("en-GB").format(endDate)
@@ -550,7 +587,6 @@ export const Form = ({ component }) => {
 													const formattedTime = date.toLocaleTimeString("en-US", {hour: "numeric", minute: "numeric", hour12: true}).replace(" ", "");
 
 													setFieldValue("endTime", formattedTime);
-													setView(false);
 												}}
 											/>
 										)} 
@@ -580,7 +616,7 @@ export const Form = ({ component }) => {
 													{new Intl.DateTimeFormat("en-GB").format(endDate)}
 												</Text>
 												<TouchableOpacity
-												activeOpacity={0.9}
+												activeOpacity={0.6}
 													onPress={() => {
 														setNewMode("date"), setView(true);
 													}}

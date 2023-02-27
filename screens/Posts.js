@@ -101,9 +101,10 @@ const PostImage=({post, navigation})=>{
       // {post.images.map((_, index, id) => {
       //    return (
       //     <>
-      //     {post.images.length>=1 ?
+      //     {post.images.length >1 ?(
       //      <View
-      //      key={index}
+      //     // key={`dot-${id}`}
+      //     key={id.toString()}
       //      style={[
       //        styles.dot,
       //        currentSlideIndex == index &&{
@@ -114,19 +115,20 @@ const PostImage=({post, navigation})=>{
       //        }
       //      ]}
       //    />
+      //     )
           
       //     : null
       //     }
-      
 
       // {
       //   currentSlideIndex==index &&(
       //     <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
       //     opacity:fadeAnim,
       //   }}
-      //   key={id.toString()}
+      //   key={id}
+        
       //     >
-      //       <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} key={index}>{index+1}/{post.images.length}</Text>
+      //       <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
       //     </Animated.View>
       //   )
       // }
@@ -139,9 +141,13 @@ const PostImage=({post, navigation})=>{
       //   )
       // }
 
+
+      
+
       const PostIndicator = ({post}) => {
         return (
           <View style={styles.pagination}>
+            
             {post.images.length > 1 && post.images.map((_, index) => (
               <View
               key={index}>
@@ -205,7 +211,7 @@ const PostImage=({post, navigation})=>{
     <View>
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, height:height*0.375, width:width*0.93, borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
-           onMomentumScrollEnd={()=>fadeOut()}
+       onMomentumScrollEnd={()=>fadeOut()}
         data={post.images}
         horizontal
         bounces={false}
