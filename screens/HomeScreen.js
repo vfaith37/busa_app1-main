@@ -130,6 +130,24 @@ const HomeScreen = () => {
     [navigation]
   );
 
+  const renderFooter = useCallback(() => {
+    if (!hasMoreData && posts.length === 0) {
+      return (
+        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
+          No posts to display
+        </Text>
+      );
+    } else if (!hasMoreData) {
+      return (
+        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
+          You have been caught up!
+        </Text>
+      );
+    }
+    return renderLoader();
+  },[hasMoreData, renderLoader]);
+
+
   const handleRefresh = useCallback(async () => {
     setPosts([]);
     setCurrentPage(1); // Reset currentPage to 1 when refreshing
@@ -143,13 +161,13 @@ const HomeScreen = () => {
       <StatusBar backgroundColor={COLORS.white}/>
    <DailyTips/>
       <FlatList
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
         data={posts}
         bounces={false}
         decelerationRate={'fast'}
-        ListFooterComponent={renderLoader}
+        ListFooterComponent={renderFooter}
         // keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         refreshing={isLoading && posts.length === 0}
