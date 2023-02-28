@@ -22,7 +22,7 @@ const DailyTips = () => {
 	}, []);
 
 	return (
-		<View style={{ paddingBottom: 10 }}>
+		<View style={{ paddingBottom: 10,}}>
 			<Image
 				source={require("../assets/background.jpg")}
 				style={{

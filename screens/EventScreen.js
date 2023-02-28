@@ -23,8 +23,8 @@ const EventsScreen = () => {
  
 
  const getEventData = useCallback(async () => {
-
-  const CACHE_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+  
+  const CACHE_EXPIRY_TIME = 2 * 60 * 1000; // 30 minutes in milliseconds
 
     setIsLoading(true);
     try {
@@ -60,9 +60,11 @@ const EventsScreen = () => {
         }
 
         const res = await client.get(
-          `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
+          `/event/get${userInfo.campus}CampusEvents/${currentPage}/${PAGE_SIZE}`,
           config
         );
+
+            console.log(res)
 
         if (res.data.data.length === 0) {
           setIsLoading(false);
@@ -122,7 +124,7 @@ const EventsScreen = () => {
     [navigation]
   );
 
-  
+
   const renderFooter = useCallback(() => {
     if (!hasMoreData && events.length === 0) {
       return (
@@ -159,7 +161,6 @@ const EventsScreen = () => {
         data={events}
         bounces={false}
         decelerationRate={'fast'}
-        // ListFooterComponent={renderLoader}
         //  keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         refreshing={isLoading && events.length === 0}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList,StatusBar } from 'react-native';
+import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,60 +8,89 @@ import Posts from './Posts';
 import { COLORS } from '../constants/theme';
 import DailyTips from "../Components/DailyTips"
 
+const {width, height} = Dimensions.get("screen")
+
 const PAGE_SIZE = 5;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-  const [posts, SetPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
+  const [hasMoreData, setHasMoreData] = useState(true);
+
 
   const getPostData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const value = await AsyncStorage.getItem('userInfo');
-      const userToken = await AsyncStorage.getItem('userToken');
-      if (value !== null && userToken !== null) {
-        const userInfo = JSON.parse(value);
-        setUserInfo(userInfo);
-        setUserToken(userToken);
-
-        // console.log(userInfo.campus)
-
-      const token = userToken;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const res = await client.get(
-`/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
-
-       config
-      );
-      console.log (res)
-
-      if (res.data.data.length === 0) {
+  
+    const CACHE_EXPIRY_TIME = 1 * 60 * 1000; // 30 minutes in milliseconds
+  
+      setIsLoading(true);
+      try {
+        const value = await AsyncStorage.getItem('userInfo');
+        const userToken = await AsyncStorage.getItem('userToken');
+        if (value !== null && userToken !== null) {
+          const userInfo = JSON.parse(value);
+          setUserInfo(userInfo);
+          setUserToken(userToken);
+  
+          const token = userToken;
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+  
+          // Check if there's cached data in AsyncStorage
+          const cachedData = await AsyncStorage.getItem('posts');
+          const cachedTimestamp = await AsyncStorage.getItem('postsTimestamp');
+          const currentTime = new Date().getTime();
+  
+          if (cachedData && cachedTimestamp) {
+            const timeDiff = currentTime - Number(cachedTimestamp);
+            if (timeDiff < CACHE_EXPIRY_TIME) { // Check if the cached data is still valid
+              setPosts(JSON.parse(cachedData));
+              setIsLoading(false);
+              return;
+            } else {
+              await AsyncStorage.removeItem('posts');
+              await AsyncStorage.removeItem('postsTimestamp');
+            }
+          }
+  
+          const res = await client.get(
+            `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
+            config
+          );
+  
+              console.log(res)
+  
+          if (res.data.data.length === 0) {
+            setIsLoading(false);
+            setHasMoreData(false);
+            return; // Exit early if there are no more posts to fetch
+          }
+  
+          const newposts = currentPage === 1 ? res.data.data : [...posts, ...res.data.data];
+          setPosts(newposts);
+  
+          // Cache the response data in AsyncStorage
+          await AsyncStorage.setItem('posts', JSON.stringify(newposts));
+          await AsyncStorage.setItem('postsTimestamp', currentTime.toString());
+  
+          setCurrentPage((prevPage) => prevPage + 1);
+        }
+      } catch (e) {
+        console.log(`${e}`);
+        alert(`${e}`);
+      } finally {
         setIsLoading(false);
-        return; // Exit early if there are no more posts to fetch
       }
+    }, [currentPage, userToken, posts]);
 
-      setIsLoading(false);
-      SetPosts((prevposts) => [...prevposts, ...res.data.data]);
-      setCurrentPage((prevPage) => prevPage + 1);
 
-    }
-    } catch (e) {
-      console.log({e});
-      alert(`${e}`)
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentPage, userToken]);
 
   useEffect(() => {
     getPostData();
@@ -92,18 +121,25 @@ const HomeScreen = () => {
 
   const renderItem = useCallback(
     ({ item, index }) => (
+      <ScrollView
+      contentContainerStyle={{top:-20, height:height/1.95}}
+      >
       <Posts post={item} key={item.id} navigation={navigation} />
+      </ScrollView>
     ),
     [navigation]
   );
 
-  const handleRefresh = useCallback(() => {
-    SetPosts([]);
-   setCurrentPage(1);
-  }, []);
+  const handleRefresh = useCallback(async () => {
+    setPosts([]);
+    setCurrentPage(1); // Reset currentPage to 1 when refreshing
+    setIsLoading(true);
+    await getPostData();
+    setIsLoading(false);
+  }, [getPostData]);
 
   return (
-    <SafeAreaView style={{ flex: 1, top: 40 }}>
+    <SafeAreaView style={{ flex: 1, top:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
    <DailyTips/>
       <FlatList

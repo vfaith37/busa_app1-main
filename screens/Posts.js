@@ -275,14 +275,14 @@ const PostFooter=({post})=>{
     //  marginVertical:330,
       position:"absolute",
     //  marginVertical:28
-    bottom:-100
+    bottom:-80
      }}>
       <Text style={{textTransform:"capitalize", color:"#000000",fontSize:16, fontWeight:"600",
       // maxWidth:'70%', 
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
-    <Text style={{fontWeight:"300", fontSize:10, color:"#303030",fontFamily:"Poppins2", lineHeight:13 }}> {newTime}</Text>
-    <Text style={{fontWeight:"500", fontSize:10, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins"}}>
+    <Text style={{fontWeight:"200", fontSize:10, color:"#303030",fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
+    <Text style={{fontWeight:"500", fontSize:13, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins"}}>
       {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>
         </View>
@@ -308,8 +308,7 @@ const Posts = ({post, navigation}) => {
 
   return (
     <View
-    style={{flex:1,
-marginBottom:110      }}
+    style={{flex:1}}
     >
       <StatusBar backgroundColor={COLORS.white}/>
       <View>
