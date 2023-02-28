@@ -20,7 +20,12 @@ const EventsScreen = () => {
   const [userToken, setUserToken] = useState(null);
   const [hasMoreData, setHasMoreData] = useState(true);
 
-  const getEventData = useCallback(async () => {
+ 
+
+ const getEventData = useCallback(async () => {
+
+  const CACHE_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+
     setIsLoading(true);
     try {
       const value = await AsyncStorage.getItem('userInfo');
@@ -29,8 +34,6 @@ const EventsScreen = () => {
         const userInfo = JSON.parse(value);
         setUserInfo(userInfo);
         setUserToken(userToken);
-
-    
 
         const token = userToken;
         const config = {
@@ -41,27 +44,39 @@ const EventsScreen = () => {
 
         // Check if there's cached data in AsyncStorage
         const cachedData = await AsyncStorage.getItem('events');
-        if (currentPage === 1 && cachedData) {
-          setEvents(JSON.parse(cachedData));
-          return;
+        const cachedTimestamp = await AsyncStorage.getItem('eventsTimestamp');
+        const currentTime = new Date().getTime();
+
+        if (cachedData && cachedTimestamp) {
+          const timeDiff = currentTime - Number(cachedTimestamp);
+          if (timeDiff < CACHE_EXPIRY_TIME) { // Check if the cached data is still valid
+            setEvents(JSON.parse(cachedData));
+            setIsLoading(false);
+            return;
+          } else {
+            await AsyncStorage.removeItem('events');
+            await AsyncStorage.removeItem('eventsTimestamp');
+          }
         }
 
         const res = await client.get(
           `/event/getMainCampusEvents/${currentPage}/${PAGE_SIZE}`,
           config
         );
-        
-console.log(res)
 
         if (res.data.data.length === 0) {
-          setIsLoading(false)
+          setIsLoading(false);
           setHasMoreData(false);
           return; // Exit early if there are no more events to fetch
         }
 
         const newEvents = currentPage === 1 ? res.data.data : [...events, ...res.data.data];
         setEvents(newEvents);
-        await AsyncStorage.setItem('events', JSON.stringify(newEvents)); // Cache the response data in AsyncStorage
+
+        // Cache the response data in AsyncStorage
+        await AsyncStorage.setItem('events', JSON.stringify(newEvents));
+        await AsyncStorage.setItem('eventsTimestamp', currentTime.toString());
+
         setCurrentPage((prevPage) => prevPage + 1);
       }
     } catch (e) {
@@ -107,8 +122,15 @@ console.log(res)
     [navigation]
   );
 
+  
   const renderFooter = useCallback(() => {
-    if (!hasMoreData) {
+    if (!hasMoreData && events.length === 0) {
+      return (
+        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
+          No events to display
+        </Text>
+      );
+    } else if (!hasMoreData) {
       return (
         <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
           You have been caught up!
@@ -116,7 +138,7 @@ console.log(res)
       );
     }
     return renderLoader();
-  }, [hasMoreData, renderLoader]);
+  },[hasMoreData, renderLoader]);
 
 
   const handleRefresh = useCallback(async () => {
