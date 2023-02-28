@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, View } from 'react-native';
+import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
