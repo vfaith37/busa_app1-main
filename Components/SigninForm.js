@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
@@ -9,15 +9,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "../api/client";
 import axios from "axios";
 
+const {width, height} =Dimensions.get("screen")
 
 const validationSchema = Yup.object({
-	// email: Yup.string()
-	// 	.trim()
-	// 	.matches(
-	// 		/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
-	// 		"School Email required"
-	// 		)
-	// 	.required("Email is required!"),
+	email: Yup.string()
+		.trim()
+		.matches(
+			/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
+			"School Email required"
+			)
+		.required("Email is required!"),
 	password: Yup.string()
 	.trim()
 	.min(8, "Password not long enough!")
@@ -72,14 +73,13 @@ export const SignInForm = () => {
 			}
 			else if (res.status === 401){
 				setIsLoading(false)
-				
 			}
 		}).catch((e)=>{
 			console.log(e)
 			setIsLoading(false)
 		}
 		)
-		
+		setIsLoading(false)
 	}
 
 
@@ -112,7 +112,7 @@ export const SignInForm = () => {
 								label={"Email"}
 								style={styles.text}
 								TextInputStyle={styles.textInput}
-								maxLength={32}
+								maxLength={50}
 								selectionColor='#363BE8'
 							/>
 							<FormInput
@@ -154,12 +154,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "white",
 	},
-	inputContainer: {
-		width: 300,
-		top: 30,
-		backgroundColor: "#000",
-		left: 20,
-	},
+	
 	text: {
 		fontWeight: "400",
 		fontSize: 13,
@@ -169,16 +164,16 @@ const styles = StyleSheet.create({
 
 	},
 	textInput: {
-		paddingTop: 15,
+		paddingTop: height*0.02,
 		borderColor: "000",
 		borderBottomColor: "grey",
 		borderBottomWidth: StyleSheet.hairlineWidth,
-		height: 35,
-		marginBottom: 10,
+		height:height*0.04,
+		marginBottom: height*0.01,
 		paddingLeft: 5,
 		fontSize: 13,
 		fontFamily:"Poppins",
-		width:240
+		width:width*0.67
 
 	},
 });
