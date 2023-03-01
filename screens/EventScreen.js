@@ -9,7 +9,7 @@ import client from '../api/client';
 
 const PAGE_SIZE = 5;
 
-const EventsScreen = () => {
+const EventScreen = () => {
   const navigation = useNavigation();
   
   
@@ -24,7 +24,7 @@ const EventsScreen = () => {
 
  const getEventData = useCallback(async () => {
   
-  const CACHE_EXPIRY_TIME = 2 * 60 * 1000; // 30 minutes in milliseconds
+  const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 30 minutes in milliseconds
 
     setIsLoading(true);
     try {
@@ -89,32 +89,49 @@ const EventsScreen = () => {
     }
   }, [currentPage, userToken, events]);
 
+  // useEffect(() => {
+  //   getEventData();
+  // }, [getEventData]);
+
   useEffect(() => {
+    // Fetch data on mount and every minute
+    const interval = setInterval(() => {
+      getEventData();
+    }, 60000); // 60 seconds
+  
     getEventData();
+  
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(interval);
   }, [getEventData]);
 
   
+  
+
   const loadMorePosts = useCallback(() => {
-    if (events.length % PAGE_SIZE === 0  && hasMoreData)  {
+    if (events.length >= currentPage * PAGE_SIZE && hasMoreData) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
-  }, [events]);
+  }, [currentPage, events.length, hasMoreData]);
 
   const renderLoader = useCallback(() => {
-    return isLoading  ? (
-      <LottieView
-        source={require('../assets/animations/loader.json')}
-        style={{
-          width: 400,
-          height: 400,
-          top: 30,
-          alignSelf: 'center',
-        }}
-        loop
-        speed={0.7}
-        autoPlay
-      />
-    ) : null;
+    if (isLoading) {
+      return (
+        <LottieView
+          source={require('../assets/animations/loader.json')}
+          style={{
+            width: 400,
+            height: 400,
+            top: 30,
+            alignSelf: 'center',
+          }}
+          loop
+          speed={0.7}
+          autoPlay
+        />
+      );
+    }
+    return null;
   }, [isLoading]);
 
   const renderItem = useCallback(
@@ -171,4 +188,4 @@ const EventsScreen = () => {
   );
 };
 
-export default EventsScreen;
+export default EventScreen;

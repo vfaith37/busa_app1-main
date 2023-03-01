@@ -25,7 +25,7 @@ const HomeScreen = () => {
 
   const getPostData = useCallback(async () => {
   
-    const CACHE_EXPIRY_TIME = 1 * 60 * 1000; // 30 minutes in milliseconds
+    const CACHE_EXPIRY_TIME = 1 * 60 * 1000; // minutes in milliseconds
   
       setIsLoading(true);
       try {
@@ -66,21 +66,23 @@ const HomeScreen = () => {
           );
   
               console.log(res)
-  
+              
+              const newposts = currentPage === 1 ? res.data.data : [...posts, ...res.data.data];
+              setPosts(newposts);
+      
+              // Cache the response data in AsyncStorage
+              await AsyncStorage.setItem('posts', JSON.stringify(newposts));
+              await AsyncStorage.setItem('postsTimestamp', currentTime.toString());
+      
+              setCurrentPage((prevPage) => prevPage + 1);
+              setHasMoreData(true); // update hasMoreData state
+
           if (res.data.data.length === 0) {
             setIsLoading(false);
             setHasMoreData(false);
             return; // Exit early if there are no more posts to fetch
           }
   
-          const newposts = currentPage === 1 ? res.data.data : [...posts, ...res.data.data];
-          setPosts(newposts);
-  
-          // Cache the response data in AsyncStorage
-          await AsyncStorage.setItem('posts', JSON.stringify(newposts));
-          await AsyncStorage.setItem('postsTimestamp', currentTime.toString());
-  
-          setCurrentPage((prevPage) => prevPage + 1);
         }
       } catch (e) {
         console.log(`${e}`);
@@ -92,32 +94,74 @@ const HomeScreen = () => {
 
 
 
-  useEffect(() => {
-    getPostData();
-  }, [getPostData]);
+  // useEffect(() => {
+  //   getPostData();
+  // }, [getPostData]);
 
-  const loadMorePosts = useCallback(() => {
-    if (posts.length % PAGE_SIZE === 0) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  }, [posts]);
+  useEffect(() => {
+    // Fetch data on mount and every 1 minute
+    const interval = setInterval(() => {
+      getPostData();
+    }, 60000); // 1 minute
+  
+    getPostData();
+  
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(interval);
+  }, []);
+
+
+
+  // const loadMorePosts = useCallback(() => {
+  //   if (posts.length >= currentPage * PAGE_SIZE && hasMoreData) {
+  //     setCurrentPage((prevPage) => prevPage + 1);
+  //   }
+  // }, [currentPage, posts.length, hasMoreData]);
+
+
+  const loadMorePosts = () => {
+    setCurrentPage(currentPage + 1);
+    getPostData(); // Call getPostData again to load more posts
+  };
+
+  // const renderLoader = useCallback(() => {
+  //   return isLoading ? (
+  //     <LottieView
+  //       source={require('../assets/animations/loader.json')}
+  //       style={{
+  //         width: 400,
+  //         height: 400,
+  //         top: 30,
+  //         alignSelf: 'center',
+  //       }}
+  //       loop
+  //       speed={0.7}
+  //       autoPlay
+  //     />
+  //   ) : null;
+  // }, [isLoading]);
+
 
   const renderLoader = useCallback(() => {
-    return isLoading ? (
-      <LottieView
-        source={require('../assets/animations/loader.json')}
-        style={{
-          width: 400,
-          height: 400,
-          top: 30,
-          alignSelf: 'center',
-        }}
-        loop
-        speed={0.7}
-        autoPlay
-      />
-    ) : null;
+    if (isLoading) {
+      return (
+        <LottieView
+          source={require('../assets/animations/loader.json')}
+          style={{
+            width: 400,
+            height: 400,
+            top: 30,
+            alignSelf: 'center',
+          }}
+          loop
+          speed={0.7}
+          autoPlay
+        />
+      );
+    }
+  else  return null;
   }, [isLoading]);
+
 
   const renderItem = useCallback(
     ({ item, index }) => (
@@ -137,7 +181,8 @@ const HomeScreen = () => {
           No posts to display
         </Text>
       );
-    } else if (!hasMoreData) {
+    } 
+    else if (!hasMoreData) {
       return (
         <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
           You have been caught up!
@@ -167,8 +212,8 @@ const HomeScreen = () => {
         data={posts}
         bounces={false}
         decelerationRate={'fast'}
-        ListFooterComponent={renderFooter}
-        // keyExtractor={(item) => item.id.toString()}
+        // ListFooterComponent={renderFooter}
+        //  keyExtractor={(item) => item._id.toString()}
         renderItem={renderItem}
         refreshing={isLoading && posts.length === 0}
         onRefresh={handleRefresh}

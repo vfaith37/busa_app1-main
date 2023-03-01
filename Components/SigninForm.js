@@ -1,13 +1,12 @@
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text } from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "../api/client";
-import axios from "axios";
 
 const {width, height} =Dimensions.get("screen")
 
@@ -33,6 +32,8 @@ export const SignInForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [userToken, setUserToken]= useState(null)
 	const [userInfo, setUserInfo] = useState(null)
+	const [error, setError] = useState(null);
+
 
 	const userInfos = {
 		email: "",
@@ -73,13 +74,26 @@ export const SignInForm = () => {
 			}
 			else if (res.status === 401){
 				setIsLoading(false)
+				setError("Invalid username or password.");
 			}
 		}).catch((e)=>{
 			console.log(e)
-			setIsLoading(false)
+			if (e.response && e.response.status === 401) {
+				setError (`${e.response.data.error}`)
+			}else if (e.response && e.response.status === 400) {
+			setError (`${e.response.data.error}`)
+			}
+			else if(e.message === "Network Error" && e.code === "ERR_NETWORK"){
+				setError("Network error, lost connection!")
+			}
+			else{
+		    setError("An error occurred. Please try again later.");
+			}
 		}
 		)
-		setIsLoading(false)
+		.finally(() => {
+			setIsLoading(false);
+		  });
 	}
 
 
@@ -102,6 +116,7 @@ export const SignInForm = () => {
 					const { email, password } = values;
 					return (
 						<>
+				{error && <Text style={{ color: "red", fontFamily:"Poppins", fontSize:12 }}>{error}</Text>}
 							<FormInput
 								onChangeText={handleChange("email")}
 								placeholder="email@student.babcock.edu.ng"

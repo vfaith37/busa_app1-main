@@ -9,10 +9,8 @@ import {
 	FlatList,
 } from "react-native";
 import React from "react";
-import { useCallback } from "react";
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
-import { useFonts } from "expo-font";
 import { Icon } from "../constants/icons";
 import moment from "moment";
 
@@ -27,7 +25,6 @@ const Events = ({ event }) => {
 };
 
 const EventImage = ({ event, navigation }) => {
-	// console.log(event)
 	return (
 		<>
 			<View
@@ -207,5 +204,3 @@ const EventItems = ({ event }) => {
 };
 
 export default  Events;
-
-const styles = StyleSheet.create({});
