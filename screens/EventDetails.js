@@ -260,7 +260,7 @@ const { width, height } = Dimensions.get("screen");
 
 const imageW = width * 0.81;
 // const imageH = imageW * 1;
-const imageH = 310
+const imageH = height/2.57
 
 const EventDetails = ({ route }) => {
 	return (

@@ -121,10 +121,13 @@ const VerifyLogic = (props) => {
 	  autoPlay
 	  />
 	  
+
+
+	  
 	  <View style={{marginTop:60}}>
 	  <View style={{width:315, height:172, backgroundColor:"#ffff", borderRadius:10, alignSelf:"center"}}>
                             <OTP
-							codeCount={4}
+							codeCount={5}
 							containerStyle={{ marginTop: 65 }}
 							otpStyles={{ backgroundColor: "#fff" }}
 						onFinish={(value) => verify(value)}

@@ -91,7 +91,7 @@ const PostImage=({post, navigation})=>{
         itemVisiblePercentThreshold:50,
       })
 
- 
+      
       // const PostIndicator = ({post}) => {
   
       //   return(

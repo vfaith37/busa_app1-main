@@ -6,12 +6,14 @@ import UploadEventScreen from "../screens/UploadEventScreen";
 import UploadPostScreen from "../screens/UploadPostScreen";
 import ScanTicketScreen from "../screens/ScanTicketScreen";
 import TicketDisplayScreen from "../screens/TicketDisplayScreen";
+import EventsListScreen from "../screens/EventsListScreen";
+import EventScreen from "../screens/EventScreen";
+
 
 
 // here the dunctionality is checked
 
 const Stack = createStackNavigator();
-
 
 const ProfileStack = ()=> {
 	return (
@@ -25,6 +27,8 @@ const ProfileStack = ()=> {
 			<Stack.Screen component={TicketDisplayScreen} name="TicketScreen"/> 
 			<Stack.Screen component={UploadPostScreen} name="UploadPostScreen"/> 
 			<Stack.Screen component={UploadEventScreen} name="UploadEventScreen"/> 
+			<Stack.Screen component={EventScreen} name="EventScreen"/> 
+			<Stack.Screen component={EventsListScreen} name="EventList"/> 
             <Stack.Screen component={ScanTicketScreen} name="ScanTicketScreen"/>	
 		</Stack.Navigator>
 	);
