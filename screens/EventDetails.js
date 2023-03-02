@@ -253,6 +253,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { StackActions, useNavigation } from "@react-navigation/native";
+import client from "../api/client";
 
 
 const { width, height } = Dimensions.get("screen");
@@ -326,8 +327,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
       
 		setIsLoading(true)
 
-		axios
-			.post("https://code-6z3x.onrender.com/api/pay/payForTicket", body, config)
+		client
+			.post(`/pay/payForTicket`, body, config)
 			.then((res) => {
 				console.log(res);
 
