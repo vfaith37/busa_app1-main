@@ -4,8 +4,8 @@ import { SafeAreaView, FlatList} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Events from './Events';
 import client from '../api/client';
+import Events from './Events';
 
 const PAGE_SIZE = 5;
 
@@ -89,21 +89,21 @@ const EventScreen = () => {
     }
   }, [currentPage, userToken, events]);
 
-  // useEffect(() => {
-  //   getEventData();
-  // }, [getEventData]);
-
   useEffect(() => {
-    // Fetch data on mount and every minute
-    const interval = setInterval(() => {
-      getEventData();
-    }, 60000); // 60 seconds
-  
     getEventData();
-  
-    // Cleanup function to clear the interval when the component unmounts
-    return () => clearInterval(interval);
   }, [getEventData]);
+
+  // useEffect(() => {
+  //   // Fetch data on mount and every minute
+  //   const interval = setInterval(() => {
+  //     getEventData();
+  //   }, 60000); // 60 seconds
+  
+  //   getEventData();
+  
+  //   // Cleanup function to clear the interval when the component unmounts
+  //   return () => clearInterval(interval);
+  // }, [getEventData]);
 
   
   
@@ -120,8 +120,8 @@ const EventScreen = () => {
         <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
-            width: 400,
-            height: 400,
+            width: 100,
+            height: 100,
             top: 30,
             alignSelf: 'center',
           }}
@@ -141,23 +141,6 @@ const EventScreen = () => {
     [navigation]
   );
 
-
-  const renderFooter = useCallback(() => {
-    if (!hasMoreData && events.length === 0) {
-      return (
-        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
-          No events to display
-        </Text>
-      );
-    } else if (!hasMoreData) {
-      return (
-        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
-          You have been caught up!
-        </Text>
-      );
-    }
-    return renderLoader();
-  },[hasMoreData, renderLoader]);
 
 
   const handleRefresh = useCallback(async () => {
@@ -182,7 +165,6 @@ const EventScreen = () => {
         renderItem={renderItem}
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
-        ListFooterComponent={renderFooter}
       />
     </SafeAreaView>
   );

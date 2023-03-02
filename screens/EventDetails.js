@@ -21,18 +21,6 @@
 //   events:"#2b3b67"
 // }
 
-const EventDetails = ({ route }) => {
-	return (
-		<>
-			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
-			{/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
-			<EventAbout route={route} />
-			{/* </View> */}
-		</>
-	);
-};
-
-import { StackActions, useNavigation } from "@react-navigation/native";
 // const EventAbout =(props)=>{
 //     const {title, date, venue, time, image, ticketPrice, description} = props.route.params
 // return(
@@ -264,12 +252,26 @@ import {Location, Time } from "../constants/icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import { StackActions, useNavigation } from "@react-navigation/native";
+
 
 const { width, height } = Dimensions.get("screen");
 
 const imageW = width * 0.81;
 // const imageH = imageW * 1;
 const imageH = 310
+
+const EventDetails = ({ route }) => {
+	return (
+		<>
+			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
+			{/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
+			<EventAbout route={route} />
+			{/* </View> */}
+		</>
+	);
+};
+
 
 const EventAbout = (props) => {
 	const { title, date, venue, time, image, ticketPrice, content } =
