@@ -24,7 +24,7 @@ const EventScreen = () => {
 
  const getEventData = useCallback(async () => {
   
-  const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 30 minutes in milliseconds
+  const CACHE_EXPIRY_TIME = 2* 60 * 1000; // 30 minutes in milliseconds
 
     setIsLoading(true);
     try {
