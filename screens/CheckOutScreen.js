@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react';
 import { WebView } from 'react-native-webview';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 
 
 const CheckOutScreen =  ({route}) => {

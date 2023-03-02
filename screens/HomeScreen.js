@@ -94,21 +94,21 @@ const HomeScreen = () => {
 
 
 
-  // useEffect(() => {
-  //   getPostData();
-  // }, [getPostData]);
-
   useEffect(() => {
-    // Fetch data on mount and every 1 minute
-    const interval = setInterval(() => {
-      getPostData();
-    }, 60000); // 1 minute
-  
     getPostData();
-  
-    // Cleanup function to clear the interval when the component unmounts
-    return () => clearInterval(interval);
   }, [currentPage]);
+
+  // useEffect(() => {
+  //   // Fetch data on mount and every 1 minute
+  //   const interval = setInterval(() => {
+  //     getPostData();
+  //   }, 60000); // 1 minute
+  
+  //   getPostData();
+  
+  //   // Cleanup function to clear the interval when the component unmounts
+  //   return () => clearInterval(interval);
+  // }, []);
 
 
 
@@ -213,11 +213,12 @@ const HomeScreen = () => {
         data={posts}
         bounces={false}
         decelerationRate={'fast'}
-        // ListFooterComponent={renderFooter}
+         ListFooterComponent={renderLoader}
         //  keyExtractor={(item) => item._id.toString()}
         renderItem={renderItem}
         refreshing={isLoading && posts.length === 0}
         onRefresh={handleRefresh}
+
       />
     </SafeAreaView>
   );

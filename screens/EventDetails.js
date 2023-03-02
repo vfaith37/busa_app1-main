@@ -21,18 +21,6 @@
 //   events:"#2b3b67"
 // }
 
-const EventDetails = ({ route }) => {
-	return (
-		<>
-			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
-			{/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
-			<EventAbout route={route} />
-			{/* </View> */}
-		</>
-	);
-};
-
-import { StackActions, useNavigation } from "@react-navigation/native";
 // const EventAbout =(props)=>{
 //     const {title, date, venue, time, image, ticketPrice, description} = props.route.params
 // return(
@@ -264,12 +252,27 @@ import {Location, Time } from "../constants/icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import client from "../api/client";
+
 
 const { width, height } = Dimensions.get("screen");
 
 const imageW = width * 0.81;
 // const imageH = imageW * 1;
 const imageH = 310
+
+const EventDetails = ({ route }) => {
+	return (
+		<>
+			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
+			{/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
+			<EventAbout route={route} />
+			{/* </View> */}
+		</>
+	);
+};
+
 
 const EventAbout = (props) => {
 	const { title, date, venue, time, image, ticketPrice, content } =
@@ -324,8 +327,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
       
 		setIsLoading(true)
 
-		axios
-			.post("https://code-6z3x.onrender.com/api/pay/payForTicket", body, config)
+		client
+			.post(`/pay/payForTicket`, body, config)
 			.then((res) => {
 				console.log(res);
 

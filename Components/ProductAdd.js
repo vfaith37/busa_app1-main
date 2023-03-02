@@ -253,14 +253,14 @@ export const Form = ({ component }) => {
 			}));
 			 setFieldValue("image", uris);
 
-		//  setImage((previmage) => [...previmage, ...uris]);
-		setImage([...image, ...uris])
-
+		 setImage((previmage) => [...previmage, ...uris]);
 		  }
 		  setIsLoading(false);
 		  console.log(pickerResult.assets);
 		} catch (e) {
 		  console.log(`${e}`);
+
+		  setIsLoading(false)
 		}
 	  };
 	  
