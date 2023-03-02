@@ -454,7 +454,7 @@ export const Form = ({ component }) => {
 													left: 7,
 													marginHorizontal: 4,
 													borderRadius: 6,
-													resizeMode: "contain",
+													resizeMode: Platform.OS === "android"? "contain" : null,
 												}}
 											/>
 										</View>
