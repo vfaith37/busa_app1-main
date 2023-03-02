@@ -108,7 +108,7 @@ const HomeScreen = () => {
   
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(interval);
-  }, []);
+  }, [currentPage]);
 
 
 
@@ -119,27 +119,13 @@ const HomeScreen = () => {
   // }, [currentPage, posts.length, hasMoreData]);
 
 
+
   const loadMorePosts = () => {
     setCurrentPage(currentPage + 1);
     getPostData(); // Call getPostData again to load more posts
   };
 
-  // const renderLoader = useCallback(() => {
-  //   return isLoading ? (
-  //     <LottieView
-  //       source={require('../assets/animations/loader.json')}
-  //       style={{
-  //         width: 400,
-  //         height: 400,
-  //         top: 30,
-  //         alignSelf: 'center',
-  //       }}
-  //       loop
-  //       speed={0.7}
-  //       autoPlay
-  //     />
-  //   ) : null;
-  // }, [isLoading]);
+
 
 
   const renderLoader = useCallback(() => {
@@ -194,12 +180,27 @@ const HomeScreen = () => {
 
 
   const handleRefresh = useCallback(async () => {
-    setPosts([]);
-    setCurrentPage(1); // Reset currentPage to 1 when refreshing
-    setIsLoading(true);
-    await getPostData();
-    setIsLoading(false);
+    try{
+ await AsyncStorage.removeItem("posts")
+ await AsyncStorage.removeItem("postsTimestamp")
+ setPosts([]);
+ setCurrentPage(1); // Reset currentPage to 1 when refreshing
+ setIsLoading(true);
+
+ const data = await getPostData();
+ await AsyncStorage.setItem('posts', JSON.stringify(data));
+ await AsyncStorage.setItem('postsTimestamp', currentTime.toString());
+
+ setIsLoading(false);
+    }catch(e){
+      console.log(e)
+    }
   }, [getPostData]);
+
+
+
+
+
 
   return (
     <SafeAreaView style={{ flex: 1, top:50}}>

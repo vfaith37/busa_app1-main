@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, FlatList, Dimensions, Animated, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, FlatList, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native'
 import React from 'react'
 import { useRef, useState, useEffect, useCallback} from 'react';
 import {useFonts} from 'expo-font'
@@ -235,7 +235,10 @@ const PostImage=({post, navigation})=>{
           >
               <Image
                   style={{
-                    height:height*0.375, width:width*0.93,borderRadius:20, resizeMode:'contain', alignSelf:"center",
+                    height:height*0.375, width:width*0.93,borderRadius:20, 
+                    resizeMode: Platform.OS === "android" ? 'contain' : null,
+                    
+                    alignSelf:"center",
                   }}
                   key={id}
                   source={{uri:item}}
