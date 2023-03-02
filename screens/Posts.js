@@ -91,116 +91,116 @@ const PostImage=({post, navigation})=>{
         itemVisiblePercentThreshold:50,
       })
 
-      
-      // const PostIndicator = ({post}) => {
-  
-      //   return(
-      // <View style={styles.pagination}
-      // >
-    
-      // {post.images.map((_, index, id) => {
-      //    return (
-      //     <>
-      //     {post.images.length >1 ?(
-      //      <View
-      //     // key={`dot-${id}`}
-      //     key={id.toString()}
-      //      style={[
-      //        styles.dot,
-      //        currentSlideIndex == index &&{
-      //          backgroundColor: "#000",
-      //          width: 7,
-      //          height:7,
-      //          borderRadius:10,
-      //        }
-      //      ]}
-      //    />
-      //     )
-          
-      //     : null
-      //     }
-
-      // {
-      //   currentSlideIndex==index &&(
-      //     <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
-      //     opacity:fadeAnim,
-      //   }}
-      //   key={id}
-        
-      //     >
-      //       <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
-      //     </Animated.View>
-      //   )
-      // }
-      //   </>
-      //  ) 
-      // })
-      // } 
-      
-      // </View>
-      //   )
-      // }
-
-
-      
 
       const PostIndicator = ({post}) => {
-        return (
-          <View style={styles.pagination}>
+  
+        return(
+      <View style={styles.pagination}
+      >
+    
+      {post.images.map((_, index, id) => {
+         return (
+          <>
+          {post.images.length >1 ?(
+           <View
+          // key={`dot-${id}`}
+          key={id.toString()}
+           style={[
+             styles.dot,
+             currentSlideIndex == index &&{
+               backgroundColor: "#000",
+               width: 7,
+               height:7,
+               borderRadius:10,
+             }
+           ]}
+         />
+          )
+          
+          : null
+          }
+
+      {
+        currentSlideIndex==index &&(
+          <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
+          opacity:fadeAnim,
+        }}
+        key={id}
+        
+          >
+            <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
+          </Animated.View>
+        )
+      }
+        </>
+       ) 
+      })
+      } 
+      
+      </View>
+        )
+      }
+
+
+      
+
+//       const PostIndicator = ({post}) => {
+//         return (
+//           <View style={styles.pagination}>
             
-            {post.images.length > 1 && post.images.map((_, index) => (
-              <View
-              key={index}>
-                <View
-                  style={[
-                    styles.dot,
-                    currentSlideIndex === index && {
-                      backgroundColor: "#000",
-                      width: 7,
-                      height: 7,
-                      borderRadius: 10,
-                    },
-                  ]}
-                />
-                {currentSlideIndex === index && (
-                  <Animated.View
-                    style={{
-                      backgroundColor: "#d9d9d9",
-                      width: 30,
-                      height: 15,
-                      borderRadius: 20,
-                      bottom: 250,
-                      position: "absolute",
-                      right: -150,
-                      opacity: fadeAnim,
-                    }}
-                    key={index.toString()}
-                  >
-                    <Text
-                      style={{
-                        color: "#000",
-                        fontFamily: "Poppins",
-                        left: 3,
-                        alignItems: "center",
-                        top: -2,
-                        position: "absolute",
-                      }}
-                    >
-                      {index + 1}/{post.images.length}
-                    </Text>
-                  </Animated.View>
-                )}
-              </View>
-            ))}
-{/* 
-{post.images.length ===1 &&
-            <View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130}}>
-              <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute"}}>{currentSlideIndex + 1}/{post.images.length}</Text>
-            </View>
-            } */}
-          </View>
-        );
-      };
+//             {post.images.length > 1 && post.images.map((_, index) => (
+//               <View
+//               key={index}>
+//                 <View
+//                   style={[
+//                     styles.dot,
+//                     currentSlideIndex === index && {
+//                       backgroundColor: "#000",
+//                       width: 7,
+//                       height: 7,
+//                       borderRadius: 10,
+//                     },
+//                   ]}
+//                 />
+//                 {currentSlideIndex === index && (
+//                   <Animated.View
+//                     style={{
+//                       backgroundColor: "#d9d9d9",
+//                       width: 30,
+//                       height: 15,
+//                       borderRadius: 20,
+//                       bottom: 250,
+//                       position: "absolute",
+//                       right: -150,
+//                       opacity: fadeAnim,
+//                     }}
+//                     key={index.toString()}
+//                   >
+//                     <Text
+//                       style={{
+//                         color: "#000",
+//                         fontFamily: "Poppins",
+//                         left: 3,
+//                         alignItems: "center",
+//                         top: -2,
+//                         position: "absolute",
+//                       }}
+//                     >
+//                       {index + 1}/{post.images.length}
+//                     </Text>
+//                   </Animated.View>
+//                 )}
+//               </View>
+//             ))}
+// {/* 
+// {post.images.length ===1 &&
+//             <View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130}}>
+//               <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute"}}>{currentSlideIndex + 1}/{post.images.length}</Text>
+//             </View>
+//             } */}
+//           </View>
+//         );
+//       };
       
 
 
@@ -292,6 +292,11 @@ const PostFooter=({post})=>{
   </>
   )
 }
+
+
+
+
+
 
 export const Header=()=>{
   return(
