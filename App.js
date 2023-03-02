@@ -5,6 +5,7 @@ import AppNavigation from "./navigation/AppNavigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import useCustomFonts from "./useCustomFonts";
+//connect
 function App() {
 	let fontsLoaded = useCustomFonts()
 
