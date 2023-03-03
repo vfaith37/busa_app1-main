@@ -89,123 +89,7 @@ const PostImage=({post, navigation})=>{
       
       const viewabilityConfig = useRef({
         itemVisiblePercentThreshold:50,
-      })
-
-
-      const PostIndicator = ({post}) => {
-  
-        return(
-      <View style={styles.pagination}
-      >
-    
-      {post.images.map((_, index, id) => {
-         return (
-          <>
-          {post.images.length >1 ?(
-           <View
-          // key={`dot-${id}`}
-          key={id.toString()}
-           style={[
-             styles.dot,
-             currentSlideIndex == index &&{
-               backgroundColor: "#000",
-               width: 7,
-               height:7,
-               borderRadius:10,
-             }
-           ]}
-         />
-          )
-          
-          : null
-          }
-
-      {
-        currentSlideIndex==index &&(
-          <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
-          opacity:fadeAnim,
-        }}
-        key={id}
-        
-          >
-            <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
-          </Animated.View>
-        )
-      }
-        </>
-       ) 
-      })
-      } 
-      
-      </View>
-        )
-      }
-
-
-      
-
-//       const PostIndicator = ({post}) => {
-//         return (
-//           <View style={styles.pagination}>
-            
-//             {post.images.length > 1 && post.images.map((_, index) => (
-//               <View
-//               key={index}>
-//                 <View
-//                   style={[
-//                     styles.dot,
-//                     currentSlideIndex === index && {
-//                       backgroundColor: "#000",
-//                       width: 7,
-//                       height: 7,
-//                       borderRadius: 10,
-//                     },
-//                   ]}
-//                 />
-//                 {currentSlideIndex === index && (
-//                   <Animated.View
-//                     style={{
-//                       backgroundColor: "#d9d9d9",
-//                       width: 30,
-//                       height: 15,
-//                       borderRadius: 20,
-//                       bottom: 250,
-//                       position: "absolute",
-//                       right: -150,
-//                       opacity: fadeAnim,
-//                     }}
-//                     key={index.toString()}
-//                   >
-//                     <Text
-//                       style={{
-//                         color: "#000",
-//                         fontFamily: "Poppins",
-//                         left: 3,
-//                         alignItems: "center",
-//                         top: -2,
-//                         position: "absolute",
-//                       }}
-//                     >
-//                       {index + 1}/{post.images.length}
-//                     </Text>
-//                   </Animated.View>
-//                 )}
-//               </View>
-//             ))}
-// {/* 
-// {post.images.length ===1 &&
-//             <View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130}}>
-//               <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute"}}>{currentSlideIndex + 1}/{post.images.length}</Text>
-//             </View>
-//             } */}
-//           </View>
-//         );
-//       };
-      
-
-
-
-      
+      })  
 
   return(
     <View>
@@ -240,7 +124,7 @@ const PostImage=({post, navigation})=>{
                     
                     alignSelf:"center",
                   }}
-                  key={id}
+                  key={item._id}
                   source={{uri:item}}
                   />
                   </TouchableOpacity>
@@ -249,7 +133,49 @@ const PostImage=({post, navigation})=>{
   )}
 />
 </View> 
-<PostIndicator post={post}/>
+
+{post.images.length> 1 ? 
+             (
+    
+              <View style={styles.pagination}
+          >
+        
+          {post.images.map((_, index, id) => {
+    
+              const imageId = `${post._id}_${index}`;
+            return (
+               <React.Fragment key={imageId}>
+               <View
+               style={[
+                 styles.dot,
+                 currentSlideIndex == index &&{
+                   backgroundColor: "#000",
+                   width: 7,
+                   height:7,
+                   borderRadius:10,
+                 }
+               ]}
+             />
+    
+          {
+            currentSlideIndex==index &&(
+              <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
+              opacity:fadeAnim,
+            }}
+            key={imageId}
+              >
+                <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
+              </Animated.View>
+            )
+          }
+           </React.Fragment>
+           ) 
+          })
+          } 
+          
+          </View>
+            )
+            : null}
 {isRecent && 
 <View style={{width:55, height:18, backgroundColor:"#fff", borderRadius:2, left:30, position:"absolute", top:40,}}>
 <Text style={{color:"#000", fontSize:10, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>

@@ -244,7 +244,8 @@ import {
 	Dimensions,
 	StyleSheet,
 	TouchableOpacity,
-	ActivityIndicator
+	ActivityIndicator,
+	Platform
 } from "react-native";
 import { useState } from "react";
 import {Location, Time } from "../constants/icons";
@@ -445,7 +446,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 								style={{
 									width: imageW,
 									height: imageH,
-									resizeMode: "contain",
+									resizeMode: Platform.OS === "android"? "contain": null,
 									borderRadius: 10,
 								}}
 							/>
@@ -539,11 +540,14 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 							{formattedNumber}
 						</Text>
 
-{isLoading?
+{isLoading ?
+(
  <View>
  <ActivityIndicator size="large" color="#0000ff" />
 </View>
+)
  : 
+ (
 <TouchableOpacity activeOpacity={0.8} onPress={() => pay()}>
 							<View
 								style={{
@@ -573,6 +577,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 								</Text>
 							</View>
 						</TouchableOpacity>
+ )
 }
 					</View>
 				</View>
