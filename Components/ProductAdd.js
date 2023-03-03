@@ -191,82 +191,40 @@ export const Form = ({ component }) => {
 	];
 
 
-	// const { width, height } = useWindowDimensions();
-
-	// const pickImage = async (setFieldValue) => {
-	// 	try {
-	// 		const permissionResult =
-	// 			await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-	// 		if (permissionResult.granted === false) {
-	// 			alert("Permission to access camera roll is required!");
-	// 			return;
-	// 		}
-	// 		setIsLoading(true);
-
-	// 		const pickerResult = await ImagePicker.launchImageLibraryAsync({
-	// 			allowsMultipleSelection: true,
-	// 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-	// 			quality: 1,
-	// 			selectionLimit: 5, //for IOS 14+
-	// 		});
-
-	// 		if (!pickerResult.canceled) {
-	// 			const uris = pickerResult.assets.map((asset, index) => ({
-	// 				uri: asset.uri,
-	// 				id: index,
-	// 			}));
-	// 			// setFieldValue("image", uris);
-	// 			setFieldValue("image", (prevImages) => [...prevImages, ...uris]);
-	// 			setImage((previmage) => [...previmage, ...uris]);
-	// 		}
-	// 		setIsLoading(false);
-	// 		console.log(pickerResult.assets);
-	// 	} catch (e) {
-	// 		console.log(`${e}`);
-	// 	}
-	// };
-
-
-
 	const pickImage = async (setFieldValue) => {
 		try {
-		  const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-	  
-		  if (permissionResult.granted === false) {
-			alert("Permission to access camera roll is required!");
-			return;
-		  }
-		  setIsLoading(true);
-	  
-		  const pickerResult = await ImagePicker.launchImageLibraryAsync({
-			allowsMultipleSelection: true,
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			quality: 1,
-			selectionLimit: 5, //for IOS 14+
-		  });
-	  
-		  if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
-			const uris = pickerResult.assets.map((asset, index) => ({
-			  uri: asset.uri,
-			  id: index,
-			}));
-			 setFieldValue("image", uris);
+			const permissionResult =
+				await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-		 setImage((previmage) => [...previmage, ...uris]);
-		  }
-		  setIsLoading(false);
-		  console.log(pickerResult.assets);
+			if (permissionResult.granted === false) {
+				alert("Permission to access camera roll is required!");
+				return;
+			}
+			setIsLoading(true);
+
+			const pickerResult = await ImagePicker.launchImageLibraryAsync({
+				allowsMultipleSelection: true,
+				mediaTypes: ImagePicker.MediaTypeOptions.Images,
+				quality: 1,
+				selectionLimit: 5, //for IOS 14+
+			});
+
+			if (!pickerResult.canceled) {
+				const uris = pickerResult.assets.map((asset, index) => ({
+					uri: asset.uri,
+					id: index,
+				}));
+				setFieldValue("image", uris);
+				// setFieldValue("image", (prevImages) => [...prevImages, ...uris]);
+				setImage((previmage) => [...previmage, ...uris]);
+			}
+			setIsLoading(false);
+			console.log(pickerResult.assets);
 		} catch (e) {
-		  console.log(`${e}`);
-
-		  setIsLoading(false)
+			console.log(`${e}`);
 		}
-	  };
-	  
+	};
 
-
-	  
 
 	const [mode, setMode] = useState("date");
 	const [newMode, setNewMode] = useState("date")
@@ -454,7 +412,7 @@ export const Form = ({ component }) => {
 													left: 7,
 													marginHorizontal: 4,
 													borderRadius: 6,
-													resizeMode: "contain",
+													resizeMode: Platform.OS === "android"? "contain" : null,
 												}}
 											/>
 										</View>
