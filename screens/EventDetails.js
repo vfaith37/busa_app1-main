@@ -265,6 +265,8 @@ const imageH = height/2.85
 
 
 const EventDetails = ({ route }) => {
+
+
 	return (
 		<>
 			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
@@ -305,55 +307,48 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 			console.log(`${e}`);
 		}
 	};
-	
+
 	useEffect(() => {
 		getData();
 	}, []);
 
 
-	const pay = async () => {
+
+	const Pay = async () => {
 		const token = userToken;
 		const email = userInfo?.email;
-
-
-		console.log (token)
-
+	  
 		const config = {
-			headers: { Authorization: `Bearer ${token}` },
+		  headers: { Authorization: `Bearer ${token}` },
 		};
-
+	  
 		const formData = new FormData();
 		formData.append("email", email);
 		formData.append("title", title);
-
-
-		// const body = {
-		// 	email: email,
-		// 	title: title,
-		// };
-		console.log(title)
-
-      
-		setIsLoading(true)
-
+	  
+		setIsLoading(true);
+	  
 		client
-			.post(`/pay/payForTicket`, formData, config)
-			.then((res) => {
-				console.log(res);
-
-				if (res.status === 200) {
-					navigation.dispatch(
-						StackActions.replace("CheckOutScreen", {
-							authorization_url: res.data.authorization_url,
-						})
-					);
-				}
-			})
-			.catch((e) => {
-				console.log(`The error is: ${e}`);
-			});
-			setIsLoading(false)
-	};
+		  .post(`/pay/payForTicket`, formData, config)
+		  .then((res) => {
+			console.log(res);
+	  
+			if (res.status === 200) {
+			  navigation.dispatch(
+				StackActions.replace("CheckOutScreen", {
+				  authorization_url: res.data.authorization_url,
+				})
+			  );
+			}
+		  })
+		  .catch((e) => {
+			console.log(`The error is: ${e}`);
+		  })
+		  .finally(() => {
+			setIsLoading(false);
+		  });
+	  };
+	  
 
 
 	const num = ticketPrice;
@@ -555,14 +550,14 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 
 {isLoading ?
 (
- <View>
+ <View style={{left:width/3.5}}>
  <ActivityIndicator size="large" color="#0000ff" />
 </View>
 )
  : 
  (
 <TouchableOpacity 
-activeOpacity={0.8} onPress={() => pay}>
+activeOpacity={0.8} onPress={Pay}>
 							<View
 								style={{
 									width: 100,
