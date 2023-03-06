@@ -213,7 +213,7 @@ const PostFooter=({post})=>{
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
     <Text style={{fontWeight:"200", fontSize:10, color:"#303030",fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
-    <Text style={{fontWeight:"500", fontSize:13, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins", right:-3}}>
+    <Text style={{fontWeight:"400", fontSize:11, color:"#999999", width:width*0.95, height:33, top:5, fontFamily:"Poppins", right:-3}}>
       {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>
       </View>

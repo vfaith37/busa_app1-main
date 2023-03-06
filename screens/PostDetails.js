@@ -21,8 +21,6 @@ const PostDetails = ({route}) => {
 }
 
 
-
-
 const About=(props)=>{
 const {image, title, date, content}= props.route.params
   return(
@@ -81,6 +79,7 @@ const PostImage=(props)=>{
 />
 </View> 
 
+{props.image.length >1 ? 
 <View style={styles.pagination}>
    {props.image.map((_, index) => {
       return (
@@ -99,12 +98,12 @@ const PostImage=(props)=>{
        ) 
       })} 
       </View>
+:null}
   </View>
   )
 
-
+  
 }
-
 
 
 const PostAbout=(props)=>{

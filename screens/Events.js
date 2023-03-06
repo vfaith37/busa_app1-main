@@ -1,6 +1,5 @@
 import {
 	Dimensions,
-	StyleSheet,
 	Text,
 	View,
 	TouchableOpacity,
@@ -67,7 +66,7 @@ const EventImage = ({ event, navigation }) => {
 										height: height * 0.417,
 										width: width * 0.85,
 										borderRadius: 20,
-										resizeMode: Platform.OS === "android" ? "contain" : null,
+										resizeMode: Platform.OS === "android" ? "contain" : "cover",
 										alignSelf: "center",
 										backgroundColor:
 											"linear-gradient(180deg, rgba(0, 0, 0, 0) 43.23%, rgba(0, 0, 0, 0.4) 56.25%, rgba(0, 0, 0, 0.722222) 81.83%, #000000 100%)",
