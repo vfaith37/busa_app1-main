@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Image, ScrollView} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Image, ScrollView, Platform} from 'react-native'
 import React, {useState, useRef, useCallback} from 'react'
 
 const {width, height}= Dimensions.get("window")
@@ -48,7 +48,7 @@ const PostImage=(props)=>{
 
   return(
   <View>
-   <View style={{top:20, height:341, width:width, backgroundColor:"transparent",}}>
+   <View style={{top:20, height:height/2.3, width:width, backgroundColor:"transparent",}}>
         <FlatList
         data={props.image}
         horizontal
@@ -67,8 +67,8 @@ const PostImage=(props)=>{
           >
               <Image
                   style={{
-                    height:341, width:width, 
-                    resizeMode:"cover"
+                    height:height/2.3, width:width, 
+                    resizeMode: Platform.OS === "android"? "stretch" :null
                   }}
                   key={id}
                   source={{uri:item}}
@@ -112,12 +112,12 @@ const PostAbout=(props)=>{
 return(
 <>
 <View 
-style={{padding:25}}
+style={{padding:25, top:10}}
 >
     <View 
     >
     <Text style={{fontWeight:"600", fontSize:19, color:"#000000", width:322, height:25, lineHeight:24.7, fontFamily:"Poppins3"}}>{props.title}</Text>
-    <Text style={{fontWeight:"300", color:"#303030", fontSize:10, lineHeight:13, fontFamily:"Poppins2"}}>{props.date}</Text>
+    <Text style={{fontWeight:"300", color:"#303030", fontSize:10, lineHeight:13, fontFamily:"Poppins", top:4}}>{props.date}</Text>
     </View>
 
 {/* <ScrollView
@@ -132,7 +132,7 @@ bounces={false}
 
 <Text style={{
   fontWeight:"400", fontSize:10, lineHeight:15, color:"#999999",fontFamily:"Poppins2",
-top:10
+top:13, textTransform:"capitalize"
 }}
 
 >{props.content}</Text>
