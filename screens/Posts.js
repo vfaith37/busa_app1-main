@@ -91,7 +91,11 @@ const PostImage=({post, navigation})=>{
 
   return(
     <View>
-   <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, height:height*0.375, width:width*0.93, borderRadius:20, alignItems:"center",}}>
+   <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, 
+   height: Platform.OS === "android" ? height*0.375: 300,                    
+   width: Platform.OS === "android"? width*0.93: 370, 
+
+   borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
        onMomentumScrollEnd={()=>fadeOut()}
         data={post.images}
@@ -117,8 +121,14 @@ const PostImage=({post, navigation})=>{
           >
               <Image
                   style={{
-                    height:height*0.375, width:width*0.93,borderRadius:20, 
-                    resizeMode: Platform.OS === "android" ? 'contain' : null,
+                   height: Platform.OS === "android" ? height*0.375: 300, 
+                   
+                   
+                   
+                   width: Platform.OS === "android"? width*0.93: 370, 
+                   
+                   borderRadius:20, 
+                    resizeMode: Platform.OS === "android" ? 'contain' : "stretch",
                     
                     alignSelf:"center",
                   }}
