@@ -236,7 +236,6 @@
 import * as React from "react";
 import {
 	StatusBar,
-	FlatList,
 	Image,
 	Animated,
 	Text,
@@ -247,10 +246,8 @@ import {
 	ActivityIndicator,
 	Platform
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import {Location, Time } from "../constants/icons";
-
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { StackActions, useNavigation } from "@react-navigation/native";
@@ -259,9 +256,9 @@ import client from "../api/client";
 
 const { width, height } = Dimensions.get("screen");
 
-const imageW = width*0.85;
+const imageW = width*0.83;
 // const imageH = imageW * 1;
-const imageH = height/2.80
+const imageH = height/2.85
 
 
 
@@ -308,7 +305,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 			console.log(`${e}`);
 		}
 	};
-	React.useEffect(() => {
+	
+	useEffect(() => {
 		getData();
 	}, []);
 
@@ -317,23 +315,29 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 		const token = userToken;
 		const email = userInfo?.email;
 
-		
+
+		console.log (token)
 
 		const config = {
 			headers: { Authorization: `Bearer ${token}` },
 		};
 
-		const body = {
-			email: email,
-			title: title,
-		};
+		const formData = new FormData();
+		formData.append("email", email);
+		formData.append("title", title);
+
+
+		// const body = {
+		// 	email: email,
+		// 	title: title,
+		// };
 		console.log(title)
 
       
 		setIsLoading(true)
 
 		client
-			.post(`/pay/payForTicket`, body, config)
+			.post(`/pay/payForTicket`, formData, config)
 			.then((res) => {
 				console.log(res);
 
@@ -344,7 +348,6 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 						})
 					);
 				}
-				setIsLoading(false)
 			})
 			.catch((e) => {
 				console.log(`The error is: ${e}`);
@@ -399,7 +402,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 	};
 
 	return (
-		<View>
+		<View style={{flex:1}}>
 			<StatusBar hidden />
 			<View style={StyleSheet.absoluteFillObject}>
 				{image.map((image, index) => {
@@ -429,8 +432,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 					[{ nativeEvent: { contentOffset: { x: scrollX } } }],
 					{ useNativeDriver: true }
 				)}
-				keyExtractor={(_, index) => index.toString}
-				// keyExtractor={(item) => item.id}
+				keyExtractor={(_, index) => index}
 				horizontal
 				pagingEnabled
 				renderItem={({ item }) => {
@@ -462,7 +464,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 			<Indicator scrollx={scrollX} />
 			<View
 				style={{
-					height: 350,
+					height: height*0.44,
 					width: imageW,
 					borderRadius: 30,
 					backgroundColor: "#fff",
@@ -507,8 +509,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 						}}
 					>
 		           <Time size={15}/>
-						
-						{time} {"|"}
+						 {""}{time} {"|"}
 						{Location}
 						{venue}
 					</Text>
@@ -523,7 +524,6 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 							color: "#999999",
 							lineHeight: 12.5,
 							height:156,
-							backgroundColor:"red",
 							alignItems:"center",
 							right:-6
 						}}
@@ -543,8 +543,11 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 								paddingTop: 15,
 								fontFamily: "Poppins2",
 								fontWeight: "500",
-								fontSize: 20,
+								fontSize: 24,
 								lineHeight: 20,
+								top:width/25,
+								width:92,
+								height:30
 							}}
 						>
 							{formattedNumber}
@@ -558,7 +561,8 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 )
  : 
  (
-<TouchableOpacity activeOpacity={0.8} onPress={() => pay()}>
+<TouchableOpacity 
+activeOpacity={0.8} onPress={() => pay}>
 							<View
 								style={{
 									width: 100,
@@ -566,9 +570,9 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 									borderRadius: 10,
 									backgroundColor: "#004fc7",
 									alignSelf: "center",
-									// marginRight: -30,
-									left:60,
-									position:"absolute"
+									left:width/5.3,
+									position:"absolute",
+									top:width/25
 								}}
 							>
 								<Text
@@ -577,7 +581,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 										fontSize: 14,
 										fontWeight: "600",
 										lineHeight: 21,
-										fontFamily: "Poppins2",
+										fontFamily: "Poppins3",
 										alignSelf: "center",
 										position: "absolute",
 										padding: 8,
