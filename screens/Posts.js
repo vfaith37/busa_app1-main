@@ -83,8 +83,6 @@ const PostImage=({post, navigation})=>{
   const onViewableItemsChanged = useRef((item)=>{
   const index = item.viewableItems[0].index
         setCurrentSlideIndex(index)
-        // const index = item.viewableItems
-      //   console.log(index)
       })
       
       const viewabilityConfig = useRef({
@@ -204,37 +202,26 @@ const PostFooter=({post})=>{
     //  marginVertical:330,
       position:"absolute",
     //  marginVertical:28
-    bottom:-80
+    bottom:-80,
+    width:width,
+    height:width/7
      }}>
+
+      <View>
       <Text style={{textTransform:"capitalize", color:"#000000",fontSize:16, fontWeight:"600",
       // maxWidth:'70%', 
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
     <Text style={{fontWeight:"200", fontSize:10, color:"#303030",fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
-    <Text style={{fontWeight:"500", fontSize:13, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins"}}>
+    <Text style={{fontWeight:"500", fontSize:13, color:"#999999", maxWidth:"95%", top:5, fontFamily:"Poppins", right:-3}}>
       {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>
+      </View>
+
         </View>
   </>
   )
 }
-
-
-
-
-
-
-export const Header=()=>{
-  return(
-  <View>
-  <Text style={{color:"#6669c8", fontWeight:"700", fontSize:30, left:20,}}>Today</Text>
-  </View>
-  )
-}
-
-
-
-
 
 
 const Posts = ({post, navigation}) => {
@@ -272,11 +259,38 @@ const styles = StyleSheet.create({
     width:40,
     
   },
-  // dotIndicator:{
-  //   width:10, borderRadius:10, position:"absolute", borderColor:"#000", borderWidth:1, height:10, marginBottom:3,
-  // },
   dot:{borderRadius:10, height:7, width:7, backgroundColor:"gray", marginBottom:3, marginHorizontal:3, justifyContent:"center" }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -303,7 +317,3 @@ const styles = StyleSheet.create({
             </View>
           </View>
         </View>  */}
-
-
-
-

@@ -9,8 +9,9 @@ export function EventStack() {
 		<Stack.Navigator
 			screenOptions={{ headerShown: false }}
 		>
-			<Stack.Screen component={EventScreen} name="EventScreen" />
-			<Stack.Screen component={EventDetails} name="EventDetails" />
+			<Stack.Screen component={EventScreen} name="EventScreen" 
+ />
+			<Stack.Screen component={EventDetails} name="EventDetails"/>
 			<Stack.Screen component={CheckOutScreen} name="CheckOutScreen" />
 			{/* <Stack.Screen component={ProcessDetailsScreen} name="ProcessDetails" /> */}
 		</Stack.Navigator>

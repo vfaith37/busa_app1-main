@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text } from 'react-native';
+import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,9 @@ import DailyTips from "../Components/DailyTips"
 
 const {width, height} = Dimensions.get("screen")
 
-const PAGE_SIZE = 5;
+
+  const PAGE_SIZE = 10;
+const CACHE_EXPIRY_TIME = 1 * 60 * 100;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -21,204 +23,164 @@ const HomeScreen = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [cacheExpiry, setCacheExpiry] = useState(null);
 
+  const getPostData = useCallback(async (currentPage) => {
+    setIsLoading(true);
 
-  const getPostData = useCallback(async () => {
-  
-    const CACHE_EXPIRY_TIME = 1 * 60 * 1000; // minutes in milliseconds
-  
-      setIsLoading(true);
-      try {
-        const value = await AsyncStorage.getItem('userInfo');
-        const userToken = await AsyncStorage.getItem('userToken');
-        if (value !== null && userToken !== null) {
-          const userInfo = JSON.parse(value);
-          setUserInfo(userInfo);
-          setUserToken(userToken);
-  
-          const token = userToken;
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-  
-          // Check if there's cached data in AsyncStorage
-          const cachedData = await AsyncStorage.getItem('posts');
-          const cachedTimestamp = await AsyncStorage.getItem('postsTimestamp');
-          const currentTime = new Date().getTime();
-  
-          if (cachedData && cachedTimestamp) {
-            const timeDiff = currentTime - Number(cachedTimestamp);
-            if (timeDiff < CACHE_EXPIRY_TIME) { // Check if the cached data is still valid
-              setPosts(JSON.parse(cachedData));
-              setIsLoading(false);
-              return;
-            } else {
-              await AsyncStorage.removeItem('posts');
-              await AsyncStorage.removeItem('postsTimestamp');
-            }
-          }
-  
-          const res = await client.get(
-            `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
-            config
-          );
-  
-              console.log(res)
-              
-              const newposts = currentPage === 1 ? res.data.data : [...posts, ...res.data.data];
-              setPosts(newposts);
-      
-              // Cache the response data in AsyncStorage
-              await AsyncStorage.setItem('posts', JSON.stringify(newposts));
-              await AsyncStorage.setItem('postsTimestamp', currentTime.toString());
-      
-              setCurrentPage((prevPage) => prevPage + 1);
-              setHasMoreData(true); // update hasMoreData state
+    try {
+      const value = await AsyncStorage.getItem("userInfo");
+      const userToken = await AsyncStorage.getItem("userToken");
 
-          if (res.data.data.length === 0) {
-            setIsLoading(false);
-            setHasMoreData(false);
-            return; // Exit early if there are no more posts to fetch
-          }
-  
+      if (value !== null && userToken !== null) {
+        const userInfo = JSON.parse(value);
+        setUserInfo(userInfo);
+        setUserToken(userToken);
+
+        const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
+
+        const cacheData = await AsyncStorage.getItem(cacheKey);
+        if (cacheData !== null) {
+          const parsedData = JSON.parse(cacheData);
+          setPosts(parsedData.posts);
+          setHasMoreData(parsedData.hasMoreData);
+          setCacheExpiry(parsedData.cacheExpiry);
+          setIsLoading(false);
+          return;
         }
-      } catch (e) {
-        console.log(`${e}`);
-        alert(`${e}`);
-      } finally {
-        setIsLoading(false);
+
+        const token = userToken;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const res = await client.get(
+          `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
+          config
+        );
+
+        console.log (res)
+
+        const responseData = res.data.data;
+
+        if (responseData.length === 0) {
+          setHasMoreData(false);
+          return;
+        }
+
+        const newData = [...posts, ...responseData];
+
+        const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
+        const cacheValue = JSON.stringify({
+          posts: newData,
+          hasMoreData: responseData.length > 0,
+          cacheExpiry,
+        });
+
+        await AsyncStorage.setItem(cacheKey, cacheValue);
+
+        setPosts(newData);
+        setCacheExpiry(cacheExpiry);
       }
-    }, [currentPage, userToken, posts]);
-
-
+    } catch (e) {
+      console.log(`${e}`);
+      alert(`${e}`);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    getPostData();
-  }, [currentPage]);
-
-  // useEffect(() => {
-  //   // Fetch data on mount and every 1 minute
-  //   const interval = setInterval(() => {
-  //     getPostData();
-  //   }, 60000); // 1 minute
-  
-  //   getPostData();
-  
-  //   // Cleanup function to clear the interval when the component unmounts
-  //   return () => clearInterval(interval);
-  // }, []);
+    setIsLoading(false)
+    getPostData(currentPage);
+  }, [currentPage, getPostData]);
 
 
+  const loadMorePosts = async () => {
+    if (!hasMoreData || isLoading) {
+      return;
+    }
 
-  // const loadMorePosts = useCallback(() => {
-  //   if (posts.length >= currentPage * PAGE_SIZE && hasMoreData) {
-  //     setCurrentPage((prevPage) => prevPage + 1);
-  //   }
-  // }, [currentPage, posts.length, hasMoreData]);
+    if (cacheExpiry && new Date().getTime() >= cacheExpiry) {
+      const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
+      await AsyncStorage.removeItem(cacheKey);
+      setCacheExpiry(null);
+    }
 
-
-
-  const loadMorePosts = () => {
     setCurrentPage(currentPage + 1);
-    getPostData(); // Call getPostData again to load more posts
   };
 
+  const handleRefresh = useCallback(async () => {
+    try {
+      setPosts([]);
+      setCurrentPage(1); // Reset currentPage to 1 when refreshing
+      setIsLoading(true);
+
+      await getPostData(1);
+      setCacheExpiry(null); 
+
+
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [getPostData]);
 
 
 
-  const renderLoader = useCallback(() => {
-    if (isLoading) {
-      return (
-        <LottieView
+  const renderItem = useCallback(
+    ({ item }) => (
+      <ScrollView contentContainerStyle={{ top: -20, height: height / 1.94}}>
+        <Posts post={item} key={item.id} navigation={navigation} />
+       </ScrollView>
+    ),
+    [navigation]
+  );
+
+
+ const renderLoader =()=>{
+    return(
+    isLoading ?
+    <View style={{marginVertical:80, alignItems:"center"}}>
+       <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
-            width: 400,
-            height: 400,
-            top: 30,
+            width: 300,
+            height: 300,
             alignSelf: 'center',
           }}
           loop
           speed={0.7}
           autoPlay
         />
-      );
-    }
-  else  return null;
-  }, [isLoading]);
-
-
-  const renderItem = useCallback(
-    ({ item, index }) => (
-      <ScrollView
-      contentContainerStyle={{top:-20, height:height/1.95}}
-      >
-      <Posts post={item} key={item.id} navigation={navigation} />
-      </ScrollView>
-    ),
-    [navigation]
-  );
-
-  const renderFooter = useCallback(() => {
-    if (!hasMoreData && posts.length === 0) {
-      return (
-        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
-          No posts to display
-        </Text>
-      );
-    } 
-    else if (!hasMoreData) {
-      return (
-        <Text style={{ textAlign: 'center', paddingVertical: 20 }}>
-          You have been caught up!
-        </Text>
-      );
-    }
-    return renderLoader();
-  },[hasMoreData, renderLoader]);
-
-
-  const handleRefresh = useCallback(async () => {
-    try{
- await AsyncStorage.removeItem("posts")
- await AsyncStorage.removeItem("postsTimestamp")
- setPosts([]);
- setCurrentPage(1); // Reset currentPage to 1 when refreshing
- setIsLoading(true);
-
- const data = await getPostData();
- await AsyncStorage.setItem('posts', JSON.stringify(data));
- await AsyncStorage.setItem('postsTimestamp', currentTime.toString());
-
- setIsLoading(false);
-    }catch(e){
-      console.log(e)
-    }
-  }, [getPostData]);
+    </View>
+    : null
+    )
+  }
 
 
 
 
-
-
+ 
+  
   return (
     <SafeAreaView style={{ flex: 1, top:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
    <DailyTips/>
       <FlatList
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
         data={posts}
         bounces={false}
         decelerationRate={'fast'}
-         ListFooterComponent={renderLoader}
-        //  keyExtractor={(item) => item._id.toString()}
+        ListFooterComponent={renderLoader}
         renderItem={renderItem}
         refreshing={isLoading && posts.length === 0}
-        onRefresh={handleRefresh}
-
+        keyExtractor={(item) => item._id}
+         onRefresh={handleRefresh}
       />
     </SafeAreaView>
   );
@@ -228,5 +190,7 @@ export default HomeScreen;
 
 
 
-
-
+  
+  
+  
+  

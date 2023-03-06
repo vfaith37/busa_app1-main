@@ -259,9 +259,13 @@ import client from "../api/client";
 
 const { width, height } = Dimensions.get("screen");
 
-const imageW = width * 0.81;
+const imageW = width*0.85;
 // const imageH = imageW * 1;
-const imageH = height/2.57
+const imageH = height/2.80
+
+
+
+
 
 const EventDetails = ({ route }) => {
 	return (
@@ -362,6 +366,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 
 	const Indicator = ({ scrollx }) => {
 		return (
+
 			<View style={{ flexDirection: "row", alignSelf: "center", bottom:30 }}>
 				{image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
@@ -457,16 +462,16 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 			<Indicator scrollx={scrollX} />
 			<View
 				style={{
-					height: 320,
+					height: 350,
 					width: imageW,
 					borderRadius: 30,
 					backgroundColor: "#fff",
-					top: -5,
+					top: -10,
 					// marginBottom: 5,
 					alignSelf: "center",
 				}}
 			>
-				<View style={{ marginLeft: 18 }}>
+				<View style={{ marginLeft: 18, top:13}}>
 					<Text
 						style={{
 							color: "#1b5bff",
@@ -474,7 +479,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 							fontSize: 10,
 							fontWeight: "300",
 							textTransform: "uppercase",
-							top:10
+							top:15
 						}}
 					>
 						{formattedDate}
@@ -486,7 +491,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 							color: "#000",
 							fontFamily: "Poppins2",
 							textTransform: "uppercase",
-							top:6
+							top:13
 						}}
 					>
 						{title}
@@ -498,6 +503,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 							fontFamily: "Poppins2",
 							fontSize: 14,
 							textTransform: "uppercase",
+							top:8
 						}}
 					>
 		           <Time size={15}/>
@@ -509,13 +515,17 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
             {/* if the text should prob be in a scroll view */}
 					<Text
 						style={{
-							marginTop: 5,
+							marginTop: 30,
 							width: width * 0.7,
 							fontSize: 11,
 							fontFamily: "Poppins",
 							fontWeight: "300",
 							color: "#999999",
 							lineHeight: 12.5,
+							height:156,
+							backgroundColor:"red",
+							alignItems:"center",
+							right:-6
 						}}
 					>
 						{content}

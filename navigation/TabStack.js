@@ -12,6 +12,13 @@ export const TabNavigator = () => {
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
+				 tabBarStyle: [{ display: "flex" }, null],
+				 
+    screen: {
+      EventDetails: {
+        tabBarStyle: { display: "none" },
+      },
+    },
 				headerShown: false,
 				tabBarIcon: ({ focused, color, size }) => {
 					let iconName;
@@ -31,9 +38,10 @@ export const TabNavigator = () => {
 				tabBarActiveTintColor: COLORS.primary,
 				tabBarInactiveTintColor: COLORS.darkgray,
 			})}
+		
 		>
 			<Tab.Screen name="Home" component={HomeStack} />
-			<Tab.Screen name="Event" component={EventStack} />
+			<Tab.Screen name="Event" component={EventStack}/>
 			<Tab.Screen name="Profile" component={ProfileStack}/>
 		</Tab.Navigator>
 	);

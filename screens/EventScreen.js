@@ -1,13 +1,13 @@
 
-import React, { useState, useEffect, useCallback, Text } from 'react';
-import { SafeAreaView, FlatList} from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { SafeAreaView, FlatList, View} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '../api/client';
 import Events from './Events';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const EventScreen = () => {
   const navigation = useNavigation();
@@ -19,10 +19,11 @@ const EventScreen = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [cacheExpiry, setCacheExpiry] = useState(null);
 
  
 
- const getEventData = useCallback(async () => {
+ const getEventData = useCallback(async (currentPage) => {
   
   const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 30 minutes in milliseconds
 
@@ -35,6 +36,20 @@ const EventScreen = () => {
         setUserInfo(userInfo);
         setUserToken(userToken);
 
+
+
+        const cacheKey = `${userInfo.firstName}-${currentPage}-${PAGE_SIZE}`;
+
+        const cacheData = await AsyncStorage.getItem(cacheKey);
+        if (cacheData !== null) {
+          const parsedData = JSON.parse(cacheData);
+          setEvents(parsedData.events);
+          setHasMoreData(parsedData.hasMoreData);
+          setCacheExpiry(parsedData.cacheExpiry);
+          setIsLoading(false);
+          return;
+        }
+
         const token = userToken;
         const config = {
           headers: {
@@ -42,22 +57,6 @@ const EventScreen = () => {
           },
         };
 
-        // Check if there's cached data in AsyncStorage
-        const cachedData = await AsyncStorage.getItem('events');
-        const cachedTimestamp = await AsyncStorage.getItem('eventsTimestamp');
-        const currentTime = new Date().getTime();
-
-        if (cachedData && cachedTimestamp) {
-          const timeDiff = currentTime - Number(cachedTimestamp);
-          if (timeDiff < CACHE_EXPIRY_TIME) { // Check if the cached data is still valid
-            setEvents(JSON.parse(cachedData));
-            setIsLoading(false);
-            return;
-          } else {
-            await AsyncStorage.removeItem('events');
-            await AsyncStorage.removeItem('eventsTimestamp');
-          }
-        }
 
         const res = await client.get(
           `/event/get${userInfo.campus}CampusEvents/${currentPage}/${PAGE_SIZE}`,
@@ -66,20 +65,26 @@ const EventScreen = () => {
 
             console.log(res)
 
-        if (res.data.data.length === 0) {
-          setIsLoading(false);
-          setHasMoreData(false);
-          return; // Exit early if there are no more events to fetch
-        }
+          const responseData = res.data.data;
 
-        const newEvents = currentPage === 1 ? res.data.data : [...events, ...res.data.data];
-        setEvents(newEvents);
-
-        // Cache the response data in AsyncStorage
-        await AsyncStorage.setItem('events', JSON.stringify(newEvents));
-        await AsyncStorage.setItem('eventsTimestamp', currentTime.toString());
-
-        setCurrentPage((prevPage) => prevPage + 1);
+            if (responseData.length === 0) {
+              setHasMoreData(false);
+              return;
+            }
+    
+            const newData = [...events, ...responseData];
+    
+            const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
+            const cacheValue = JSON.stringify({
+              events: newData,
+              hasMoreData: responseData.length > 0,
+              cacheExpiry,
+            });
+    
+            await AsyncStorage.setItem(cacheKey, cacheValue);
+    
+            setEvents(newData);
+            setCacheExpiry(cacheExpiry);
       }
     } catch (e) {
       console.log(`${e}`);
@@ -87,52 +92,48 @@ const EventScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, userToken, events]);
+  }, []);
 
   useEffect(() => {
     getEventData();
-  }, [getEventData]);
+  }, [currentPage, getEventData]);
 
-  // useEffect(() => {
-  //   // Fetch data on mount and every minute
-  //   const interval = setInterval(() => {
-  //     getEventData();
-  //   }, 60000); // 60 seconds
-  
-  //   getEventData();
-  
-  //   // Cleanup function to clear the interval when the component unmounts
-  //   return () => clearInterval(interval);
-  // }, [getEventData]);
 
-  
-  
-
-  const loadMorePosts = useCallback(() => {
-    if (events.length >= currentPage * PAGE_SIZE && hasMoreData) {
-      setCurrentPage((prevPage) => prevPage + 1);
+  const loadMorePosts = async () => {
+    if (!hasMoreData || isLoading) {
+      return;
     }
-  }, [currentPage, events.length, hasMoreData]);
 
-  const renderLoader = useCallback(() => {
-    if (isLoading) {
-      return (
-        <LottieView
+    if (cacheExpiry && new Date().getTime() >= cacheExpiry) {
+      const cacheKey = `${userInfo.firstName}-${currentPage}-${PAGE_SIZE}`;
+      await AsyncStorage.removeItem(cacheKey);
+      setCacheExpiry(null);
+    }
+
+    setCurrentPage(currentPage + 1);
+  };
+
+
+  const renderLoader =()=>{
+    return(
+    isLoading ?
+    <View style={{marginVertical:20, alignItems:"center"}}>
+       <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
-            width: 100,
-            height: 100,
-            top: 30,
+            width: 300,
+            height: 300,
             alignSelf: 'center',
           }}
           loop
           speed={0.7}
           autoPlay
         />
-      );
-    }
-    return null;
-  }, [isLoading]);
+    </View>
+    : null
+    )
+  }
+ 
 
   const renderItem = useCallback(
     ({ item, index }) => (
@@ -142,26 +143,34 @@ const EventScreen = () => {
   );
 
 
-
   const handleRefresh = useCallback(async () => {
-    setEvents([]);
-    setCurrentPage(1); // Reset currentPage to 1 when refreshing
-    setIsLoading(true);
-    await getEventData();
-    setIsLoading(false);
+    try {
+      setEvents([]);
+      setCurrentPage(1); // Reset currentPage to 1 when refreshing
+      setIsLoading(true);
+
+      await getEventData(1);
+      setCacheExpiry(null); 
+
+
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
   }, [getEventData]);
+
 
 
   return (
     <SafeAreaView style={{ flex: 1, top: 40 }}>
       <FlatList
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
         data={events}
         bounces={false}
         decelerationRate={'fast'}
-        //  keyExtractor={(item) => item.id.toString()}
+        ListFooterComponent={renderLoader}
         renderItem={renderItem}
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
