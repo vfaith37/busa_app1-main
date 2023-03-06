@@ -295,59 +295,74 @@ const changedDate = moment(newDate, 'DD/MM/YYYY'); // parse the date string usin
 
 const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as "Friday, 17 February"
 
-	const getData = async () => {
-		try {
+	// const getData = async () => {
+	// 	try {
+	// 		const value = await AsyncStorage.getItem("userInfo");
+	// 		const userToken = await AsyncStorage.getItem(`userToken`);
+	// 		if (value !== null && userToken !== null) {
+	// 			setUserInfo(JSON.parse(value));
+	// 			setUserToken(userToken);
+	// 		}
+	// 	} catch (e) {
+	// 		console.log(`${e}`);
+	// 	}
+	// };
+
+	// useEffect(() => {
+	// 	getData();
+	// }, []);
+
+
+
+	const Pay = async () => {
+		try{
+
 			const value = await AsyncStorage.getItem("userInfo");
 			const userToken = await AsyncStorage.getItem(`userToken`);
 			if (value !== null && userToken !== null) {
 				setUserInfo(JSON.parse(value));
 				setUserToken(userToken);
-			}
-		} catch (e) {
+          
+				const userInfo = JSON.parse((value));
+				const token = userToken;
+				const email = userInfo.email;
+			  
+				const config = {
+				  headers: { Authorization: `Bearer ${token}` },
+				};
+			  
+				const formData = new FormData();
+				formData.append("email", email);
+				formData.append("title", title);
+			  
+				setIsLoading(true);
+			  
+				client
+				  .post(`/pay/payForTicket`, formData, config)
+				  .then((res) => {
+					console.log(res);
+			  
+					if (res.status === 200) {
+					  navigation.dispatch(
+						StackActions.replace("CheckOutScreen", {
+						  authorization_url: res.data.authorization_url,
+						})
+					  );
+					}
+				  })
+				  .catch((e) => {
+					console.log(`The error is: ${e}`);
+				  })
+				  .finally(() => {
+					setIsLoading(false);
+				  });
+		
+			}	
+
+		}catch (e){
 			console.log(`${e}`);
 		}
-	};
-
-	useEffect(() => {
-		getData();
-	}, []);
-
-
-
-	const Pay = async () => {
-		const token = userToken;
-		const email = userInfo?.email;
-	  
-		const config = {
-		  headers: { Authorization: `Bearer ${token}` },
-		};
-	  
-		const formData = new FormData();
-		formData.append("email", email);
-		formData.append("title", title);
-	  
-		setIsLoading(true);
-	  
-		client
-		  .post(`/pay/payForTicket`, formData, config)
-		  .then((res) => {
-			console.log(res);
-	  
-			if (res.status === 200) {
-			  navigation.dispatch(
-				StackActions.replace("CheckOutScreen", {
-				  authorization_url: res.data.authorization_url,
-				})
-			  );
-			}
-		  })
-		  .catch((e) => {
-			console.log(`The error is: ${e}`);
-		  })
-		  .finally(() => {
-			setIsLoading(false);
-		  });
-	  };
+			  };
 	  
 
 

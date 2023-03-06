@@ -93,7 +93,7 @@ const PostImage=({post, navigation})=>{
     <View>
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, 
    height: Platform.OS === "android" ? height*0.375: 300,                    
-   width: Platform.OS === "android"? width*0.93: 370, 
+   width: Platform.OS === "android"? width*0.93: 360, 
 
    borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
@@ -125,7 +125,7 @@ const PostImage=({post, navigation})=>{
                    
                    
                    
-                   width: Platform.OS === "android"? width*0.93: 370, 
+                   width: Platform.OS === "android"? width*0.93: 360, 
                    
                    borderRadius:20, 
                     resizeMode: Platform.OS === "android" ? 'contain' : "stretch",
