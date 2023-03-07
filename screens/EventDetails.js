@@ -384,7 +384,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		return (
 
 			<View style={{ flexDirection: "row", alignSelf: "center", bottom:height/2.09, position:"absolute"}}>
-				{image.map((_, i) => {
+				{image.length >1 && image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
 					const scale = scrollx.interpolate({
