@@ -320,13 +320,16 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 			const value = await AsyncStorage.getItem("userInfo");
 			const userToken = await AsyncStorage.getItem(`userToken`);
 			if (value !== null && userToken !== null) {
-				setUserInfo(JSON.parse(value));
+				const userInfo = JSON.parse((value));
+				setUserInfo(userInfo);
 				setUserToken(userToken);
           
-				const userInfo = JSON.parse((value));
 				const token = userToken;
 				const email = userInfo.email;
-			  
+
+console.log(email)
+console.log(title)
+
 				const config = {
 				  headers: { Authorization: `Bearer ${token}` },
 				};
@@ -337,7 +340,7 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 			  
 				setIsLoading(true);
 			  
-				client
+			await	client
 				  .post(`/pay/payForTicket`, formData, config)
 				  .then((res) => {
 					console.log(res);
@@ -380,7 +383,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 	const Indicator = ({ scrollx }) => {
 		return (
 
-			<View style={{ flexDirection: "row", alignSelf: "center", bottom:30 }}>
+			<View style={{ flexDirection: "row", alignSelf: "center", bottom:height/2.09, position:"absolute"}}>
 				{image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
@@ -471,141 +474,145 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 					);
 				}}
 			/>
+
+			<View style={{position:"absolute", top:height/1.2, alignSelf:"center"}}>
 			<Indicator scrollx={scrollX} />
-			<View
+
+		<View
+	style={{
+		height: height*0.44,
+		width: imageW,
+		borderRadius: 30,
+		backgroundColor: "#fff",
+		bottom:height/350,
+		alignSelf: "center",
+		position:"absolute"
+	}}
+>
+	<View style={{ marginLeft: 18, top:13}}>
+		<Text
+			style={{
+				color: "#1b5bff",
+				fontFamily: "Poppins2",
+				fontSize: 10,
+				fontWeight: "300",
+				textTransform: "uppercase",
+				top:15
+			}}
+		>
+		{formattedDate}
+	</Text>
+	<Text
+			style={{
+				fontWeight: "500",
+				fontSize: 23,
+				color: "#000",
+				fontFamily: "Poppins2",
+				textTransform: "uppercase",
+				top:13
+			}}
+		>
+			{title}
+		</Text>
+		<Text
+			style={{
+				fontWeight: "600",
+				color: "#000",
+				fontFamily: "Poppins2",
+				fontSize: 14,
+				textTransform: "uppercase",
+				top:8
+			}}
+		>
+	   <Time size={15}/>
+			 {""}{time} {"|"}
+			{Location}
+			{venue}
+		</Text>
+{/* if the text should prob be in a scroll view */}
+		<Text
+			style={{
+				marginTop: 30,
+				width: width * 0.7,
+				fontSize: 11,
+				fontFamily: "Poppins",
+				fontWeight: "300",
+				color: "#999999",
+				lineHeight: 12.5,
+				height:156,
+				alignItems:"center",
+				right:-6
+			}}
+		>
+			{content}
+		</Text>
+
+		<View
+			style={{
+				position: "absolute",
+				top: 275,
+				flexDirection: "row",
+			}}
+		>
+			<Text
 				style={{
-					height: height*0.44,
-					width: imageW,
-					borderRadius: 30,
-					backgroundColor: "#fff",
-					top: -10,
-					// marginBottom: 5,
-					alignSelf: "center",
+					paddingTop: 15,
+					fontFamily: "Poppins2",
+					fontWeight: "500",
+					fontSize: 24,
+					lineHeight: 20,
+					top:width/25,
+					width:92,
+					height:30
 				}}
 			>
-				<View style={{ marginLeft: 18, top:13}}>
-					<Text
-						style={{
-							color: "#1b5bff",
-							fontFamily: "Poppins2",
-							fontSize: 10,
-							fontWeight: "300",
-							textTransform: "uppercase",
-							top:15
-						}}
-					>
-						{formattedDate}
-					</Text>
-					<Text
-						style={{
-							fontWeight: "500",
-							fontSize: 23,
-							color: "#000",
-							fontFamily: "Poppins2",
-							textTransform: "uppercase",
-							top:13
-						}}
-					>
-						{title}
-					</Text>
-					<Text
-						style={{
-							fontWeight: "600",
-							color: "#000",
-							fontFamily: "Poppins2",
-							fontSize: 14,
-							textTransform: "uppercase",
-							top:8
-						}}
-					>
-		           <Time size={15}/>
-						 {""}{time} {"|"}
-						{Location}
-						{venue}
-					</Text>
-            {/* if the text should prob be in a scroll view */}
-					<Text
-						style={{
-							marginTop: 30,
-							width: width * 0.7,
-							fontSize: 11,
-							fontFamily: "Poppins",
-							fontWeight: "300",
-							color: "#999999",
-							lineHeight: 12.5,
-							height:156,
-							alignItems:"center",
-							right:-6
-						}}
-					>
-						{content}
-					</Text>
-
-					<View
-						style={{
-							position: "absolute",
-							top: 275,
-							flexDirection: "row",
-						}}
-					>
-						<Text
-							style={{
-								paddingTop: 15,
-								fontFamily: "Poppins2",
-								fontWeight: "500",
-								fontSize: 24,
-								lineHeight: 20,
-								top:width/25,
-								width:92,
-								height:30
-							}}
-						>
-							{formattedNumber}
-						</Text>
+				{formattedNumber}
+			</Text>
 
 {isLoading ?
 (
- <View style={{left:width/3.5}}>
- <ActivityIndicator size="large" color="#0000ff" />
+<View style={{left:width/3.5}}>
+<ActivityIndicator size="large" color="#0000ff" />
 </View>
 )
- : 
- (
+: 
+(
 <TouchableOpacity 
-activeOpacity={0.8} onPress={Pay}>
-							<View
-								style={{
-									width: 100,
-									height: 37,
-									borderRadius: 10,
-									backgroundColor: "#004fc7",
-									alignSelf: "center",
-									left:width/5.3,
-									position:"absolute",
-									top:width/25
-								}}
-							>
-								<Text
-									style={{
-										color: "#fff",
-										fontSize: 14,
-										fontWeight: "600",
-										lineHeight: 21,
-										fontFamily: "Poppins3",
-										alignSelf: "center",
-										position: "absolute",
-										padding: 8,
-									}}
-								>
-									Buy Now
-								</Text>
-							</View>
-						</TouchableOpacity>
- )
-}
-					</View>
+activeOpacity={0.8} onPress={()=>Pay}>
+				<View
+					style={{
+						width: 100,
+						height: 37,
+						borderRadius: 10,
+						backgroundColor: "#004fc7",
+						alignSelf: "center",
+						left:width/5.3,
+						position:"absolute",
+						top:width/25
+					}}
+				>
+					<Text
+						style={{
+							color: "#fff",
+							fontSize: 14,
+							fontWeight: "600",
+							lineHeight: 21,
+							fontFamily: "Poppins3",
+							alignSelf: "center",
+							position: "absolute",
+							padding: 8,
+						}}
+					>
+						Buy Now
+					</Text>
 				</View>
-			</View>
+			</TouchableOpacity>
+)
+}
+		</View>
+	</View>
+</View>
+</View>
 		</View>
 	);
 };
@@ -639,3 +646,15 @@ export default EventDetails;
 //       },
 
 // })
+
+
+
+
+
+
+
+
+
+
+
+

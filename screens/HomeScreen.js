@@ -12,7 +12,7 @@ const {width, height} = Dimensions.get("screen")
 
 
   const PAGE_SIZE = 10;
-const CACHE_EXPIRY_TIME = 1 * 60 * 100;
+const CACHE_EXPIRY_TIME = 2* 60 * 100;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -61,7 +61,7 @@ const HomeScreen = () => {
           config
         );
 
-        console.log (res)
+        console.log (res.data.data)
 
         const responseData = res.data.data;
 
