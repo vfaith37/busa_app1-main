@@ -92,15 +92,14 @@ const PostImage=({post, navigation})=>{
   return(
     <View>
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, 
-   height: Platform.OS === "android" ? height*0.375: 300,                    
-   width: Platform.OS === "android"? width*0.93: 360, 
+   height: Platform.OS === "android" ? height*0.37: 300,                    
+   width: Platform.OS === "android"? width*0.9: width*0.9, 
 
    borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
        onMomentumScrollEnd={()=>fadeOut()}
         data={post.images}
-        horizontal
-        bounces={false}
+        horizontal bounces={false}
         onViewableItemsChanged={onViewableItemsChanged.current}
         viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
@@ -121,11 +120,11 @@ const PostImage=({post, navigation})=>{
           >
               <Image
                   style={{
-                   height: Platform.OS === "android" ? height*0.375: 300, 
+                   height: Platform.OS === "android" ? height*0.37: height*0.31, 
                    
                    
                    
-                   width: Platform.OS === "android"? width*0.93: 360, 
+                   width: Platform.OS === "android"? width*0.9: width*0.9, 
                    
                    borderRadius:20, 
                     resizeMode: Platform.OS === "android" ? 'contain' : "stretch",
@@ -208,22 +207,21 @@ const PostFooter=({post})=>{
  
   return(
   <>
-   <View style={{left:15,
-    //  marginVertical:330,
+   <View style={{
+    
+    left:width/15,
       position:"absolute",
-    //  marginVertical:28
-    bottom:-80,
+    bottom:-height/11,
     width:width,
     height:width/7
      }}>
 
       <View>
       <Text style={{textTransform:"capitalize", color:"#000000",fontSize:16, fontWeight:"600",
-      // maxWidth:'70%', 
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
     <Text style={{fontWeight:"200", fontSize:10, color:"#303030",fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
-    <Text style={{fontWeight:"400", fontSize:11, color:"#999999", width:width*0.95, height:33, top:5, fontFamily:"Poppins", right:-3}}>
+    <Text style={{fontWeight:"400", fontSize:11, color:"#999999", width:width*0.95, height:height/10, top:5, fontFamily:"Poppins", right:-3,}}>
       {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>
       </View>
@@ -242,7 +240,7 @@ const Posts = ({post, navigation}) => {
     style={{flex:1}}
     >
       <StatusBar backgroundColor={COLORS.white}/>
-      <View>
+      <View> 
          <PostImage post={post} navigation ={navigation}/>
         <PostFooter post={post}/>
         </View>

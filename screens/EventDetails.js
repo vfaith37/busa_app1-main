@@ -414,8 +414,10 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		);
 	};
 
+
+
 	return (
-		<View style={{flex:1}}>
+		<View style={{flex:1, top:120}}>
 			<StatusBar hidden />
 			<View style={StyleSheet.absoluteFillObject}>
 				{image.map((image, index) => {
