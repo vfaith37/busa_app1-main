@@ -92,7 +92,7 @@ const PostImage=({post, navigation})=>{
   return(
     <View>
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, 
-   height: Platform.OS === "android" ? height*0.37: 300,                    
+   height: Platform.OS === "android" ? height*0.37: height*0.37,                   
    width: Platform.OS === "android"? width*0.9: width*0.9, 
 
    borderRadius:20, alignItems:"center",}}>
@@ -120,7 +120,7 @@ const PostImage=({post, navigation})=>{
           >
               <Image
                   style={{
-                   height: Platform.OS === "android" ? height*0.37: height*0.31, 
+                   height: Platform.OS === "android" ? height*0.37: height*0.37, 
                    
                    
                    
@@ -166,7 +166,7 @@ const PostImage=({post, navigation})=>{
     
           {
             currentSlideIndex==index &&(
-              <Animated.View style={{backgroundColor:"#d9d9d9", width:30, height:15, borderRadius:20, bottom:250, position:"absolute", right:-130, 
+              <Animated.View style={{backgroundColor:"#d9d9d9", width:33, height:17, borderRadius:20, bottom:width*0.68, position:"absolute", right:-width/2.7, 
               opacity:fadeAnim,
             }}
             key={imageId}
@@ -213,7 +213,7 @@ const PostFooter=({post})=>{
       position:"absolute",
     bottom:-height/11,
     width:width,
-    height:width/7
+    height:width/8
      }}>
 
       <View>

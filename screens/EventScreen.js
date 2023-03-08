@@ -121,8 +121,8 @@ const EventScreen = () => {
        <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
-            width: 300,
-            height: 300,
+            width: 50,
+            height: 50,
             alignSelf: 'center',
           }}
           loop

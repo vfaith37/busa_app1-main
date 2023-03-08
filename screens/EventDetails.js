@@ -244,7 +244,8 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	ActivityIndicator,
-	Platform
+	Platform,
+	SafeAreaView
 } from "react-native";
 import { useState, useEffect} from "react";
 import {Location, Time } from "../constants/icons";
@@ -417,7 +418,8 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 
 
 	return (
-		<View style={{flex:1, top:120}}>
+		<View style={{flex:1}}>
+  <SafeAreaView style={{flex:1}}>
 			<StatusBar hidden />
 			<View style={StyleSheet.absoluteFillObject}>
 				{image.map((image, index) => {
@@ -486,12 +488,12 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		width: imageW,
 		borderRadius: 30,
 		backgroundColor: "#fff",
-		bottom:height/350,
+		top:-height*0.38,
 		alignSelf: "center",
 		position:"absolute"
 	}}
 >
-	<View style={{ marginLeft: 18, top:13}}>
+	<View style={{ marginLeft: 18, top:15}}>
 		<Text
 			style={{
 				color: "#1b5bff",
@@ -523,7 +525,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 				fontFamily: "Poppins2",
 				fontSize: 14,
 				textTransform: "uppercase",
-				top:8
+				top:13
 			}}
 		>
 	   <Time size={15}/>
@@ -552,7 +554,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		<View
 			style={{
 				position: "absolute",
-				top: 275,
+				top: height/2.95,
 				flexDirection: "row",
 			}}
 		>
@@ -565,7 +567,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 					lineHeight: 20,
 					top:width/25,
 					width:92,
-					height:30
+					height:33
 				}}
 			>
 				{formattedNumber}
@@ -615,7 +617,9 @@ activeOpacity={0.8} onPress={()=>Pay}>
 	</View>
 </View>
 </View>
+		</SafeAreaView>
 		</View>
+
 	);
 };
 

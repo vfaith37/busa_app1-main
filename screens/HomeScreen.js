@@ -147,8 +147,8 @@ const HomeScreen = () => {
        <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
-            width: 300,
-            height: 300,
+            width: 50,
+            height: 50,
             alignSelf: 'center',
           }}
           loop
@@ -176,11 +176,11 @@ const HomeScreen = () => {
         data={posts}
         bounces={false}
         decelerationRate={'fast'}
-        ListFooterComponent={renderLoader}
+         ListFooterComponent={renderLoader}
         renderItem={renderItem}
-        refreshing={isLoading && posts.length === 0}
+        // refreshing={isLoading && posts.length === 0}
         keyExtractor={(item) => item._id}
-         onRefresh={handleRefresh}
+        //  onRefresh={handleRefresh}
       />
     </SafeAreaView>
   );
