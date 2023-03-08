@@ -329,7 +329,8 @@ const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as
 				const email = userInfo.email;
 
 console.log(email)
-console.log(title)
+const Title = title 
+console.log(Title)
 
 				const config = {
 				  headers: { Authorization: `Bearer ${token}` },
@@ -337,7 +338,7 @@ console.log(title)
 			  
 				const formData = new FormData();
 				formData.append("email", email);
-				formData.append("title", title);
+				formData.append("title", Title);
 			  
 				setIsLoading(true);
 			  
@@ -479,7 +480,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 				}}
 			/>
 
-			<View style={{position:"absolute", top:height/1.2, alignSelf:"center"}}>
+			<View style={{position:"absolute", top:height/1.3, alignSelf:"center"}}>
 			<Indicator scrollx={scrollX} />
 
 		<View

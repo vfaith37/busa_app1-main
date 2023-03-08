@@ -178,9 +178,9 @@ const HomeScreen = () => {
         decelerationRate={'fast'}
          ListFooterComponent={renderLoader}
         renderItem={renderItem}
-        // refreshing={isLoading && posts.length === 0}
+        refreshing={isLoading && posts.length === 0}
         keyExtractor={(item) => item._id}
-        //  onRefresh={handleRefresh}
+         onRefresh={handleRefresh}
       />
     </SafeAreaView>
   );

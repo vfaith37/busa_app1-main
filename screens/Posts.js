@@ -127,7 +127,7 @@ const PostImage=({post, navigation})=>{
                    width: Platform.OS === "android"? width*0.9: width*0.9, 
                    
                    borderRadius:20, 
-                    resizeMode: Platform.OS === "android" ? 'contain' : "stretch",
+                    resizeMode: Platform.OS === "android" ? 'contain' :null,
                     
                     alignSelf:"center",
                   }}
