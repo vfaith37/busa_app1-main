@@ -11,9 +11,13 @@ const Tab = createBottomTabNavigator();
 export const TabNavigator = () => {
 	return (
 		<Tab.Navigator
+		
 			screenOptions={({ route }) => ({
-				 tabBarStyle: [{ display: "flex", position:"absolute" }, null],
 				headerShown: false,
+				tabBarStyle: {
+					display: 'flex',
+				  },
+				  tabBarPosition: 'bottom', 
 				tabBarIcon: ({ focused, color, size}) => {
 					let iconName;
 
