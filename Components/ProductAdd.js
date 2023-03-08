@@ -44,8 +44,8 @@ export const Form = ({ component }) => {
 		title: Yup.string().required("Title is required!"),
 		content: Yup.string().required("Content is required!"),
 		image: Yup.array()
-			.min(1, "Please select at least one image")
-			.max(5, "You can only select a maximum of 5 images"),
+			.min(1, "Please select at least one image!")
+			.max(5, "You can only select a maximum of 5 images!"),
 		campus: Yup.string().required("Campus is required!"),
 	});
 
@@ -53,16 +53,16 @@ export const Form = ({ component }) => {
 		title: Yup.string().required("Title is required!"),
 		content: Yup.string().required("Content is required!"),
 		image: Yup.array()
-			.min(1, "Please select at least one image")
+			.min(1, "Please select at least one image!")
 			.max(5, "You can only select a maximum of 5 images"),
 		campus: Yup.string().required("Campus is required!"),
 
-		date: Yup.string().required("Please select a date"),
-		time: Yup.string().required("Please select a time"),
-		endTime: Yup.string().required("Please select end time"),
-		endDate: Yup.string().required("Please select end date"), // here, endDate is a string
-		ticketPrice: Yup.string().required("price required"),
-		venue: Yup.string().required("venue required"),
+		date: Yup.string().required("select start date!"),
+		time: Yup.string().required("select start time!"),
+		endTime: Yup.string().required("select end time!"),
+		endDate: Yup.string().required("select end date!"), // here, endDate is a string
+		ticketPrice: Yup.string().required("price required!"),
+		venue: Yup.string().required("venue required!"),
 		
 	});
 
@@ -289,7 +289,7 @@ export const Form = ({ component }) => {
                              <ScrollView
 							 showsVerticalScrollIndicator={false}
 							 bounces={false}
-							 contentContainerStyle={{height:height*1.42}}
+							 contentContainerStyle={{height:height*1.5}}
 							 >
 						<View style={{top:-10}}>
 							<FormInput
@@ -383,20 +383,21 @@ export const Form = ({ component }) => {
 								</View>
 
                                         
-
 								{errors.image && touched.image && (
 									<Text
-										style={{
-											color: "red",
-											fontFamily: "Poppins",
-											fontSize: 10,
-											top: -13,
-											alignSelf: "center",
-										}}
+										// style={{
+										// 	color: "red",
+										// 	fontFamily: "Poppins",
+										// 	fontSize: 10,
+										// 	top: -13,
+										// 	alignSelf: "center",
+										// }}
+										style={[styles.error, {top:70, alignContent:"center", fontSize:10, right:width/4.5}]}
 									>
 										{errors.image}
 									</Text>
 								)}
+								
 								<FlatList
 									data={image.slice(0, 5)}
 									// data={image}
@@ -469,6 +470,13 @@ export const Form = ({ component }) => {
 													},
 												]}
 											>
+												{errors.date && touched.date && (
+									<Text
+									style={[styles.error, {top:-33, right:10}]}
+									>
+										{errors.date}
+									</Text>
+								)}
 												<Text
 													style={[styles.textContainer, { marginTop: 10 }]}
 												>
@@ -484,6 +492,7 @@ export const Form = ({ component }) => {
 												</TouchableOpacity>
 											</View>
 							
+
 										<View
 												style={[
 													styles.dateContainer,
@@ -497,6 +506,14 @@ export const Form = ({ component }) => {
 													},
 												]}
 											>
+
+{errors.time && touched.time && (
+									<Text
+									style={[styles.error, {top:-33, right:10}]}
+									>
+										{errors.time}
+									</Text>
+								)}
 												<Text
 													style={[styles.textContainer, { marginTop: 10 }]}
 												>
@@ -510,6 +527,9 @@ export const Form = ({ component }) => {
 													 <Time size={25}/>
 												</TouchableOpacity>
 											</View>
+
+
+
 										</View>
 
                                              
@@ -567,6 +587,14 @@ export const Form = ({ component }) => {
 													},
 												]}
 											>
+												{errors.endDate && touched.endDate && (
+									<Text
+									style={[styles.error, {top:-33, right:20}]}
+										
+									>
+										{errors.endDate}
+									</Text>
+								)}
 												<Text
 													style={[styles.textContainer, { marginTop: 10 }]}
 												>
@@ -581,6 +609,7 @@ export const Form = ({ component }) => {
 													{Calendars}
 												</TouchableOpacity>
 											</View>
+
 											<View
 												style={[
 													styles.dateContainer,
@@ -594,6 +623,13 @@ export const Form = ({ component }) => {
 													},
 												]}
 											>
+												{errors.endTime && touched.endTime && (
+									<Text
+										style={[styles.error, {top:-33, right:20}]}
+									>
+										{errors.endTime}
+									</Text>
+								)}
 												<Text
 													style={[styles.textContainer, { marginTop: 10 }]}
 												>
@@ -607,27 +643,60 @@ export const Form = ({ component }) => {
 													 <Time size={25}/>
 												</TouchableOpacity>
 											</View>
+
 										</View>
 
 
 									</View>
 
 						<View style={{flexDirection:"row", justifyContent:"space-between", paddingRight:5, top:18}}>
+						{errors.ticketPrice && touched.ticketPrice && (
+									<Text
+										style={{
+											color: "red",
+											fontFamily: "Poppins",
+											fontSize: 10,
+											top: -8,
+											alignSelf: "center",
+											position:"absolute",
+										left:50
+										
+										}}
+									>
+										{errors.ticketPrice}
+									</Text>
+								)}
 									<FormInput
 								onChangeText={handleChange("ticketPrice")}
 								onBlur={handleBlur("ticketPrice")}
-								error={touched.ticketPrice && errors.ticketPrice}
+								// error={touched.ticketPrice && errors.ticketPrice}
 								value={ticketPrice}
 								placeholder="Price"
-								TextInputStyle={[styles.venueInput,{right:14}]}
+								TextInputStyle={[styles.venueInput,{right:11}]}
 							/>
-
+                                 
+								 {errors.venue && touched.venue && (
+									<Text
+										style={{
+											color: "red",
+											fontFamily: "Poppins",
+											fontSize: 10,
+											top: -8,
+											alignSelf: "center",
+											position:"absolute",
+										right:8
+										
+										}}
+									>
+										{errors.venue}
+									</Text>
+								)}
 								<FormInput
 								onChangeText={handleChange("venue")}
 								onBlur={handleBlur("venue")}
-								error={touched.venue && errors.venue}
+								// error={touched.venue && errors.venue}
 								value={venue}
-								placeholder="venue"
+								placeholder="Venue"
 								TextInputStyle={styles.venueInput}
 							/>
 								</View>
