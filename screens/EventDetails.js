@@ -378,13 +378,12 @@ const formatter = new Intl.NumberFormat('en-NG', {
 
 const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 
-	const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
 	const scrollX = React.useRef(new Animated.Value(0)).current;
 
 	const Indicator = ({ scrollx }) => {
 		return (
 
-			<View style={{ flexDirection: "row", alignSelf: "center", bottom:height/2.09, position:"absolute"}}>
+			<View style={{ flexDirection: "row", alignSelf: "center", bottom:imageH*1.16, position:"absolute"}}>
 				{image.length >1 && image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
@@ -482,7 +481,8 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 			<View style={{position:"absolute", top:height/1.3, alignSelf:"center"}}>
 			<Indicator scrollx={scrollX} />
 
-		<View
+
+			<View
 	style={{
 		height: height*0.44,
 		width: imageW,
@@ -581,10 +581,6 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 )
 : 
 (
-<Pressable
-onPress={Pay}
-activeOpacity={0.8}
->
 				<View
 					style={{
 						width: 100,
@@ -592,11 +588,15 @@ activeOpacity={0.8}
 						borderRadius: 10,
 						backgroundColor: "#004fc7",
 						alignSelf: "center",
-						left:width/5.3,
+						left:width/2.2,
 						position:"absolute",
 						top:width/25
 					}}
-				>
+					>
+						<Pressable
+						onPress={Pay}
+						activeOpacity={0.8}
+						>
 					<Text
 						style={{
 							color: "#fff",
@@ -611,13 +611,16 @@ activeOpacity={0.8}
 					>
 						Buy Now
 					</Text>
+					</Pressable>
 				</View>
-			</Pressable>
 )
 }
 		</View>
 	</View>
 </View>
+
+
+
 </View>
 		</SafeAreaView>
 		</View>
