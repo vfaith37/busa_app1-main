@@ -365,9 +365,9 @@ console.log(Title)
 		}
 			  };
 			  
-	  useEffect(()=>{
-		getData()
-	  },[])
+	//   useEffect(()=>{
+	// 	Pay()
+	//   },[])
 
 
 	const num = ticketPrice;
@@ -582,7 +582,8 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 : 
 (
 <Pressable
-onPress={()=>Pay}
+onPress={Pay}
+activeOpacity={0.8}
 >
 				<View
 					style={{
