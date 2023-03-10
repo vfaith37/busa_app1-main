@@ -95,8 +95,8 @@ const EventItems = ({ event }) => {
 		<>
 			<View
 				style={{
-					width: 56,
-					height: 62,
+					width: width*0.16,
+					height:height*0.09,
 					borderRadius: 20,
 					backgroundColor: "#ffff",
 					position: "absolute",
@@ -118,12 +118,12 @@ const EventItems = ({ event }) => {
 				</Text>
 				<Text
 					style={{
-						fontWeight: "700",
-						fontSize: 16,
+						fontWeight: "600",
+						fontSize: 14,
 						color: "#8c8c8c",
 						alignSelf: "center",
 						bottom: 5,
-						fontFamily: "Poppins2",
+						fontFamily: "Poppins3",
 					}}
 				>
 					{formattedDMonth}
@@ -139,14 +139,14 @@ const EventItems = ({ event }) => {
 						lineHeight: 29.9,
 						fontFamily: "Poppins2",
 						left: 40,
-						bottom: 90,
+						bottom: width*0.23,
 					}}
 				>
 					{event.title}
 				</Text>
 			</View>
 
-			<View style={{ flexDirection: "row", top: -43, left: 50 }}>
+			<View style={{ flexDirection: "row", top: -45, left: 50 }}>
 				<View>
 					<Icon
 						name="time-outline"
@@ -154,7 +154,7 @@ const EventItems = ({ event }) => {
 						style={{
 							position: "absolute",
 							color: "#fff",
-							top: -42,
+							top: -44,
 							left: -8,
 						}}
 					/>
@@ -164,7 +164,7 @@ const EventItems = ({ event }) => {
 							fontFamily: "Poppins2",
 							fontSize: 14,
 							position: "absolute",
-							bottom: 20,
+							bottom: 23,
 							left: 9,
 						}}
 					>
@@ -190,7 +190,7 @@ const EventItems = ({ event }) => {
 							fontSize: 14,
 							textTransform: "uppercase",
 							position: "absolute",
-							bottom: 20,
+							bottom: 23,
 							left: 85,
 						}}
 					>

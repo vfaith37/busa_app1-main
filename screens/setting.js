@@ -311,7 +311,7 @@ export const Profile = () => {
 
 
                            <>
-					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-200, right:15}}>
+					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-height/3.2, right:15}}>
                      <Pressable
 					onPress={()=>pressHandler()}
 					>

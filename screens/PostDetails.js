@@ -119,16 +119,14 @@ style={{padding:25, top:10}}
     <Text style={{fontWeight:"300", color:"#303030", fontSize:10, lineHeight:13, fontFamily:"Poppins", top:4}}>{props.date}</Text>
     </View>
 
-{/* <ScrollView
-showsVerticalScrollIndicator
-bounces={false}
-> */}
 <View
-// adjustsFontSizeToFit
-// accessibilityRole='adjustable'
-
 >
 
+<ScrollView
+showsVerticalScrollIndicator
+bounces={false}
+contentContainerStyle={{height:height }}
+>
 <Text style={{
   fontWeight:"400", fontSize:10, lineHeight:15, color:"#999999",fontFamily:"Poppins2",
 top:13, textTransform:"capitalize"
@@ -136,9 +134,9 @@ top:13, textTransform:"capitalize"
 
 >{props.content}</Text>
 
+</ScrollView>
 </View>
 
-{/* </ScrollView> */}
 </View>
 </>
 
