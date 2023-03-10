@@ -242,7 +242,7 @@ import {
 	View,
 	Dimensions,
 	StyleSheet,
-	TouchableOpacity,
+	Pressable,
 	ActivityIndicator,
 	Platform
 } from "react-native";
@@ -256,8 +256,7 @@ import client from "../api/client";
 
 const { width, height } = Dimensions.get("screen");
 
-const imageW = width*0.83;
-// const imageH = imageW * 1;
+const imageW = width*0.83
 const imageH = height/2.85
 
 
@@ -269,10 +268,7 @@ const EventDetails = ({ route }) => {
 
 	return (
 		<>
-			{/* <StatusBar backgroundColor={COLORS.events} statusBarStyle={COLORS.events}/> */}
-			{/* <View style={{backgroundColor:"#2b3b67", flex:1}}> */}
 			<EventAbout route={route} />
-			{/* </View> */}
 		</>
 	);
 };
@@ -350,7 +346,7 @@ console.log(title)
 						StackActions.replace("CheckOutScreen", {
 						  authorization_url: res.data.authorization_url,
 						})
-					  );
+					  )
 					}
 				  })
 				  .catch((e) => {
@@ -366,7 +362,10 @@ console.log(title)
 			console.log(`${e}`);
 		}
 			  };
-	  
+			  
+	  useEffect(()=>{
+		getData()
+	  },[])
 
 
 	const num = ticketPrice;
@@ -579,8 +578,9 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 )
 : 
 (
-<TouchableOpacity 
-activeOpacity={0.8} onPress={()=>Pay}>
+<Pressable
+onPress={()=>Pay}
+>
 				<View
 					style={{
 						width: 100,
@@ -608,7 +608,7 @@ activeOpacity={0.8} onPress={()=>Pay}>
 						Buy Now
 					</Text>
 				</View>
-			</TouchableOpacity>
+			</Pressable>
 )
 }
 		</View>
