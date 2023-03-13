@@ -478,7 +478,9 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 				}}
 			/>
 
-			<View style={{position:"absolute", top:height/1.3, alignSelf:"center"}}>
+			<View style={{position:"absolute",
+			 top:height/1.3, 
+			 alignSelf:"center"}}>
 			<Indicator scrollx={scrollX} />
 
 
