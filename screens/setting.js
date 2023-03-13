@@ -32,6 +32,8 @@ import axios from "axios";
 import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import BottomSheet from "../Components/Bottomsheet";
 import moment from "moment";
+import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
+import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 const {  width, height } = Dimensions.get("screen");
 
 export const Profile = () => {
@@ -528,6 +530,9 @@ export const Profile = () => {
 						
 						{actionTriggered === "Action_2" ? (
 							<>
+							<KeyboardAvoidingView>
+								<ScrollView>
+								<TouchableWithoutFeedback>
 								<View
 									style={{
 										alignItems: "center",
@@ -558,6 +563,10 @@ export const Profile = () => {
 										this app
 									</Text>
 								</View>
+								</TouchableWithoutFeedback>
+								</ScrollView>
+							</KeyboardAvoidingView>
+
 								<TextInput
 									placeholder="Your message here"
 									multiline={true}
@@ -574,6 +583,8 @@ export const Profile = () => {
 									}}
 									selectionColor={"blue"}
 								/>
+
+
 								<TouchableOpacity activeOpacity={0.7}>
 									<View
 										style={{

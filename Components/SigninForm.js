@@ -1,12 +1,13 @@
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Text } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "../api/client";
+import { ScrollView } from "react-native-gesture-handler";
 
 const {width, height} =Dimensions.get("screen")
 
@@ -98,7 +99,13 @@ export const SignInForm = () => {
 
 
 	return (
+		<KeyboardAvoidingView
+		enabled
+		behavior={Platform.OS ==="ios"?"padding":null}
+		>
 		<View>
+			<ScrollView>
+				<TouchableWithoutFeedback>
 			<Formik
 				initialValues={userInfos}
 				validationSchema={validationSchema}
@@ -160,7 +167,10 @@ export const SignInForm = () => {
 					);
 				}}
 			</Formik>
+			</TouchableWithoutFeedback>
+			</ScrollView>
 		</View>
+		</KeyboardAvoidingView>
 	);
 };
 
