@@ -531,7 +531,10 @@ export const Profile = () => {
 						
 						{actionTriggered === "Action_2" ? (
 							<>
-							<KeyboardAvoidingView>
+							<KeyboardAvoidingView
+							enabled
+							behavior={Platform.OS === "ios" ? "padding" : null}
+							>
 								<ScrollView
 								showsVerticalScrollIndicator={false}
 								bounces={false}

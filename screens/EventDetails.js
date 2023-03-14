@@ -344,6 +344,8 @@ console.log(Title)
 
 		}catch (e){
 			console.log(`${e}`);
+		}finally{
+			setIsLoading(false)
 		}
 			  };
 			  
@@ -464,7 +466,6 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		width: width,
 		borderRadius: 30,
 		backgroundColor: "#fff",
-		// paddingTop:imageH /20,
 		top:-imageH*0.87,
 		alignSelf: "center",
 		position:"absolute"

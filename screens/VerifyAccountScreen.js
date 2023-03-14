@@ -104,7 +104,10 @@ const VerifyLogic = (props) => {
 	return (
 		<View style={styles.container}>
 			<StatusBar hidden/>
-		<KeyboardAvoidingView>
+		<KeyboardAvoidingView
+		enabled
+		behavior={Platform.OS === "ios" ? "padding" : null}
+		>
 			<ScrollView
 			bounces={false}
 			showsVerticalScrollIndicator={false}

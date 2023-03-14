@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ActivityIndicator, Dimensions,  } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator, Dimensions, TouchableWithoutFeedback,  } from 'react-native'
 import React from 'react'
 import { Formik } from "formik";
 import { FormInput } from "../Components/FormInput";
@@ -6,6 +6,8 @@ import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../constants/theme';
+import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -56,6 +58,17 @@ const ChangePassword = () => {
 
   return (
     <View>
+
+<KeyboardAvoidingView
+enabled
+behavior={Platform.OS === "ios" ? "padding" : null}
+>
+		<ScrollView
+		showsVerticalScrollIndicator={false}
+		bounces={false}
+		
+		>
+			<TouchableWithoutFeedback>		
     <Formik
 							initialValues={userInfo}
 							validationSchema={validationSchema}
@@ -137,6 +150,9 @@ const ChangePassword = () => {
 								);
 							}}
 						</Formik>
+			</TouchableWithoutFeedback>
+		</ScrollView>
+	</KeyboardAvoidingView>
     </View>
   )
 }
