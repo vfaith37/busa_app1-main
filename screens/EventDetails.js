@@ -253,14 +253,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import client from "../api/client";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 const { width, height } = Dimensions.get("screen");
 
-const imageW = width*0.83
-const imageH = height/2.85
-
-
+// const imageW = width*0.83
+const imageW= 348
+// const imageH = height/2.85
+const imageH = 338
 
 
 
@@ -291,25 +292,6 @@ const EventAbout = (props) => {
 const changedDate = moment(newDate, 'DD/MM/YYYY'); // parse the date string using the specified format
 
 const formattedDate = changedDate.format('dddd, DD MMMM'); // format the date as "Friday, 17 February"
-
-	// const getData = async () => {
-	// 	try {
-	// 		const value = await AsyncStorage.getItem("userInfo");
-	// 		const userToken = await AsyncStorage.getItem(`userToken`);
-	// 		if (value !== null && userToken !== null) {
-	// 			setUserInfo(JSON.parse(value));
-	// 			setUserToken(userToken);
-	// 		}
-	// 	} catch (e) {
-	// 		console.log(`${e}`);
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	getData();
-	// }, []);
-
-
 
 	const Pay = async () => {
 		try{
@@ -365,11 +347,6 @@ console.log(Title)
 		}
 			  };
 			  
-	//   useEffect(()=>{
-	// 	Pay()
-	//   },[])
-
-
 	const num = ticketPrice;
 const formatter = new Intl.NumberFormat('en-NG', {
   style: 'currency',
@@ -383,7 +360,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 	const Indicator = ({ scrollx }) => {
 		return (
 
-			<View style={{ flexDirection: "row", alignSelf: "center", bottom:imageH*1.16, position:"absolute"}}>
+			<View style={{ flexDirection: "row", alignSelf: "center", bottom:imageH*1, position:"relative"}}>
 				{image.length >1 && image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
@@ -478,24 +455,22 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 				}}
 			/>
 
-			<View style={{position:"absolute",
-			 top:height/1.3, 
-			 alignSelf:"center"}}>
+			<View  
+			 >
 			<Indicator scrollx={scrollX} />
-
-
 			<View
 	style={{
-		height: height*0.44,
-		width: imageW,
+		height: height*0.49,
+		width: width,
 		borderRadius: 30,
 		backgroundColor: "#fff",
-		top:-height*0.38,
+		// paddingTop:imageH /20,
+		top:-imageH*0.87,
 		alignSelf: "center",
 		position:"absolute"
 	}}
 >
-	<View style={{ marginLeft: 18, top:15}}>
+	<View style={{ marginLeft: 40, top:15}}>
 		<Text
 			style={{
 				color: "#1b5bff",
@@ -536,40 +511,48 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 			{venue}
 		</Text>
 {/* if the text should prob be in a scroll view */}
+
+<ScrollView
+showsVerticalScrollIndicator
+vertical 
+bounces={false}
+>
 		<Text
 			style={{
 				marginTop: 30,
-				width: width * 0.7,
+				width: width * 0.8,
 				fontSize: 11,
 				fontFamily: "Poppins",
 				fontWeight: "300",
 				color: "#999999",
 				lineHeight: 12.5,
-				height:156,
+				height:110,
 				alignItems:"center",
-				right:-6
+				right:-6,
 			}}
 		>
 			{content}
 		</Text>
+</ScrollView>
 
 		<View
 			style={{
 				position: "absolute",
-				top: height/2.95,
+				top: imageH/1.5,
 				flexDirection: "row",
 			}}
 		>
 			<Text
 				style={{
-					paddingTop: 15,
 					fontFamily: "Poppins2",
 					fontWeight: "500",
 					fontSize: 24,
 					lineHeight: 20,
-					top:width/25,
+					paddingTop:width/35,
 					width:92,
-					height:33
+					height:33,
+					backgroundColor:"transparent",
+					top:width/85
 				}}
 			>
 				{formattedNumber}
@@ -590,9 +573,9 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 						borderRadius: 10,
 						backgroundColor: "#004fc7",
 						alignSelf: "center",
-						left:width/2.2,
+						left:width/1.9,
 						position:"absolute",
-						top:width/25
+						top:width/100
 					}}
 					>
 						<Pressable

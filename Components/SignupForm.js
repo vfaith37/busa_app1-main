@@ -13,6 +13,8 @@ import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import client from "../api/client";
+import { ScrollView, TouchableWithoutFeedback } from "react-native";
+import { SafeAreaView } from "react-native";
 const { width, height } = Dimensions.get("screen");
 
 const validationSchema = Yup.object({
@@ -72,14 +74,20 @@ export const SignUpForm = () => {
 		}
 	};
 	return (
+		<SafeAreaView>
 		<KeyboardAvoidingView
 			enabled
 			behavior={Platform.OS === "ios" ? "padding" : null}
 		>
+			<ScrollView
+			showsVerticalScrollIndicator={false}
+			bounces={false}
+			>
+				<TouchableWithoutFeedback>
 			<View
 				style={{
-					marginTop: 75,
-					height: height / 1.46,
+					marginTop: height/70,
+					height: height / 1.38,
 					width: width - 60,
 					borderRadius: 17,
 					backgroundColor: "#FFFFFF",
@@ -193,8 +201,37 @@ export const SignUpForm = () => {
 						}}
 					</Formik>
 				</View>
+				<View style={{alignSelf:"center"}}>
+				<Text
+						style={{
+							fontWeight: "400",
+							fontSize: 15,
+							color: "#717171",
+							textAlign: "center",
+							alignSelf: "center",
+							// marginTop: 20,
+							// marginBottom: 10,
+							fontFamily:"Poppins"
+						}}
+					>
+						or
+					</Text>
+					<View style={{flexDirection: "row"}}>
+						<Text style={{ textAlign: "center", fontFamily:"Poppins" }}>Have an account?</Text>
+						<Text
+							style={{ color: "#363be8", fontWeight: "500", marginLeft: 5, fontFamily:"Poppins3"}}
+							onPress={() => navigation.navigate("Log-in")
+						}
+						>
+						Log in
+						</Text>
+					</View>
+				</View>
 			</View>
+		</TouchableWithoutFeedback>
+			</ScrollView>
 		</KeyboardAvoidingView>
+		</SafeAreaView>
 	);
 };
 const styles = StyleSheet.create({

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, TextInput, Dimensions, StyleSheet } from "react-native";
+import { View, TextInput, Dimensions, StyleSheet, KeyboardAvoidingView } from "react-native";
+import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -63,7 +64,7 @@ export default function OTP({
 				return (
 					<TextInput
 						maxLength={1}
-						cursorColor="red"
+						// cursorColor="blue"
 						selectionColor={"blue"}
 						key={`${index}`}
 						ref={(element) => inputCodeRef.current.push(element)}

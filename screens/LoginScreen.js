@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
 const { width, height } = Dimensions.get("window");
 import { SignInForm } from "../Components/SigninForm";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAvoidingView } from "react-native-web";
+import { ScrollView } from "react-native-gesture-handler";
 const LoginScreen = () => {
 	const navigation = useNavigation();
 	return (
@@ -44,6 +46,7 @@ const LoginScreen = () => {
 					autoPlay
 				/>
 			</View>
+
 			<View style={{ flex: 1 }}>
 				<View
 					style={{
@@ -55,13 +58,14 @@ const LoginScreen = () => {
 				<View
 					style={{
 						paddingTop: 12.5,
-						flex: 1,
+					     flex: 1,
 						backgroundColor: "white",
 						borderTopLeftRadius: 100,
 						alignItems: "center",
 					}}
 				>
 					<SignInForm/>
+					<View style={{paddingTop:250, position:"absolute"}}>
 					<Text
 						style={{
 							fontWeight: "400",
@@ -86,6 +90,8 @@ const LoginScreen = () => {
 							Sign up
 						</Text>
 					</View>
+					</View>
+
 				</View>
 			</View>
 		</SafeAreaView>

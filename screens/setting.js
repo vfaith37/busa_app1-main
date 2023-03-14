@@ -9,6 +9,9 @@ import {
 	TextInput,
 	Button,
 	ActivityIndicator,
+	ScrollView,
+	 TouchableWithoutFeedback ,
+	 KeyboardAvoidingView
 } from "react-native";
 import {
 	TicketIcon,
@@ -32,8 +35,6 @@ import axios from "axios";
 import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import BottomSheet from "../Components/Bottomsheet";
 import moment from "moment";
-import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
-import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 const {  width, height } = Dimensions.get("screen");
 
 export const Profile = () => {
@@ -531,7 +532,10 @@ export const Profile = () => {
 						{actionTriggered === "Action_2" ? (
 							<>
 							<KeyboardAvoidingView>
-								<ScrollView>
+								<ScrollView
+								showsVerticalScrollIndicator={false}
+								bounces={false}
+								>
 								<TouchableWithoutFeedback>
 								<View
 									style={{

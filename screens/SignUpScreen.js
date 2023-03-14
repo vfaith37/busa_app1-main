@@ -4,6 +4,7 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {SignUpForm} from "../Components/SignupForm";
 import AppForm from "../Components/AppForm";
+import { COLORS } from "../constants/theme";
 
 const { width } = Dimensions.get("screen");
 const ArrowBack = (
@@ -34,12 +35,9 @@ const Bg = () => {
 export const SignUp = () => {
 	return (
 		<View style={{ flex: 1, backgroundColor: "#0D13E3", paddingTop: 55 }}>
+			<StatusBar backgroundColor={COLORS.white}/>
 			<Bg />
-			<SignUpForm />
-
-			{/* <AppForm/> */}
-
-			<StatusBar hidden />
+			<AppForm/>
 		</View>
 	);
 };

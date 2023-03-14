@@ -37,17 +37,17 @@ const HomeScreen = () => {
   //       setUserInfo(userInfo);
   //       setUserToken(userToken);
 
-  //       const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
+  //       // const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
 
-  //       const cacheData = await AsyncStorage.getItem(cacheKey);
-  //       if (cacheData !== null) {
-  //         const parsedData = JSON.parse(cacheData);
-  //         setPosts([...posts, ...parsedData.posts]);
-  //         setHasMoreData(parsedData.hasMoreData);
-  //         setCacheExpiry(parsedData.cacheExpiry);
-  //         setIsLoading(false);
-  //         return;
-  //       }
+  //       // const cacheData = await AsyncStorage.getItem(cacheKey);
+  //       // if (cacheData !== null) {
+  //       //   const parsedData = JSON.parse(cacheData);
+  //       //   setPosts([...posts, ...parsedData.posts]);
+  //       //   setHasMoreData(parsedData.hasMoreData);
+  //       //   setCacheExpiry(parsedData.cacheExpiry);
+  //       //   setIsLoading(false);
+  //       //   return;
+  //       // }
 
   //       const token = userToken;
   //       const config = {
@@ -72,17 +72,17 @@ const HomeScreen = () => {
 
   //       const newData = [...posts, ...responseData];
 
-  //       const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-  //       const cacheValue = JSON.stringify({
-  //         posts: newData,
-  //         hasMoreData: responseData.length > 0,
-  //         cacheExpiry,
-  //       });
+  //       // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
+  //       // const cacheValue = JSON.stringify({
+  //       //   posts: newData,
+  //       //   hasMoreData: responseData.length > 0,
+  //       //   cacheExpiry,
+  //       // });
 
-  //       await AsyncStorage.setItem(cacheKey, cacheValue);
+  //       // await AsyncStorage.setItem(cacheKey, cacheValue);
 
   //       setPosts(newData);
-  //       setCacheExpiry(cacheExpiry);
+  //       // setCacheExpiry(cacheExpiry);
   //     }
   //   } catch (e) {
   //     console.log(`${e}`);
@@ -92,6 +92,9 @@ const HomeScreen = () => {
   //   }
   // }, []);
 
+
+
+  
 
   const getPostData = useCallback(async (currentPage) => {
     setIsLoading(true);
@@ -151,17 +154,17 @@ const HomeScreen = () => {
                 return;
             }
 
-            const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-            const cacheValue = JSON.stringify({
-                posts: allPosts,
-                hasMoreData: false,
-                cacheExpiry,
-            });
+            // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
+            // const cacheValue = JSON.stringify({
+            //     posts: allPosts,
+            //     hasMoreData: false,
+            //     cacheExpiry,
+            // });
 
-            await AsyncStorage.setItem(cacheKey, cacheValue);
+            // await AsyncStorage.setItem(cacheKey, cacheValue);
 
             setPosts([...posts, ...allPosts]);
-            setCacheExpiry(cacheExpiry);
+            // setCacheExpiry(cacheExpiry);
         }
     } catch (e) {
         console.log(`${e}`);
@@ -170,7 +173,6 @@ const HomeScreen = () => {
         setIsLoading(false);
     }
 }, []);
-
 
   useEffect(() => {
     setIsLoading(false)
@@ -181,30 +183,43 @@ const HomeScreen = () => {
   const loadMorePosts = async () => {
     if (!hasMoreData || isLoading) {
       return;
+
     }
 
-    if (cacheExpiry && new Date().getTime() >= cacheExpiry) {
-      const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
-      await AsyncStorage.removeItem(cacheKey);
-      setCacheExpiry(null);
-    }
+    // if (cacheExpiry && new Date().getTime() >= cacheExpiry) {
+    //   const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
+    //   await AsyncStorage.removeItem(cacheKey);
+    //   setCacheExpiry(null);
+    // }
+   setCurrentPage(currentPage+1)
   };
 
-  const handleRefresh = useCallback(async () => {
-    try {
-      setPosts([]);
-      setCurrentPage(1); // Reset currentPage to 1 when refreshing
-      setIsLoading(true);
-
-      await getPostData(1);
-      setCacheExpiry(null); 
 
 
-      setIsLoading(false);
-    } catch (e) {
-      console.log(e);
+
+  // const handleRefresh = useCallback(async () => {
+  //   try {
+  //     setPosts([]);
+  //     setCurrentPage(1); // Reset currentPage to 1 when refreshing
+  //     setIsLoading(true);
+
+  //     await getPostData(1);
+  //     setCacheExpiry(null); 
+
+
+  //     setIsLoading(false);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }, [getPostData]);
+
+
+
+  const handleScroll = useCallback(({ nativeEvent }) => {
+    if (nativeEvent.contentOffset.y === 0 && currentPage > 1) {
+      setCurrentPage(currentPage-1);
     }
-  }, [getPostData]);
+  }, [currentPage]);
 
 
 
@@ -240,14 +255,13 @@ const HomeScreen = () => {
 
 
 
-
- 
-  
   return (
     <SafeAreaView style={{ flex: 1, top:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
    <DailyTips/>
       <FlatList
+      // ListHeaderComponent={renderLoader}
+      // onScroll={handleScroll}
         onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
@@ -268,7 +282,6 @@ export default HomeScreen;
 
 
 
-  
   
   
   

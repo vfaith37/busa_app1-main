@@ -99,13 +99,17 @@ export const SignInForm = () => {
 
 
 	return (
+		<View style={{flex:1}}>
 		<KeyboardAvoidingView
 		enabled
 		behavior={Platform.OS ==="ios"?"padding":null}
 		>
 		<View>
-			<ScrollView>
-				<TouchableWithoutFeedback>
+			<ScrollView
+			showsVerticalScrollIndicator={false}
+			bounces={false}
+			>
+			<TouchableWithoutFeedback>
 			<Formik
 				initialValues={userInfos}
 				validationSchema={validationSchema}
@@ -171,6 +175,7 @@ export const SignInForm = () => {
 			</ScrollView>
 		</View>
 		</KeyboardAvoidingView>
+		</View>
 	);
 };
 

@@ -6,6 +6,9 @@ import {
 	Image,
 	Dimensions,
 	ActivityIndicator,
+	KeyboardAvoidingView,
+	ScrollView,
+	TouchableWithoutFeedback,
 } from "react-native";
 import OTP from "../Components/otp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,82 +34,83 @@ const VerifyAccountScreen =({route})=>{
 
 
 const VerifyLogic = (props) => {
-	const {email, password} = props.route.params
+	 const {email, password} = props.route.params
 
 	const navigation= useNavigation()
-	const [isLoading, setIsLoading] = React.useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [userInfo, setUserInfo] = useState(null)
 	const [userToken, setUserToken]= useState(null)
 
-
-	const verify = async (values) => {
-  	await client.post('/verifyToken', {
-			...values,
-			})
-			.then((res) => {
+	const verify = async (value) => {
+		 setIsLoading(true);
+		console.log(value.token)
+		try {
+		  await client.post('/verifyToken', {
+		   ...value,
+		  }).then((res) => {
 			console.log(res)
+			if (res.status === 200) {
+			  //since the response was succesful, then email and password is valid
+			  // get the refreshtoken and run the login function
+	  
+			  // run the login function
+	  
+			  client.post("/signin", {
+				email: email,
+				password: password
+			  }).then(async (res) => {
+				console.log(res)
 				if (res.status === 200) {
-               //since the response was succesful, then email and password is valid
-			   // get the refreshtoken and run the login function
-			   
-
-				 // run the login function
-
-				 client.post("/signin",{
-                email:email,
-			 password:password
-				 }).then(async(res)=>{
-					console.log(res)
-					if (res.status === 200) {
-						// also store the users values as an object and pass it round
-						console.log(res.data);
-						let userInfo = res.data.user
-						console.log(userInfo)
-			
-						setUserInfo(userInfo)
-						let token = res.data.refreshToken
-						setUserToken(token)
-
-						try{
-							axios.defaults.headers.common.Authorization = `Bearer ${token}`
-							// stringify the user object
-							await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
-							 
-							// get the user token
-							await AsyncStorage.setItem("userToken",token)
-						}catch(e){
-							console.log(`Async Storage error: ${e}`)
-						}
-
-						navigation.dispatch(StackActions.replace("Sign-up2"));
-					}else{
-						console.error("Error with Login Functionality")
-					}
-
-				 }).catch((e)=>{
-					console.log(`This is the login function error: ${e}`)
+				  // also store the users values as an object and pass it round
+				  console.log(res.data);
+				  let userInfo = res.data.user
+				  console.log(userInfo)
+	  
+				  setUserInfo(userInfo)
+				  let token = res.data.refreshToken
+				  setUserToken(token)
+	  
+				  try {
+					// axios.defaults.headers.common.Authorization = `Bearer ${token}`
+					// stringify the user object
+					await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
+	  
+					// get the user token
+					await AsyncStorage.setItem("userToken", token)
+				  } catch (e) {
+					console.log(`Async Storage error: ${e}`)
+				  }
+	  
+				  navigation.dispatch(StackActions.replace("Sign-up2"));
+				} else {
+				  console.error("Error with Login Functionality")
 				}
-				 )
-				
-				}
-				else{
-					console.error("Invalid token")
-					// {<View>
-                    //  <Text style={{color:"red"}}>sbfdbfsjfbsjfbsfbbfbf</Text>
-					// </View>}
-					}
-			})
-			.catch((e) => {
-				console.log(` This is the verify token error: ${e}`);
-			});
-
-	};
-	
+			  }).catch((e) => {
+				console.log(`This is the login function error: ${e}`)
+			  })
+			} else {
+			  console.error("Invalid token")
+			}
+		  })
+		} catch (e) {
+		  console.log(` This is the verify token error: ${e}`);
+		  setIsLoading(false)
+		} finally {
+		  setIsLoading(false);
+		}
+	  };
+	  
 
 	return (
-		
-		  <View style ={styles.container}>
-			  <StatusBar hidden/>
+		<View style={styles.container}>
+			<StatusBar hidden/>
+		<KeyboardAvoidingView>
+			<ScrollView
+			bounces={false}
+			showsVerticalScrollIndicator={false}
+			>
+				<TouchableWithoutFeedback>
+		  <View >
 			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>verify Account</Text>
 	  <LottieView
 	  source={require("../assets/animations/email-verification.json")}
@@ -120,21 +124,35 @@ const VerifyLogic = (props) => {
 	  loop={true}
 	  autoPlay
 	  />
-	  
 
 
-	  
-	  <View style={{marginTop:60}}>
+	  <View style={{marginTop:50, height:height}}>
 	  <View style={{width:315, height:172, backgroundColor:"#ffff", borderRadius:10, alignSelf:"center"}}>
-                            <OTP
-							codeCount={5}
-							containerStyle={{ marginTop: 65 }}
-							otpStyles={{ backgroundColor: "#fff" }}
-						onFinish={(value) => verify(value)}
-						      />
+		{/* {
+			isLoading?(
+            <View>
+			<ActivityIndicator size="large" color="#0000ff" />
+			</View>
+			):
+			(
+				<OTP
+				codeCount={5}
+				containerStyle={{ marginTop: 65 }}
+				otpStyles={{ backgroundColor: "#fff" }}
+			    onFinish={(value) => verify(value)}
+				  />
+			)
+		} */}
+
+                  <OTP
+				codeCount={5}
+				containerStyle={{ marginTop: 65 }}
+				otpStyles={{ backgroundColor: "#fff" }}
+			    onFinish={(value) => verify(value)}
+				  />
+  
 		  <Text style={{fontWeight:"500", color:"#363BE8", textAlign:"center", bottom:95, fontFamily:"Poppins", fontSize:12.5}}>enter code sent to your email address</Text>
 	  </View>
-	  
 		  <View style={{top:20}}>
 		  <Text style={{textAlign:"center", fontWeight:"600", fontSize:13, color:"#ffff", fontFamily:"Poppins3"}}>Didn't receive a code?</Text>
 		  <TouchableOpacity
@@ -145,6 +163,10 @@ const VerifyLogic = (props) => {
 		  </View>
 		  </View>
 	  </View>
+				</TouchableWithoutFeedback>
+			</ScrollView>
+		</KeyboardAvoidingView>
+	</View>
 		)
 };
 
@@ -165,7 +187,6 @@ const styles = StyleSheet.create({
 	},
 	container:{
         flex:1.5,
-        // backgroundColor:"#363be8",
 		backgroundColor:
 "linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
 

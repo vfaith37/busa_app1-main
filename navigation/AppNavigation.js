@@ -20,7 +20,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
     <SafeAreaProvider>
-      {userToken!==null ?
+      {userToken!==null ?  // meant to be userToken
       //when a user is signed in
     <MainStack/>
     :
