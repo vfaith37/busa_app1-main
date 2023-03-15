@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,221 +7,113 @@ import Posts from './Posts';
  import client from '../api/client'
 import { COLORS } from '../constants/theme';
 import DailyTips from "../Components/DailyTips"
+import ErrorButton from '../Components/ErrorButton';
 
 const {width, height} = Dimensions.get("screen")
 
-
-  const PAGE_SIZE = 10;
-const CACHE_EXPIRY_TIME = 1* 60 * 100;
+const PAGE_SIZE = 10;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
+  
+  const flatListRef = useRef(null);
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [error,setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const [cacheExpiry, setCacheExpiry] = useState(null);
 
-  // const getPostData = useCallback(async (currentPage) => {
-  //   setIsLoading(true);
-
-  //   try {
-  //     const value = await AsyncStorage.getItem("userInfo");
-  //     const userToken = await AsyncStorage.getItem("userToken");
-
-  //     if (value !== null && userToken !== null) {
-  //       const userInfo = JSON.parse(value);
-  //       setUserInfo(userInfo);
-  //       setUserToken(userToken);
-
-  //       // const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
-
-  //       // const cacheData = await AsyncStorage.getItem(cacheKey);
-  //       // if (cacheData !== null) {
-  //       //   const parsedData = JSON.parse(cacheData);
-  //       //   setPosts([...posts, ...parsedData.posts]);
-  //       //   setHasMoreData(parsedData.hasMoreData);
-  //       //   setCacheExpiry(parsedData.cacheExpiry);
-  //       //   setIsLoading(false);
-  //       //   return;
-  //       // }
-
-  //       const token = userToken;
-  //       const config = {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       };
-
-  //       const res = await client.get(
-  //         `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
-  //         config
-  //       );
-
-  //       console.log (res.data.data)
-
-  //       const responseData = res.data.data;
-
-  //       if (responseData.length === 0) {
-  //         setHasMoreData(false);
-  //         return;
-  //       }
-
-  //       const newData = [...posts, ...responseData];
-
-  //       // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-  //       // const cacheValue = JSON.stringify({
-  //       //   posts: newData,
-  //       //   hasMoreData: responseData.length > 0,
-  //       //   cacheExpiry,
-  //       // });
-
-  //       // await AsyncStorage.setItem(cacheKey, cacheValue);
-
-  //       setPosts(newData);
-  //       // setCacheExpiry(cacheExpiry);
-  //     }
-  //   } catch (e) {
-  //     console.log(`${e}`);
-  //     alert(`${e}`);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, []);
-
-
-
-  
 
   const getPostData = useCallback(async (currentPage) => {
+  const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 1 minute in milliseconds
+
     setIsLoading(true);
 
     try {
-        const value = await AsyncStorage.getItem("userInfo");
-        const userToken = await AsyncStorage.getItem("userToken");
+      const value = await AsyncStorage.getItem("userInfo");
+      const userToken = await AsyncStorage.getItem("userToken");
 
-        if (value !== null && userToken !== null) {
-            const userInfo = JSON.parse(value);
-            setUserInfo(userInfo);
-            setUserToken(userToken);
+      if (value !== null && userToken !== null) {
+        const userInfo = JSON.parse(value);
+        setUserInfo(userInfo);
+        setUserToken(userToken);
 
-            const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
+        const cacheKey = `${userInfo.lastName}-${currentPage}-${PAGE_SIZE}`;
 
-            const cacheData = await AsyncStorage.getItem(cacheKey);
-            if (cacheData !== null) {
-                const parsedData = JSON.parse(cacheData);
-                setPosts([...posts, ...parsedData.posts]);
-                setHasMoreData(parsedData.hasMoreData);
-                setCacheExpiry(parsedData.cacheExpiry);
-                setIsLoading(false);
-                return;
-            }
+        // const cacheData = await AsyncStorage.getItem(cacheKey);
+        // if (cacheData !== null) {
+        //   const parsedData = JSON.parse(cacheData);
+        //   setPosts(parsedData.posts);
+        //   setHasMoreData(parsedData.hasMoreData);
+        //   setCacheExpiry(parsedData.cacheExpiry);
+        //   setIsLoading(false);
+        //   return;
+        // }
 
-            const token = userToken;
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
+        const token = userToken;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
 
-            let allPosts = []; // New variable to hold all the posts
-            let hasMore = true; // New variable to determine if there is more data to load
+        const res = await client.get(
+          `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
+          config
+        );
 
-            while (hasMore) { // Loop until there is no more data
-                const res = await client.get(
-                    `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
-                    config
-                );
+        console.log (res.data.data)
 
-                console.log(res.data.data);
+        const responseData = res.data.data;
 
-                const responseData = res.data.data;
-
-                if (responseData.length === 0) {
-                    hasMore = false;
-                } else {
-                    allPosts = [...allPosts, ...responseData];
-                    currentPage++;
-                }
-            }
-
-            if (allPosts.length === 0) {
-                setHasMoreData(false);
-                setIsLoading(false);
-                return;
-            }
-
-            // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-            // const cacheValue = JSON.stringify({
-            //     posts: allPosts,
-            //     hasMoreData: false,
-            //     cacheExpiry,
-            // });
-
-            // await AsyncStorage.setItem(cacheKey, cacheValue);
-
-            setPosts([...posts, ...allPosts]);
-            // setCacheExpiry(cacheExpiry);
+        if (responseData.length === 0) {
+          setHasMoreData(false);
+          return;
         }
+   
+        // const newData = prevPosts=>[...prevPosts, ...responseData]
+        const newData = [...posts, ...responseData];
+
+        // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
+        // const cacheValue = JSON.stringify({
+        //  posts: newData,
+        //   hasMoreData: responseData.length > 0,
+        //   cacheExpiry,
+        // });
+
+        // await AsyncStorage.setItem(cacheKey, cacheValue);
+           setPosts(prevPosts => [...prevPosts, ...responseData]);
+          // setCacheExpiry(cacheExpiry);
+      }
     } catch (e) {
-        console.log(`${e}`);
-        alert(`${e}`);
+      console.log(`${e}`);
+      alert(`${e}`);
+      setError(true);
+  setErrorMessage('Oops! Something went wrong. Please try again later.');
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-}, []);
+  }, []);
 
   useEffect(() => {
     setIsLoading(false)
     getPostData(currentPage);
   }, [currentPage, getPostData]);
 
+ 
+
 
   const loadMorePosts = async () => {
-    if (!hasMoreData || isLoading) {
+    if (isLoading || !hasMoreData) {
       return;
-
     }
-
-    // if (cacheExpiry && new Date().getTime() >= cacheExpiry) {
-    //   const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
-    //   await AsyncStorage.removeItem(cacheKey);
-    //   setCacheExpiry(null);
-    // }
-   setCurrentPage(currentPage+1)
+    setCurrentPage(prevPage=> prevPage+1);
+    
   };
-
-
-
-
-  // const handleRefresh = useCallback(async () => {
-  //   try {
-  //     setPosts([]);
-  //     setCurrentPage(1); // Reset currentPage to 1 when refreshing
-  //     setIsLoading(true);
-
-  //     await getPostData(1);
-  //     setCacheExpiry(null); 
-
-
-  //     setIsLoading(false);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }, [getPostData]);
-
-
-
-  const handleScroll = useCallback(({ nativeEvent }) => {
-    if (nativeEvent.contentOffset.y === 0 && currentPage > 1) {
-      setCurrentPage(currentPage-1);
-    }
-  }, [currentPage]);
-
-
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -253,16 +145,28 @@ const HomeScreen = () => {
     )
   }
 
+   const handleRefresh = useCallback(async () => {
+    try {
+      setPosts([]);
+      setCurrentPage(1); // Reset currentPage to 1 when refreshing
+      setIsLoading(true);
+
+      await getPostData(1);
+      setCacheExpiry(null); 
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [getPostData]);
+
 
 
   return (
     <SafeAreaView style={{ flex: 1, top:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
-   <DailyTips/>
+       <DailyTips/> 
       <FlatList
-      // ListHeaderComponent={renderLoader}
-      // onScroll={handleScroll}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
         data={posts}
@@ -270,10 +174,12 @@ const HomeScreen = () => {
         decelerationRate={'fast'}
          ListFooterComponent={renderLoader}
         renderItem={renderItem}
-        // refreshing={isLoading && posts.length === 0}
         keyExtractor={(item) => item._id}
-        //  onRefresh={handleRefresh}
+        // scrollEventThrottle={32}
+        //  refreshing={isLoading && posts.length === 0}
+        // onRefresh={handleRefresh}
       />
+   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={styles.error}/>}
     </SafeAreaView>
   );
 };
@@ -283,5 +189,126 @@ export default HomeScreen;
 
 
   
-  
+const styles = StyleSheet.create({
+error:{
+  color:"red",
+  fontSize:10,
+  fontFamily:"Poppins"
+}
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   const getPostData = useCallback(async (currentPage) => {
+//     setIsLoading(true);
+
+//     try {
+//         const value = await AsyncStorage.getItem("userInfo");
+//         const userToken = await AsyncStorage.getItem("userToken");
+
+//         if (value !== null && userToken !== null) {
+//             const userInfo = JSON.parse(value);
+//             setUserInfo(userInfo);
+//             setUserToken(userToken);
+
+//             const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
+
+//             const cacheData = await AsyncStorage.getItem(cacheKey);
+//             if (cacheData !== null) {
+//                 const parsedData = JSON.parse(cacheData);
+//                 setPosts([...posts, ...parsedData.posts]);
+//                 setHasMoreData(parsedData.hasMoreData);
+//                 setCacheExpiry(parsedData.cacheExpiry);
+//                 setIsLoading(false);
+//                 return;
+//             }
+
+//             const token = userToken;
+//             const config = {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`,
+//                 },
+//             };
+
+//             let allPosts = []; // New variable to hold all the posts
+//             let hasMore = true; // New variable to determine if there is more data to load
+
+//             while (hasMore) { // Loop until there is no more data
+//                 const res = await client.get(
+//                     `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
+//                     config
+//                 );
+
+//                 console.log(res.data.data);
+
+//                 const responseData = res.data.data;
+
+//                 if (responseData.length === 0) {
+//                     hasMore = false;
+//                 } else {
+//                     allPosts = [...allPosts, ...responseData];
+//                     currentPage++;
+//                 }
+//             }
+
+//             if (allPosts.length === 0) {
+//                 setHasMoreData(false);
+//                 setIsLoading(false);
+//                 return;
+//             }
+
+//             // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
+//             // const cacheValue = JSON.stringify({
+//             //     posts: allPosts,
+//             //     hasMoreData: false,
+//             //     cacheExpiry,
+//             // });
+
+//             // await AsyncStorage.setItem(cacheKey, cacheValue);
+
+//             setPosts([...posts, ...allPosts]);
+//             // setCacheExpiry(cacheExpiry);
+//         }
+//     } catch (e) {
+//         console.log(`${e}`);
+//         alert(`${e}`);
+//     } finally {
+//         setIsLoading(false);
+//     }
+// }, []);
   
