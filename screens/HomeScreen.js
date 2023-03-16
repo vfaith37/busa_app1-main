@@ -42,7 +42,7 @@ const HomeScreen = () => {
         setUserInfo(userInfo);
         setUserToken(userToken);
 
-        const cacheKey = `${userInfo.lastName}-${currentPage}-${PAGE_SIZE}`;
+        const cacheKey = `${userInfo.lastname}-${currentPage}-${PAGE_SIZE}`;
         const cachedData = await AsyncStorage.getItem(cacheKey);
         const cacheExpiry = await AsyncStorage.getItem(`${cacheKey}-expiry`);
 
@@ -128,6 +128,7 @@ const HomeScreen = () => {
     [navigation]
   );
 
+console.log(height)
 
  const renderLoader =()=>{
     return(
@@ -160,6 +161,8 @@ const HomeScreen = () => {
       setIsLoading(false);
     } catch (e) {
       console.log(e);
+      setError(true)
+      setErrorMessage("An error occured")
     }
   }, [getPostData]);
 

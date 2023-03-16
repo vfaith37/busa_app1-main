@@ -36,22 +36,20 @@ const EventScreen = () => {
         setUserInfo(userInfo);
         setUserToken(userToken);
 
+        const cacheKeyEvent = `${userInfo.email}-${currentPage}-${PAGE_SIZE}`;
+        const cachedDataEvent = await AsyncStorage.getItem(cacheKeyEvent);
+        const cacheExpiryEvent = await AsyncStorage.getItem(`${cacheKeyEvent}-expiry`);
 
 
-        const cacheKeyEvent = `${userInfo.firstName}-${currentPage}-${PAGE_SIZE}`;
-        const cachedData = await AsyncStorage.getItem(cacheKeyEvent);
-        const cacheExpiry = await AsyncStorage.getItem(`${cacheKeyEvent}-expiry`);
-
-        
         if (
-          cachedData !== null &&
-          cacheExpiry !== null &&
-          Date.now() - parseInt(cacheExpiry) < CACHE_EXPIRY_TIME
+          cachedDataEvent !== null &&
+          cacheExpiryEvent !== null &&
+          Date.now() - parseInt(cacheExpiryEvent) < CACHE_EXPIRY_TIME
           // i.e the cache hasn't expired
         ) {
-          setEvents(JSON.parse(cachedData));
-          setCacheExpiry(parseInt(cacheExpiry));
-          console.log(cacheExpiry)
+          setEvents(JSON.parse(cachedDataEvent));
+          setCacheExpiry(parseInt(cacheExpiryEvent));
+          console.log(cacheExpiryEvent)
         }else{
 
 
@@ -87,7 +85,7 @@ const EventScreen = () => {
               setCacheExpiry(Date.now());
               await AsyncStorage.setItem(cacheKeyEvent, JSON.stringify(responseData));
               await AsyncStorage.setItem(
-                `${cacheKeyEvent}-expiry-event`,
+                `${cacheKeyEvent}-expiry`,
                 JSON.stringify(Date.now())
               );
              console.log(cacheKeyEvent) 
@@ -105,7 +103,7 @@ const EventScreen = () => {
 
   useEffect(() => {
     setIsLoading(false)
-    getEventData();
+    getEventData(currentPage);
   }, [currentPage, getEventData]);
 
 
@@ -174,7 +172,8 @@ const EventScreen = () => {
         data={events}
         bounces={false}
         decelerationRate={'fast'}
-        ListFooterComponent={renderLoader}
+         ListFooterComponent={renderLoader}
+        keyExtractor={(item) => item._id}
         renderItem={renderItem}
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
