@@ -72,7 +72,6 @@ const EventScreen = () => {
 
             if (responseData.length === 0) {
               setHasMoreData(false);
-              setEvents([])
               return;
             }
 
@@ -109,16 +108,12 @@ const EventScreen = () => {
 
 
   const loadMoreEvents = async () => {
-    if (!hasMoreData || isLoading) {
-      return(
+     (!hasMoreData || isLoading) ?
       <View>
         <Text style={{color:"red"}}>no more events present</Text>
       </View>
-      )
-
-      return;
-    }
-
+      :
+    null;
     setCurrentPage(prevPage=> prevPage+1);
   };
 
@@ -172,10 +167,11 @@ const EventScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, top: 40 }}>
-
-    {events.length === 0 && <View><Text>no events present</Text></View>}
-
-    
+ {events.length === 0 && !isLoading && (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No events present</Text>
+      </View>
+    )}
       <FlatList
         onEndReachedThreshold={0.1}
         onEndReached={loadMoreEvents}

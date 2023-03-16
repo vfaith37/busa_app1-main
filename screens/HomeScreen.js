@@ -29,7 +29,7 @@ const HomeScreen = () => {
 
 
   const getPostData = useCallback(async (currentPage) => {
-  const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 1 minute in milliseconds
+  // const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 1 minute in milliseconds
 
     setIsLoading(true);
 
@@ -42,18 +42,18 @@ const HomeScreen = () => {
         setUserInfo(userInfo);
         setUserToken(userToken);
 
-        const cacheKey = `${userInfo.lastname}-${currentPage}-${PAGE_SIZE}`;
-        const cachedData = await AsyncStorage.getItem(cacheKey);
-        const cacheExpiry = await AsyncStorage.getItem(`${cacheKey}-expiry`);
+        // const cacheKey = `${userInfo.lastname}-${currentPage}-${PAGE_SIZE}`;
+        // const cachedData = await AsyncStorage.getItem(cacheKey);
+        // const cacheExpiry = await AsyncStorage.getItem(`${cacheKey}-expiry`);
 
-        if (
-          cachedData !== null &&
-          cacheExpiry !== null &&
-          Date.now() - parseInt(cacheExpiry) < CACHE_EXPIRY_TIME
-        ) {
-          setPosts(JSON.parse(cachedData));
-          setCacheExpiry(parseInt(cacheExpiry));
-        }else{
+        // if (
+        //   cachedData !== null &&
+        //   cacheExpiry !== null &&
+        //   Date.now() - parseInt(cacheExpiry) < CACHE_EXPIRY_TIME
+        // ) {
+        //   setPosts(JSON.parse(cachedData));
+        //   setCacheExpiry(parseInt(cacheExpiry));
+        // }else{
         
         
 
@@ -75,7 +75,8 @@ const HomeScreen = () => {
 
         if (responseData.length === 0) {
           setHasMoreData(false);
-          return;
+          setIsLoading(false)
+          // return;
         }
 
         if(currentPage>1){
@@ -84,14 +85,14 @@ const HomeScreen = () => {
         else{
           setPosts([...posts, ...responseData])
         }
-        setCacheExpiry(Date.now());
-        await AsyncStorage.setItem(cacheKey, JSON.stringify(responseData));
-        await AsyncStorage.setItem(
-          `${cacheKey}-expiry`,
-          JSON.stringify(Date.now())
-        );
-       console.log(cacheKey)
-      }
+      //   setCacheExpiry(Date.now());
+      //   await AsyncStorage.setItem(cacheKey, JSON.stringify(responseData));
+      //   await AsyncStorage.setItem(
+      //     `${cacheKey}-expiry`,
+      //     JSON.stringify(Date.now())
+      //   );
+      //  console.log(cacheKey)
+      // }
     }
     } catch (e) {
       console.log(`${e}`);
@@ -111,13 +112,21 @@ const HomeScreen = () => {
  
 
 
-  const loadMorePosts = async () => {
+  // const loadMorePosts = async () => {
+  //   if (isLoading || !hasMoreData) {
+  //     return;
+  //   }
+  //   setCurrentPage(prevPage=> prevPage+1);
+    
+  // };
+
+
+  const loadMorePosts = useCallback(async () => {
     if (isLoading || !hasMoreData) {
       return;
     }
-    setCurrentPage(prevPage=> prevPage+1);
-    
-  };
+    setCurrentPage(prevPage => prevPage + 1);
+  }, [isLoading, hasMoreData]);
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -172,6 +181,11 @@ const HomeScreen = () => {
     <SafeAreaView style={{ flex: 1, top:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
        <DailyTips/> 
+       {posts.length === 0 && !isLoading && (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No posts present</Text>
+      </View>
+    )}
       <FlatList
         onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
