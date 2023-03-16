@@ -11,7 +11,8 @@ import {
 	ActivityIndicator,
 	ScrollView,
 	 TouchableWithoutFeedback ,
-	 KeyboardAvoidingView
+	 KeyboardAvoidingView,
+	 KeyboardAvoidingViewBase
 } from "react-native";
 import {
 	TicketIcon,
@@ -339,11 +340,6 @@ export const Profile = () => {
 			</>
 
 
-
-
-
-			
-
                  <BottomSheet
 						ref={bottomSheetRef}
 						activeHeight={height * 0.5}
@@ -397,8 +393,6 @@ export const Profile = () => {
 						</View>
 					</BottomSheet>
 
-                      
-
 
 					<ModalPopUp visible={visible}>
 						<View 
@@ -416,7 +410,14 @@ export const Profile = () => {
 
 						{actionTriggered === "Action_1" ?
 						(
-                             <Formik
+							<View>
+								<KeyboardAvoidingView
+								enabled
+								behavior = {Platform.OS ==="ios"?"padding":null}
+								>
+									<ScrollView>
+										<TouchableWithoutFeedback>
+										<Formik
 							 initialValues={{password:""}}
 							 validationSchema={validationSchema}
 							onSubmit={verifyPassword }
@@ -478,35 +479,6 @@ export const Profile = () => {
 								cursorColor='#363be8'
 	                        style={styles.password}
 />
-							   {/* <TouchableOpacity activeOpacity={0.7}
-								
-								onPress={handleSubmit}
-								>
-									<View
-										style={{
-											alignSelf: "center",
-											height: 30,
-											width: 80,
-											backgroundColor: "rgba(0, 79.41, 198.53, 1)",
-											borderRadius: 5,
-											justifyContent: "center",
-										}}
-									>
-										<Text
-											style={{
-												fontSize: 16,
-												fontWeight: "500",
-												textAlign: "center",
-												color: "white",
-												fontFamily:"Poppins3"
-											}}
-
-										>
-										Verify
-										</Text>
-									</View>
-								</TouchableOpacity>	 */}
-
 								{isLoading ? (
 								<View>
 									<ActivityIndicator size="large" color="#0000ff" />
@@ -519,12 +491,16 @@ export const Profile = () => {
 								/>
 							)}	
 
-
 								</>
 									)
 								}
 							}
 			</Formik>
+										</TouchableWithoutFeedback>
+									</ScrollView>
+								</KeyboardAvoidingView>
+							</View>
+
 						)
 			:
 			null}
@@ -540,6 +516,7 @@ export const Profile = () => {
 								bounces={false}
 								>
 								<TouchableWithoutFeedback>
+									<View>
 								<View
 									style={{
 										alignItems: "center",
@@ -570,9 +547,6 @@ export const Profile = () => {
 										this app
 									</Text>
 								</View>
-								</TouchableWithoutFeedback>
-								</ScrollView>
-							</KeyboardAvoidingView>
 
 								<TextInput
 									placeholder="Your message here"
@@ -617,129 +591,13 @@ export const Profile = () => {
 										</Text>
 									</View>
 								</TouchableOpacity>
+                                      </View>
+								</TouchableWithoutFeedback>
+								</ScrollView>
+							</KeyboardAvoidingView>
+
 							</>
 						) : null}
-
-{/* 
-						{actionTriggered === "Action_3" ?
-                             <Formik
-							 initialValues={{password:""}}
-							 validationSchema={validationSchema}
-							//  onSubmit={(values) => {
-							// 	console.log(values);
-							// }}
-							onSubmit={verifyPassword}
-							 >
-								{({
-                                 values,
-								 errors,
-								 isSubmitting,
-								 handleChange,
-								 handleBlur,
-								 handleSubmit,
-								 touched
-								})=>{
-                               const {password} = values
-									return(
-										<>
-								<View
-									style={{
-										alignItems: "center",
-									}}
-								>
-									<Text
-										style={{
-											fontSize: 26,
-											fontWeight: "400",
-											color: "rgba(39, 46, 57, 1)",
-											fontFamily:"Poppins3"
-										}}
-									>
-										Hey {`${userInfo?.lastname}`}
-									</Text>
-									<Text
-										style={{
-											width:"90%",
-											fontSize: 12,
-											fontWeight: "300",
-											textAlign: "center",
-											color: "rgba(112.62, 112.62, 112.62, 1)",
-											fontFamily:"Poppins"
-										}}
-									>
-								  Please enter your secured password 
-									</Text>
-								</View>
-								{errors.password && touched.password && 
-		<Text style={{ color: 'red', fontFamily:"Poppins", fontSize:10, top:3, alignSelf:"center", left:60 }}>
-			{errors.password}
-			</Text>
-			}
-                                 <TextInput
-	                        placeholder="*********"
-							onChangeText={handleChange("password")}
-								onBlur={handleBlur("password")}
-								value={password}
-								secureTextEntry
-								autoCapitalize="none"
-								maxLength={32}
-								selectionColor='#363BE8'
-								cursorColor='#363be8'
-	                        style={styles.password}
-/> */}
-							   {/* {/* <TouchableOpacity activeOpacity={0.7}
-								
-								onPress={handleSubmit}
-								
-								>
-									<View
-										style={{
-											alignSelf: "center",
-											height: 30,
-											width: 80,
-											backgroundColor: "rgba(0, 79.41, 198.53, 1)",
-											borderRadius: 5,
-											justifyContent: "center",
-										}}
-									>
-										<Text
-											style={{
-												fontSize: 16,
-												fontWeight: "500",
-												textAlign: "center",
-												color: "white",
-												fontFamily:"Poppins3"
-											}}
-
-										>
-										Verify
-										</Text>
-									</View>
-								</TouchableOpacity>	 */}
-
-								{/* {isLoading ? (
-								<View>
-									<ActivityIndicator size="large" color="#0000ff" />
-								</View>
-							) : (
-								<FormSubmitBtn
-									Submitting={isSubmitting}
-									onPress={handleSubmit}
-									title={"verify"}
-								/>
-							)}	 */}
-
-
-								{/* </>
-									)
-								}
-							}
-			</Formik>
-			:
-			null} */}
-
-
-
 					</ModalPopUp>	
 				</View>
 			</View>

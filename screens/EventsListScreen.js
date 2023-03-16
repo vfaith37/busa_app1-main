@@ -39,6 +39,8 @@ const EventsListScreen = () => {
 
 const getListofEVents = async () => {
 	const today = moment().format('DD/MM/YYYY');
+
+	console.log(today)
   
 	try {
 	  const value = await AsyncStorage.getItem('userInfo');

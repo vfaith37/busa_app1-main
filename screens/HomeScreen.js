@@ -43,16 +43,19 @@ const HomeScreen = () => {
         setUserToken(userToken);
 
         const cacheKey = `${userInfo.lastName}-${currentPage}-${PAGE_SIZE}`;
+        const cachedData = await AsyncStorage.getItem(cacheKey);
+        const cacheExpiry = await AsyncStorage.getItem(`${cacheKey}-expiry`);
 
-        // const cacheData = await AsyncStorage.getItem(cacheKey);
-        // if (cacheData !== null) {
-        //   const parsedData = JSON.parse(cacheData);
-        //   setPosts(parsedData.posts);
-        //   setHasMoreData(parsedData.hasMoreData);
-        //   setCacheExpiry(parsedData.cacheExpiry);
-        //   setIsLoading(false);
-        //   return;
-        // }
+        if (
+          cachedData !== null &&
+          cacheExpiry !== null &&
+          Date.now() - parseInt(cacheExpiry) < CACHE_EXPIRY_TIME
+        ) {
+          setPosts(JSON.parse(cachedData));
+          setCacheExpiry(parseInt(cacheExpiry));
+        }else{
+        
+        
 
         const token = userToken;
         const config = {
@@ -74,21 +77,22 @@ const HomeScreen = () => {
           setHasMoreData(false);
           return;
         }
-   
-        // const newData = prevPosts=>[...prevPosts, ...responseData]
-        const newData = [...posts, ...responseData];
 
-        // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-        // const cacheValue = JSON.stringify({
-        //  posts: newData,
-        //   hasMoreData: responseData.length > 0,
-        //   cacheExpiry,
-        // });
-
-        // await AsyncStorage.setItem(cacheKey, cacheValue);
-           setPosts(prevPosts => [...prevPosts, ...responseData]);
-          // setCacheExpiry(cacheExpiry);
+        if(currentPage>1){
+        setPosts(prevPosts => [...prevPosts, ...responseData]);
+        }
+        else{
+          setPosts([...posts, ...responseData])
+        }
+        setCacheExpiry(Date.now());
+        await AsyncStorage.setItem(cacheKey, JSON.stringify(responseData));
+        await AsyncStorage.setItem(
+          `${cacheKey}-expiry`,
+          JSON.stringify(Date.now())
+        );
+       console.log(cacheKey)
       }
+    }
     } catch (e) {
       console.log(`${e}`);
       alert(`${e}`);
@@ -166,7 +170,7 @@ const HomeScreen = () => {
       <StatusBar backgroundColor={COLORS.white}/>
        <DailyTips/> 
       <FlatList
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}
         data={posts}
@@ -175,9 +179,8 @@ const HomeScreen = () => {
          ListFooterComponent={renderLoader}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
-        // scrollEventThrottle={32}
-        //  refreshing={isLoading && posts.length === 0}
-        // onRefresh={handleRefresh}
+         refreshing={isLoading && posts.length === 0}
+         onRefresh={handleRefresh}
       />
    {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={styles.error}/>}
     </SafeAreaView>
@@ -196,41 +199,6 @@ error:{
   fontFamily:"Poppins"
 }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

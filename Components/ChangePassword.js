@@ -57,7 +57,7 @@ const ChangePassword = () => {
 
 
   return (
-    <View>
+    <View style={{height:height/2.3}}>
 
 <KeyboardAvoidingView
 enabled
@@ -69,7 +69,7 @@ behavior={Platform.OS === "ios" ? "padding" : null}
 		
 		>
 			<TouchableWithoutFeedback>		
-    <Formik
+                       <Formik
 							initialValues={userInfo}
 							validationSchema={validationSchema}
 							onSubmit={resetPassword}
@@ -126,25 +126,27 @@ behavior={Platform.OS === "ios" ? "padding" : null}
 										{console.log(12, errors)}
 										{isLoading ? (
 											<View
-												style={{
-													width: width - 130,
-													height: 50,
-													alignSelf: "center",
-													borderRadius: 10,
-													justifyContent: "center",
-													marginTop: 10,
-													backgroundColor: "#0000ff",
-												}}
+												// style={{
+												// 	width: width - 130,
+												// 	height: 50,
+												// 	alignSelf: "center",
+												// 	borderRadius: 10,
+												// 	justifyContent: "center",
+												// 	marginTop: 15,
+												// 	backgroundColor: "#0000ff",
+												// }}
 											>
 												<ActivityIndicator size="large" color="#FFF" />
 											</View>
 										) : (
-											<FormSubmitBtn
-												disabled={isDisabled}
-												Submitting={isSubmitting}
-												onPress={handleSubmit}
-												title={"Change Password"}
-											/>
+											<View style={{marginTop:5}}>
+												<FormSubmitBtn
+													disabled={isDisabled}
+													Submitting={isSubmitting}
+													onPress={handleSubmit}
+													title={"Change Password"}
+												/>
+											</View>
 										)}
 									</>
 								);

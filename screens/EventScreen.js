@@ -1,18 +1,17 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList, View} from 'react-native';
+import { SafeAreaView, FlatList, View, StyleSheet} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '../api/client';
 import Events from './Events';
+import ErrorButton from '../Components/ErrorButton';
 
 const PAGE_SIZE = 10;
 
 const EventScreen = () => {
   const navigation = useNavigation();
-  
-  
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,12 +19,13 @@ const EventScreen = () => {
   const [userToken, setUserToken] = useState(null);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [cacheExpiry, setCacheExpiry] = useState(null);
-
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
  
 
  const getEventData = useCallback(async (currentPage) => {
   
-  const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 30 minutes in milliseconds
+  const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 1 minute in milliseconds
 
     setIsLoading(true);
     try {
@@ -38,17 +38,22 @@ const EventScreen = () => {
 
 
 
-        const cacheKey = `${userInfo.firstName}-${currentPage}-${PAGE_SIZE}`;
+        const cacheKeyEvent = `${userInfo.firstName}-${currentPage}-${PAGE_SIZE}`;
+        const cachedData = await AsyncStorage.getItem(cacheKeyEvent);
+        const cacheExpiry = await AsyncStorage.getItem(`${cacheKeyEvent}-expiry`);
 
-        const cacheData = await AsyncStorage.getItem(cacheKey);
-        if (cacheData !== null) {
-          const parsedData = JSON.parse(cacheData);
-          setEvents(parsedData.events);
-          setHasMoreData(parsedData.hasMoreData);
-          setCacheExpiry(parsedData.cacheExpiry);
-          setIsLoading(false);
-          return;
-        }
+        
+        if (
+          cachedData !== null &&
+          cacheExpiry !== null &&
+          Date.now() - parseInt(cacheExpiry) < CACHE_EXPIRY_TIME
+          // i.e the cache hasn't expired
+        ) {
+          setEvents(JSON.parse(cachedData));
+          setCacheExpiry(parseInt(cacheExpiry));
+          console.log(cacheExpiry)
+        }else{
+
 
         const token = userToken;
         const config = {
@@ -63,7 +68,7 @@ const EventScreen = () => {
           config
         );
 
-            console.log(res)
+            console.log(res.data.data)
 
           const responseData = res.data.data;
 
@@ -71,30 +76,35 @@ const EventScreen = () => {
               setHasMoreData(false);
               return;
             }
-    
-            const newData = [...events, ...responseData];
-    
-            const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-            const cacheValue = JSON.stringify({
-              events: newData,
-              hasMoreData: responseData.length > 0,
-              cacheExpiry,
-            });
-    
-            await AsyncStorage.setItem(cacheKey, cacheValue);
-    
-            setEvents(newData);
-            setCacheExpiry(cacheExpiry);
+
+            if(currentPage>1){
+              setEvents(prevEvents => [...prevEvents, ...responseData]);
+              }
+              else{
+                setEvents([...events, ...responseData])
+              }
+  
+              setCacheExpiry(Date.now());
+              await AsyncStorage.setItem(cacheKeyEvent, JSON.stringify(responseData));
+              await AsyncStorage.setItem(
+                `${cacheKeyEvent}-expiry-event`,
+                JSON.stringify(Date.now())
+              );
+             console.log(cacheKeyEvent) 
       }
+    }
     } catch (e) {
       console.log(`${e}`);
       alert(`${e}`);
+      setError(true);
+      setErrorMessage('Oops! Something went wrong. Please try again later.');
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
+    setIsLoading(false)
     getEventData();
   }, [currentPage, getEventData]);
 
@@ -104,20 +114,14 @@ const EventScreen = () => {
       return;
     }
 
-    if (cacheExpiry && new Date().getTime() >= cacheExpiry) {
-      const cacheKey = `${userInfo.firstName}-${currentPage}-${PAGE_SIZE}`;
-      await AsyncStorage.removeItem(cacheKey);
-      setCacheExpiry(null);
-    }
-
-    setCurrentPage(currentPage + 1);
+    setCurrentPage(prevPage=> prevPage+1);
   };
 
 
   const renderLoader =()=>{
     return(
     isLoading ?
-    <View style={{marginVertical:20, alignItems:"center"}}>
+    <View style={{marginVertical:80, alignItems:"center"}}>
        <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
@@ -136,7 +140,7 @@ const EventScreen = () => {
  
 
   const renderItem = useCallback(
-    ({ item, index }) => (
+    ({ item}) => (
       <Events event={item} key={item.id} navigation={navigation} />
     ),
     [navigation]
@@ -151,11 +155,11 @@ const EventScreen = () => {
 
       await getEventData(1);
       setCacheExpiry(null); 
-
-
       setIsLoading(false);
     } catch (e) {
       console.log(e);
+      setError(true)
+      setErrorMessage("An error occured")
     }
   }, [getEventData]);
 
@@ -175,8 +179,18 @@ const EventScreen = () => {
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
       />
+   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={styles.error}/>}
     </SafeAreaView>
   );
 };
 
 export default EventScreen;
+
+
+const styles = StyleSheet.create({
+  error:{
+    color:"red",
+    fontSize:10,
+    fontFamily:"Poppins"
+  }
+  })
