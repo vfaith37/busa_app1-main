@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList, View, StyleSheet} from 'react-native';
+import { SafeAreaView, FlatList, View, StyleSheet, Text} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -72,6 +72,7 @@ const EventScreen = () => {
 
             if (responseData.length === 0) {
               setHasMoreData(false);
+              setEvents([])
               return;
             }
 
@@ -107,8 +108,14 @@ const EventScreen = () => {
   }, [currentPage, getEventData]);
 
 
-  const loadMorePosts = async () => {
+  const loadMoreEvents = async () => {
     if (!hasMoreData || isLoading) {
+      return(
+      <View>
+        <Text style={{color:"red"}}>no more events present</Text>
+      </View>
+      )
+
       return;
     }
 
@@ -165,9 +172,13 @@ const EventScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, top: 40 }}>
+
+    {events.length === 0 && <View><Text>no events present</Text></View>}
+
+    
       <FlatList
         onEndReachedThreshold={0.1}
-        onEndReached={loadMorePosts}
+        onEndReached={loadMoreEvents}
         showsVerticalScrollIndicator={false}
         data={events}
         bounces={false}

@@ -128,7 +128,7 @@ const HomeScreen = () => {
     [navigation]
   );
 
-console.log(height)
+
 
  const renderLoader =()=>{
     return(
