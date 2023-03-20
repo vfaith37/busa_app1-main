@@ -14,10 +14,10 @@ export const TabNavigator = () => {
 		
 			screenOptions={({ route }) => ({
 				headerShown: false,
-				tabBarStyle: {
-					display: 'flex',
-				  },
-				  tabBarPosition: 'bottom', 
+				// tabBarStyle: {
+				// 	display: 'flex',
+				//   },
+				//   tabBarPosition: 'bottom', 
 				tabBarIcon: ({ focused, color, size}) => {
 					let iconName;
 
@@ -31,7 +31,7 @@ export const TabNavigator = () => {
 						iconName = focused ? "ios-person-circle" : "ios-person-circle-outline";
 					}
 
-					return <Ionicons name={iconName} size={size} color={color}/>;
+					return <Ionicons name={iconName} size={size} color={color} style={{position:"absolute"}}/>;
 				},
 				tabBarActiveTintColor: COLORS.primary,
 				tabBarInactiveTintColor: COLORS.darkgray,

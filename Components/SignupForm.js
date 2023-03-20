@@ -7,14 +7,13 @@ import {
 	View,
 	StyleSheet,
 	ActivityIndicator,
+	ScrollView, TouchableWithoutFeedback, SafeAreaView
 } from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import client from "../api/client";
-import { ScrollView, TouchableWithoutFeedback } from "react-native";
-import { SafeAreaView } from "react-native";
 const { width, height } = Dimensions.get("screen");
 
 const validationSchema = Yup.object({
@@ -79,14 +78,15 @@ export const SignUpForm = () => {
 			enabled
 			behavior={Platform.OS === "ios" ? "padding" : null}
 		>
-			<ScrollView
+			{/* <ScrollView
 			showsVerticalScrollIndicator={false}
 			bounces={false}
-			>
+			contentContainerStyle={{height:height}}
+			> */}
 				<TouchableWithoutFeedback>
 			<View
 				style={{
-					marginTop: height/70,
+					marginTop: height/120,
 					height: height / 1.38,
 					width: width - 60,
 					borderRadius: 17,
@@ -113,6 +113,11 @@ export const SignUpForm = () => {
 				<Text style={{textDecorationLine:"underline", color:"#363be8", fontFamily:"Poppins", left:3}}>account</Text>
 				</View>
 
+                <ScrollView
+				showsVerticalScrollIndicator={false}
+			contentContainerStyle={{height:height/1.5}}
+			bounces={false}
+				>
 				<View
 					style={{width: width - 130, alignSelf: "center" }}
 				>
@@ -201,6 +206,7 @@ export const SignUpForm = () => {
 						}}
 					</Formik>
 				</View>
+				</ScrollView>
 				<View style={{alignSelf:"center"}}>
 				<Text
 						style={{
@@ -229,7 +235,7 @@ export const SignUpForm = () => {
 				</View>
 			</View>
 		</TouchableWithoutFeedback>
-			</ScrollView>
+			{/* </ScrollView> */}
 		</KeyboardAvoidingView>
 		</SafeAreaView>
 	);

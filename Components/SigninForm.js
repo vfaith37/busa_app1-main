@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, keyboard} from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
@@ -99,15 +99,15 @@ export const SignInForm = () => {
 
 
 	return (
-		<View>
 		<KeyboardAvoidingView
 		enabled
 		behavior={Platform.OS ==="ios"? "padding" :null}
 		>
-			<ScrollView
+			{/* <ScrollView
 			showsVerticalScrollIndicator={false}
 			bounces={false}
-			>
+			contentContainerStyle={{height:height/1.5}}
+			> */}
 			<TouchableWithoutFeedback>
 			<Formik
 				initialValues={userInfos}
@@ -125,7 +125,14 @@ export const SignInForm = () => {
 				}) => {
 					const { email, password } = values;
 					return (
-						<>
+                         <ScrollView
+						 showsVerticalScrollIndicator={false}
+						 bounces={false}
+						 contentContainerStyle={{height:height/1.6}}
+						 >
+							<View style={{padding:10}}>
+						<View
+						>
 				{error && <Text style={{ color: "red", fontFamily:"Poppins", fontSize:12 }}>{error}</Text>}
 							<FormInput
 								onChangeText={handleChange("email")}
@@ -160,20 +167,23 @@ export const SignInForm = () => {
 									<ActivityIndicator size="large" color="#0000ff" />
 								</View>
 							) : (
+								<View style={{paddingTop:20}}>
 								<FormSubmitBtn
 									Submitting={isSubmitting}
 									onPress={handleSubmit}
 									title={"Log in"}
 								/>
+								</View>
 							)}
-						</>
+						</View>
+						</View>
+						 </ScrollView>
 					);
 				}}
 			</Formik>
 			</TouchableWithoutFeedback>
-			</ScrollView>
+			{/* </ScrollView> */}
 		</KeyboardAvoidingView>
-		</View>
 	);
 };
 
@@ -187,17 +197,18 @@ const styles = StyleSheet.create({
 		fontWeight: "400",
 		fontSize: 13,
 		color: "#363be8",
-		fontFamily:"Poppins"
+		fontFamily:"Poppins",
+
 
 
 	},
 	textInput: {
-		paddingTop: height*0.02,
+		// paddingTop: height*0.02,
 		borderColor: "000",
 		borderBottomColor: "grey",
 		borderBottomWidth: StyleSheet.hairlineWidth,
 		height:height*0.04,
-		marginBottom: height*0.01,
+		// marginBottom: height*0.01,
 		paddingLeft: 5,
 		fontSize: 13,
 		fontFamily:"Poppins",

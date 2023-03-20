@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View, Dimensions, StatusBar, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, TouchableWithoutFeedback, KeyboardAvoidingView, ScrollView, SafeAreaView } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
 const { width, height } = Dimensions.get("window");
 import { SignInForm } from "../Components/SigninForm";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native-web";
-import { ScrollView } from "react-native-gesture-handler";
+
 const LoginScreen = () => {
 	const navigation = useNavigation();
 	return (
@@ -26,7 +24,7 @@ const LoginScreen = () => {
 						color: "#fff",
 						fontSize: 35,
 						fontWeight: "600",
-						top: 70,
+						paddingTop:70,
 						fontFamily:"Poppins3"
 					}}
 				>
@@ -35,19 +33,20 @@ const LoginScreen = () => {
 				<LottieView
 					source={require("../assets/animations/information.json")}
 					style={{
-						position: "absolute",
+						position: "relative",
 						width: 250,
 						height: 250,
-						// resizeMode: "cover",
-						top: 50,
+						paddingTop:5,
 						alignSelf: "center",
 					}}
 					loop={true}
 					autoPlay
 				/>
 			</View>
-
-			<View style={{ flex: 1 }}>
+			
+			<View 
+				style={{ flex: 1 }}
+			>
 				<View
 					style={{
 						...StyleSheet.absoluteFillObject,
@@ -65,7 +64,10 @@ const LoginScreen = () => {
 					}}
 				>
 					<SignInForm/>
-					<View style={{paddingTop:250, position:"absolute"}}>
+					<View style={{
+						paddingTop:250,
+						 position:"absolute"
+						}}>
 					<Text
 						style={{
 							fontWeight: "400",
@@ -91,9 +93,8 @@ const LoginScreen = () => {
 						</Text>
 					</View>
 					</View>
-
 				</View>
-			</View>
+			         </View>
 		</SafeAreaView>
 	);
 };

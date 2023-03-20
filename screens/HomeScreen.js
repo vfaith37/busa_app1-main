@@ -109,22 +109,14 @@ const HomeScreen = () => {
     getPostData(currentPage);
   }, [currentPage, getPostData]);
 
- 
-
-
-  // const loadMorePosts = async () => {
-  //   if (isLoading || !hasMoreData) {
-  //     return;
-  //   }
-  //   setCurrentPage(prevPage=> prevPage+1);
-    
-  // };
-
 
   const loadMorePosts = useCallback(async () => {
     if (isLoading || !hasMoreData) {
-      return;
+     console.log("no more")
+       return;
     }
+    console.log("load more")
+    
     setCurrentPage(prevPage => prevPage + 1);
   }, [isLoading, hasMoreData]);
 
