@@ -115,7 +115,7 @@ export const SignUpForm = () => {
 
                 <ScrollView
 				showsVerticalScrollIndicator={false}
-			contentContainerStyle={{height:height/1.5}}
+			contentContainerStyle={{height:height*0.95}}
 			bounces={false}
 				>
 				<View

@@ -1,13 +1,12 @@
 import { Formik } from "formik";
-import React, { useContext, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, keyboard} from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, ScrollView} from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "../api/client";
-import { ScrollView } from "react-native-gesture-handler";
 
 const {width, height} =Dimensions.get("screen")
 
@@ -99,16 +98,16 @@ export const SignInForm = () => {
 
 
 	return (
-		<KeyboardAvoidingView
-		enabled
-		behavior={Platform.OS ==="ios"? "padding" :null}
-		>
-			{/* <ScrollView
-			showsVerticalScrollIndicator={false}
-			bounces={false}
-			contentContainerStyle={{height:height/1.5}}
-			> */}
-			<TouchableWithoutFeedback>
+		// <KeyboardAvoidingView
+		// enabled
+		// behavior={Platform.OS ==="ios"? "padding" :null}
+		// >
+		// 	<ScrollView
+		// 	showsVerticalScrollIndicator={false}
+		// 	bounces={false}
+		// 	contentContainerStyle={{height:height*1.3}}
+		// 	>
+		// 	<TouchableWithoutFeedback>
 			<Formik
 				initialValues={userInfos}
 				validationSchema={validationSchema}
@@ -125,12 +124,9 @@ export const SignInForm = () => {
 				}) => {
 					const { email, password } = values;
 					return (
-                         <ScrollView
-						 showsVerticalScrollIndicator={false}
-						 bounces={false}
-						 contentContainerStyle={{height:height/1.6}}
-						 >
-							<View style={{padding:10}}>
+
+							<View 
+							>
 						<View
 						>
 				{error && <Text style={{ color: "red", fontFamily:"Poppins", fontSize:12 }}>{error}</Text>}
@@ -167,23 +163,22 @@ export const SignInForm = () => {
 									<ActivityIndicator size="large" color="#363be8" />
 								</View>
 							) : (
-								<View style={{paddingTop:20}}>
+								// <View style={{paddingTop:20}}>
 								<FormSubmitBtn
 									Submitting={isSubmitting}
 									onPress={handleSubmit}
 									title={"Log in"}
 								/>
-								</View>
+								// </View>
 							)}
 						</View>
 						</View>
-						 </ScrollView>
 					);
 				}}
 			</Formik>
-			</TouchableWithoutFeedback>
-			{/* </ScrollView> */}
-		</KeyboardAvoidingView>
+		// 	</TouchableWithoutFeedback>
+		// 	</ScrollView>
+		// </KeyboardAvoidingView>
 	);
 };
 
@@ -203,12 +198,12 @@ const styles = StyleSheet.create({
 
 	},
 	textInput: {
-		// paddingTop: height*0.02,
+		 paddingTop: height*0.02,
 		borderColor: "000",
 		borderBottomColor: "grey",
 		borderBottomWidth: StyleSheet.hairlineWidth,
 		height:height*0.04,
-		// marginBottom: height*0.01,
+		 marginBottom: height*0.01,
 		paddingLeft: 5,
 		fontSize: 13,
 		fontFamily:"Poppins",

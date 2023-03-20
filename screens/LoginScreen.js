@@ -63,7 +63,18 @@ const LoginScreen = () => {
 						alignItems: "center",
 					}}
 				>
+					<KeyboardAvoidingView>
+						<ScrollView
+						contentContainerStyle={{height:height*1.2}}
+						vertical
+						bounces={false}
+						>
+							<TouchableWithoutFeedback>
+
 					<SignInForm/>
+							</TouchableWithoutFeedback>
+						</ScrollView>
+					</KeyboardAvoidingView>
 					<View style={{
 						paddingTop:250,
 						 position:"absolute"
