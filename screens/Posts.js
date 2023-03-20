@@ -16,6 +16,8 @@ const COLORS = {
 }
 
 const {width, height}= Dimensions.get("screen")
+const imageH = height*0.37
+const imageW = width*0.9
 
 
 
@@ -92,8 +94,8 @@ const PostImage=({post, navigation})=>{
   return(
     <View>
    <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, 
-   height: Platform.OS === "android" ? height*0.37: height*0.37,                   
-   width: Platform.OS === "android"? width*0.9: width*0.9, 
+   height:imageH,                   
+   width:imageW, 
 
    borderRadius:20, alignItems:"center",}}>
         <Animated.FlatList
@@ -120,15 +122,10 @@ const PostImage=({post, navigation})=>{
           >
               <Image
                   style={{
-                   height: Platform.OS === "android" ? height*0.37: height*0.37, 
-                   
-                   
-                   
-                   width: Platform.OS === "android"? width*0.9: width*0.9, 
-                   
+                   height:imageH, 
+                   width:imageW, 
                    borderRadius:20, 
                     resizeMode: Platform.OS === "android" ? 'contain' :null,
-                    
                     alignSelf:"center",
                   }}
                   key={item._id}
@@ -166,12 +163,12 @@ const PostImage=({post, navigation})=>{
     
           {
             currentSlideIndex==index &&(
-              <Animated.View style={{backgroundColor:"#d9d9d9", width:33, height:17, borderRadius:20, bottom:width*0.68, position:"absolute", right:-width/2.7, 
+              <Animated.View style={{backgroundColor:"#d9d9d9", width:33, height:17, borderRadius:20, bottom:width*0.68, position:"absolute", right:-imageW/2.7, 
               opacity:fadeAnim,
             }}
             key={imageId}
               >
-                <Text style={{color:"#000", fontFamily:"Poppins", left:3, alignItems:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
+                <Text style={{color:"#000", fontFamily:"Poppins", alignSelf:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
               </Animated.View>
             )
           }
@@ -184,8 +181,8 @@ const PostImage=({post, navigation})=>{
             )
             : null}
 {isRecent && 
-<View style={{width:55, height:18, backgroundColor:"#fff", borderRadius:2, left:30, position:"absolute", top:40,}}>
-<Text style={{color:"#000", fontSize:10, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
+<View style={{width:55, height:18, backgroundColor:"#fff", borderRadius:2, left:30, position:"absolute", top:imageH*0.13}}>
+<Text style={{color:"#000", fontSize:11, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
 </View>
 }
 </View> 

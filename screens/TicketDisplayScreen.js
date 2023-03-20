@@ -58,7 +58,7 @@ const TicketDisplayScreen = () =>{
 
 				// if (tickets.length === 0){
 
-					await axios.get(`https://code-6z3x.onrender.com/api/tickets/getTicketByEmail/${email}`, config,
+					await client.get(`/tickets/getTicketByEmail/${email}`, config,
 					)
 				.then((res)=> {
 					console.log(res)

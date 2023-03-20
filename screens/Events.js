@@ -13,6 +13,9 @@ const { width, height } = Dimensions.get("window");
 import { Icon } from "../constants/icons";
 import moment from "moment";
 
+const imageH = height * 0.417
+const imageW = width * 0.85
+
 const Events = ({ event }) => {
 	const navigation = useNavigation();
 	return (
@@ -63,15 +66,15 @@ const EventImage = ({ event, navigation }) => {
 							>
 								<Image
 									style={{
-										height: height * 0.417,
-										width: width * 0.85,
+										height: imageH,
+										width: imageW,
 										borderRadius: 20,
 										resizeMode: Platform.OS === "android" ? "contain" : "cover",
 										alignSelf: "center",
-										backgroundColor:
-											"linear-gradient(180deg, rgba(0, 0, 0, 0) 43.23%, rgba(0, 0, 0, 0.4) 56.25%, rgba(0, 0, 0, 0.722222) 81.83%, #000000 100%)",
+										 backgroundColor:
+										"linear-gradient(180deg, rgba(0, 0, 0, 0) 43.23%, rgba(0, 0, 0, 0.4) 56.25%, rgba(0, 0, 0, 0.722222) 81.83%, #000000 100%)",
 									}}
-									blurRadius={1.8}
+									// blurRadius={1.8}
 									key={id}
 									source={{ uri: item }}
 								/>
@@ -139,14 +142,15 @@ const EventItems = ({ event }) => {
 						lineHeight: 29.9,
 						fontFamily: "Poppins2",
 						left: 40,
-						bottom: width*0.23,
+						bottom: imageH*0.22,
+						position:"absolute"
 					}}
 				>
 					{event.title}
 				</Text>
 			</View>
 
-			<View style={{ flexDirection: "row", top: -45, left: 50 }}>
+			<View style={{ flexDirection: "row", top: -imageH*0.05, left: 50 }}>
 				<View>
 					<Icon
 						name="time-outline"
@@ -172,7 +176,7 @@ const EventItems = ({ event }) => {
 					</Text>
 				</View>
 
-				<View style={{ flexDirection: "row", left: 8 }}>
+				<View style={{ flexDirection: "row", left: 3 }}>
 					<Icon
 						name="location-outline"
 						size={16}
@@ -180,7 +184,7 @@ const EventItems = ({ event }) => {
 							position: "absolute",
 							color: "#fff",
 							left: 70,
-							bottom: 25,
+							bottom: 28,
 						}}
 					/>
 					<Text

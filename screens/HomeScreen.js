@@ -16,7 +16,6 @@ const PAGE_SIZE = 10;
 const HomeScreen = () => {
   const navigation = useNavigation();
   
-  const flatListRef = useRef(null);
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +95,6 @@ const HomeScreen = () => {
     }
     } catch (e) {
       console.log(`${e}`);
-      alert(`${e}`);
       setError(true);
   setErrorMessage('Oops! Something went wrong. Please try again later.');
     } finally {
@@ -122,7 +120,13 @@ const HomeScreen = () => {
 
   const renderItem = useCallback(
     ({ item }) => (
-      <ScrollView contentContainerStyle={{ top: -20, height: height / 1.94}}>
+      <ScrollView contentContainerStyle={{ 
+        // paddingTop:10,
+         height: height / 1.94
+         }}
+         showsVerticalScrollIndicator={false}
+         bounces={false}
+         >
         <Posts post={item} key={item.id} navigation={navigation} />
        </ScrollView>
     ),
@@ -170,14 +174,15 @@ const HomeScreen = () => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1, top:50}}>
+    <SafeAreaView style={{ flex: 1, paddingTop:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
        <DailyTips/> 
        {posts.length === 0 && !isLoading && (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>No posts present</Text>
       </View>
     )}
+    {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height*0.48}} color= "red"/>}
       <FlatList
         onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
@@ -191,7 +196,6 @@ const HomeScreen = () => {
          refreshing={isLoading && posts.length === 0}
          onRefresh={handleRefresh}
       />
-   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={styles.error}/>}
     </SafeAreaView>
   );
 };

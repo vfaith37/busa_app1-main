@@ -164,7 +164,7 @@ export const SignInForm = () => {
 							/>
 							{isLoading ? (
 								<View>
-									<ActivityIndicator size="large" color="#0000ff" />
+									<ActivityIndicator size="large" color="#363be8" />
 								</View>
 							) : (
 								<View style={{paddingTop:20}}>

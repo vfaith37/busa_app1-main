@@ -7,12 +7,10 @@ import {
 	Text,
 	Image,
 	TextInput,
-	Button,
 	ActivityIndicator,
 	ScrollView,
 	 TouchableWithoutFeedback ,
-	 KeyboardAvoidingView,
-	 KeyboardAvoidingViewBase
+	 KeyboardAvoidingView
 } from "react-native";
 import {
 	TicketIcon,
@@ -20,22 +18,22 @@ import {
 	Person,
 	Chat,
 	Direction,
-	Warning,
 	ScanTicket,
 	Icon,
 } from "../constants/icons";
-import { StackActions, useNavigation } from "@react-navigation/native";
+import {useNavigation } from "@react-navigation/native";
 import { SettingsButton } from "../Components/settingsButton";
 import { ModalPopUp } from "../Components/Modal";
 import { COLORS } from "../constants/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pressable } from "react-native";
-import { ErrorMessage, Formik } from "formik";
+import {Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import BottomSheet from "../Components/Bottomsheet";
 import moment from "moment";
+import client from "../api/client";
+import ErrorButton from "../Components/ErrorButton";
 const {  width, height } = Dimensions.get("screen");
 
 export const Profile = () => {
@@ -53,7 +51,19 @@ export const Profile = () => {
           const [userToken, setUserToken] = useState(null)
 		  const [eventTitle, setEventTitle] = useState(null)
            const [eventTime, setEventTime] = useState(null)
+		   const [feedback, setFeedback] = useState(false)
+           const [message, setMessage] = useState("")
 
+		   const validationSchema = Yup.object({
+			password: Yup.string()
+			.trim()
+			.min(8, "Password not long enough!")
+			.required("Password required!"),
+		});
+	
+		const validationSchemaFeedback = Yup.object({
+			feedback:Yup.string().required("Feedback required!")
+		})
 
 
   const  getData = async () => {
@@ -177,7 +187,7 @@ export const Profile = () => {
 		
 
 		setIsLoading(true)
-	   axios.post("https://code-6z3x.onrender.com/api/tickets/verifyPassword",body,config
+	await client.post(`/tickets/verifyPassword`,body,config
 		).then((res)=> {
 			console.log(res);
 			if (res.status === 200) {
@@ -195,23 +205,49 @@ export const Profile = () => {
 	   }
 
 
+	   const postFeedback = async(values)=>{
+
+           console.log(values)
+		const formData = new FormData();
+		formData.append("feedback", values.feedback);
 
 
+		const token = userToken
+		console.log(token)
 
+	   const config = {
+		   headers: { Authorization: `Bearer ${token}` }
+	   };
+ setIsLoading(true)
+		try{
+      const res =  await client.post(`/sendFeedback`, formData, config)
 
+	     console.log(res)
+		 if(res.status === 200){
+         console.log("successful")
+		 setVisible(false);
+		 // remove the modal from view
+		 setFeedback(true);
+		 setMessage("Feedback sent successfully");
+		}
+		 
+		}catch(e){
+         console.log(e)
+		 setFeedback(true);
+		 setMessage("Something went wrong, Please try again!");
+		}finally{
+			setIsLoading(false)
+		}
+	   }
 
-	   const validationSchema = Yup.object({
-		password: Yup.string()
-		.trim()
-		.min(8, "Password not long enough!")
-		.required("Password required!"),
-	});
-
+	 
 
 	// here, i'm getting the whole userinfo to get the values
 	return (
 
-		<View style={styles.container}>
+		<View 
+		style={styles.container}
+		>
 			<View
 				style={{
 					width: width - 20,
@@ -281,7 +317,7 @@ export const Profile = () => {
 					 // this user role is meant to be 1
 					 (
 						<>
-					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-200, right:15}}>
+					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-height/3.5, right:15}}>
                      <Pressable
 					onPress={()=>pressHandler()}
 					>
@@ -312,10 +348,8 @@ export const Profile = () => {
 		
 } */}
 
-
-
                            <>
-					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-height/3.2, right:15}}>
+					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-height/4.2, right:15}}>
                      <Pressable
 					onPress={()=>pressHandler()}
 					>
@@ -344,7 +378,6 @@ export const Profile = () => {
 						ref={bottomSheetRef}
 						activeHeight={height * 0.5}
 						backgroundColor={"#fff"}
-						// backDropColor={"black"}
 					>
 						<View
 							style={{
@@ -516,6 +549,24 @@ export const Profile = () => {
 								bounces={false}
 								>
 								<TouchableWithoutFeedback>
+									<Formik
+									initialValues={{feedback:""}}
+									validationSchema={validationSchemaFeedback}
+									onSubmit={postFeedback}
+									>
+										{({
+										values,
+										errors,
+										isSubmitting,
+										handleChange,
+										handleBlur,
+										handleSubmit,
+										touched
+										}
+										)=>{
+                                const {feedback} = values
+								return(
+									<>
 									<View>
 								<View
 									style={{
@@ -534,7 +585,6 @@ export const Profile = () => {
 									</Text>
 									<Text
 										style={{
-											// width: width / 3,
 											width:"90%",
 											fontSize: 12,
 											fontWeight: "300",
@@ -563,10 +613,19 @@ export const Profile = () => {
 										top:3
 									}}
 									selectionColor={"blue"}
+							onChangeText={handleChange("feedback")}
+							onBlur={handleBlur("feedback")}
 								/>
-
-
-								<TouchableOpacity activeOpacity={0.7}>
+								{isLoading? (
+									<View>
+									<ActivityIndicator size="large" color="#0000ff" />
+									</View>
+								)
+									:
+                                   (
+								<TouchableOpacity activeOpacity={0.7}
+								onPress ={handleSubmit}
+								>
 									<View
 										style={{
 											alignSelf: "center",
@@ -591,15 +650,20 @@ export const Profile = () => {
 										</Text>
 									</View>
 								</TouchableOpacity>
+								)}
                                       </View>
+									</>
+								)
+										}}
+									</Formik>
 								</TouchableWithoutFeedback>
 								</ScrollView>
 							</KeyboardAvoidingView>
-
 							</>
 						) : null}
 					</ModalPopUp>	
 				</View>
+	{feedback && <ErrorButton onPress={() => setFeedback(false)} message={message} style={{paddingTop:height*0.21}}  color= "green"/>}
 			</View>
 		</View>
 

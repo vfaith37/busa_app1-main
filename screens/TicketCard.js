@@ -1,7 +1,6 @@
 import { Image, StyleSheet, Text, View, Dimensions } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { Warning } from '../constants/icons';
-import { FlatList } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get("screen");
 const QR = width / 2;
 
@@ -9,7 +8,6 @@ const TicketCard = ({ticket}) => {
   return (
     <View style={{
 		height:height*0.44, width:width*0.83, alignContent:"center", borderRadius:20, alignSelf:"center", backgroundColor:"transparent", top:10
-		//347 // top:10
 	}}>
         <TicketTitle ticket={ticket}/>
       <TicketImage ticket={ticket}/>

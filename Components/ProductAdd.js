@@ -110,9 +110,9 @@ export const Form = ({ component }) => {
 
                if(component === "Event"){
            setLoading(true)
-				await axios
+				await client
 				.post(
-					"https://code-6z3x.onrender.com/api/event/uploadEvent",
+					`/event/uploadEvent`,
 					formData ,config
 					
 				)
@@ -145,9 +145,9 @@ export const Form = ({ component }) => {
 			   
 			  else if(component === "Post"){
 				setLoading(true)
-				await axios
+				await client
 				.post(
-					"https://code-6z3x.onrender.com/api/news/addNews",
+					`/news/addNews`,
 					formData ,config
 					
 				)

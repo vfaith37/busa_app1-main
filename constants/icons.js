@@ -15,5 +15,5 @@ export const Icon =({name, size, style, color})=><Ionicons name={name} size={siz
 export const ScanTicket = <Ionicons name="scan-outline" size={20} color="#717171" light/>
 export const Calendars = <Ionicons name="calendar-outline" size={25} color="#717171" light style={{marginTop: 5,}}/>
 export const Time =  ({size})=> <Ionicons name="time-outline" size={size} color="#717171" light  style={{marginTop:5,}}/>
-
+export const Close = ({style, color})=><Ionicons name="close-circle" size={25} color={color} style={style} light/>
 export const Location = <Ionicons name="location-outline" size={16} color="#000" light />
