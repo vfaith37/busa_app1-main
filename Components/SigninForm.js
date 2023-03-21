@@ -98,18 +98,8 @@ export const SignInForm = () => {
 
 
 	return (
-		<SafeAreaView style={{flex:1}}>
-		<KeyboardAvoidingView
-					enabled
-					behaviour={Platform.OS === "ios"? "padding": "height"}
-					
-					>
-						<ScrollView
-						contentContainerStyle={{flexGrow:1, paddingBottom:20}}
-						showsVerticalScrollIndicator={false}
-						bounces={false}
-						>
-							<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		<SafeAreaView 
+		>
 			<Formik
 				initialValues={userInfos}
 				validationSchema={validationSchema}
@@ -178,9 +168,6 @@ export const SignInForm = () => {
 					);
 				}}
 			</Formik>
-							</TouchableWithoutFeedback>
-						</ScrollView>
-		</KeyboardAvoidingView>
 		</SafeAreaView>
 		
 	);

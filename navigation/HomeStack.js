@@ -1,7 +1,5 @@
 
 import { createStackNavigator } from "@react-navigation/stack";
-import ErrorButton from "../Components/ErrorButton";
-import {Home} from "../screens/home"
 import HomeScreen from "../screens/HomeScreen";
 import PostDetails from "../screens/PostDetails";
 

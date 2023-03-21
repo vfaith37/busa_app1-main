@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Dimensions, FlatList } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import axios from "axios";
 import LottieView from "lottie-react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { EVENTS } from "../data/eventData";
 import client from "../api/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";

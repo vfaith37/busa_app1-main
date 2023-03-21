@@ -1,12 +1,9 @@
 import { StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView} from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { Warning } from '../constants/icons'
 import client from '../api/client';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
-import { EVENTS } from '../data/eventData';
 import TicketCard from './TicketCard';
 const {height, width} = Dimensions.get("screen")
 

@@ -1,16 +1,28 @@
-import { StyleSheet, Text, View, Dimensions, StatusBar, TouchableWithoutFeedback, KeyboardAvoidingView, ScrollView, SafeAreaView, Platform, Keyboard } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard} from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
 const { width, height } = Dimensions.get("window");
 import { SignInForm } from "../Components/SigninForm";
 import { useNavigation } from "@react-navigation/native";
 
+
 const LoginScreen = () => {
 	const navigation = useNavigation();
 	return (
-
 		<SafeAreaView style={styles.container}>
 			<StatusBar hidden />
+			<KeyboardAvoidingView
+			enabled
+			style={{ flex: 1 }}
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			>
+				<ScrollView
+				showsVerticalScrollIndicator={false}
+				bounces={false}
+				// contentContainerStyle={{height:height}}
+				>
+					<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+						<View>
 			<View
 				style={{
 					backgroundColor: "#363be8",
@@ -43,24 +55,24 @@ const LoginScreen = () => {
 					autoPlay
 				/>
 			</View>
-			
+
+
 			<View 
-				style={{ flex: 1 }}
 			>
 				<View
 					style={{
 						...StyleSheet.absoluteFillObject,
 						backgroundColor: "#363be8",
-						// backgroundColor: "linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
 					}}
 				/>
 				<View
 					style={{
 						paddingTop: 12.5,
-					     flex: 1,
+					    //  flex: 1,
 						backgroundColor: "white",
 						borderTopLeftRadius: 100,
 						alignItems: "center",
+						height:height/2
 					}}
 				>
 					<SignInForm/>
@@ -94,7 +106,14 @@ const LoginScreen = () => {
 					</View>
 					</View>
 				</View>
+
 			         </View>
+
+					 </View>
+					</TouchableWithoutFeedback>
+				</ScrollView>
+			
+			</KeyboardAvoidingView>
 		</SafeAreaView>
 	);
 };

@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View, Image, FlatList, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native'
 import React from 'react'
-import { useRef, useState, useEffect, useCallback} from 'react';
-import {useFonts} from 'expo-font'
+import { useRef, useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FlatListInput } from '../Components/FlatListInput';
 import moment from 'moment/moment';
 const COLORS = {
   primary: "#004FC7", // blue

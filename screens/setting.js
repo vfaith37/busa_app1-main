@@ -10,7 +10,8 @@ import {
 	ActivityIndicator,
 	ScrollView,
 	 TouchableWithoutFeedback ,
-	 KeyboardAvoidingView
+	 KeyboardAvoidingView,
+	 Keyboard
 } from "react-native";
 import {
 	TicketIcon,
@@ -446,10 +447,10 @@ export const Profile = () => {
 							<View>
 								<KeyboardAvoidingView
 								enabled
-								behavior = {Platform.OS ==="ios"?"padding":null}
+								behavior = {Platform.OS ==="ios"?"padding":"height"}
 								>
 									<ScrollView>
-										<TouchableWithoutFeedback>
+										<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 										<Formik
 							 initialValues={{password:""}}
 							 validationSchema={validationSchema}
@@ -542,13 +543,13 @@ export const Profile = () => {
 							<>
 							<KeyboardAvoidingView
 							enabled
-							behavior={Platform.OS === "ios" ? "padding" : null}
+							behavior={Platform.OS === "ios" ? "padding" : "height"}
 							>
 								<ScrollView
 								showsVerticalScrollIndicator={false}
 								bounces={false}
 								>
-								<TouchableWithoutFeedback>
+								<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 									<Formik
 									initialValues={{feedback:""}}
 									validationSchema={validationSchemaFeedback}
