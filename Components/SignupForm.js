@@ -7,7 +7,7 @@ import {
 	View,
 	StyleSheet,
 	ActivityIndicator,
-	ScrollView, TouchableWithoutFeedback, SafeAreaView
+	ScrollView, TouchableWithoutFeedback, SafeAreaView, Keyboard
 } from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
@@ -73,17 +73,18 @@ export const SignUpForm = () => {
 		}
 	};
 	return (
-		<SafeAreaView>
+		<SafeAreaView style={{flex:1}}>
 		<KeyboardAvoidingView
 			enabled
-			behavior={Platform.OS === "ios" ? "padding" : null}
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
 		>
-			{/* <ScrollView
+			<ScrollView
 			showsVerticalScrollIndicator={false}
 			bounces={false}
-			contentContainerStyle={{height:height}}
-			> */}
-				<TouchableWithoutFeedback>
+		  contentContainerStyle={{ flexGrow: 1,
+			 paddingBottom: 20 }}
+			>
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<View
 				style={{
 					marginTop: height/120,
@@ -113,11 +114,11 @@ export const SignUpForm = () => {
 				<Text style={{textDecorationLine:"underline", color:"#363be8", fontFamily:"Poppins", left:3}}>account</Text>
 				</View>
 
-                <ScrollView
+                {/* <ScrollView
 				showsVerticalScrollIndicator={false}
-			contentContainerStyle={{height:height*0.95}}
+			contentContainerStyle={{height:height}}
 			bounces={false}
-				>
+				> */}
 				<View
 					style={{width: width - 130, alignSelf: "center" }}
 				>
@@ -206,7 +207,7 @@ export const SignUpForm = () => {
 						}}
 					</Formik>
 				</View>
-				</ScrollView>
+				{/* </ScrollView> */}
 				<View style={{alignSelf:"center"}}>
 				<Text
 						style={{
@@ -235,7 +236,7 @@ export const SignUpForm = () => {
 				</View>
 			</View>
 		</TouchableWithoutFeedback>
-			{/* </ScrollView> */}
+			</ScrollView>
 		</KeyboardAvoidingView>
 		</SafeAreaView>
 	);
