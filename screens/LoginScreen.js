@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, StatusBar, TouchableWithoutFeedback, KeyboardAvoidingView, ScrollView, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, TouchableWithoutFeedback, KeyboardAvoidingView, ScrollView, SafeAreaView, Platform, Keyboard } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
 const { width, height } = Dimensions.get("window");
@@ -63,18 +63,7 @@ const LoginScreen = () => {
 						alignItems: "center",
 					}}
 				>
-					<KeyboardAvoidingView>
-						<ScrollView
-						contentContainerStyle={{height:height*1.2}}
-						vertical
-						bounces={false}
-						>
-							<TouchableWithoutFeedback>
-
 					<SignInForm/>
-							</TouchableWithoutFeedback>
-						</ScrollView>
-					</KeyboardAvoidingView>
 					<View style={{
 						paddingTop:250,
 						 position:"absolute"

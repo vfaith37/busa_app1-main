@@ -81,10 +81,13 @@ export const SignUpForm = () => {
 			<ScrollView
 			showsVerticalScrollIndicator={false}
 			bounces={false}
-		  contentContainerStyle={{ flexGrow: 1,
-			 paddingBottom: 20 }}
+		  contentContainerStyle={{ 
+			flexGrow: 1,
+			 paddingBottom: 30 }}
 			>
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+				<TouchableWithoutFeedback
+				 onPress={Keyboard.dismiss}
+				 >
 			<View
 				style={{
 					marginTop: height/120,
@@ -113,12 +116,6 @@ export const SignUpForm = () => {
 				<Text style={{fontFamily:"Poppins"}}>Let's create your</Text>
 				<Text style={{textDecorationLine:"underline", color:"#363be8", fontFamily:"Poppins", left:3}}>account</Text>
 				</View>
-
-                {/* <ScrollView
-				showsVerticalScrollIndicator={false}
-			contentContainerStyle={{height:height}}
-			bounces={false}
-				> */}
 				<View
 					style={{width: width - 130, alignSelf: "center" }}
 				>
@@ -207,7 +204,7 @@ export const SignUpForm = () => {
 						}}
 					</Formik>
 				</View>
-				{/* </ScrollView> */}
+
 				<View style={{alignSelf:"center"}}>
 				<Text
 						style={{

@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, ScrollView} from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, ScrollView, Keyboard, SafeAreaView} from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
@@ -98,16 +98,18 @@ export const SignInForm = () => {
 
 
 	return (
-		// <KeyboardAvoidingView
-		// enabled
-		// behavior={Platform.OS ==="ios"? "padding" :null}
-		// >
-		// 	<ScrollView
-		// 	showsVerticalScrollIndicator={false}
-		// 	bounces={false}
-		// 	contentContainerStyle={{height:height*1.3}}
-		// 	>
-		// 	<TouchableWithoutFeedback>
+		<SafeAreaView style={{flex:1}}>
+		<KeyboardAvoidingView
+					enabled
+					behaviour={Platform.OS === "ios"? "padding": "height"}
+					
+					>
+						<ScrollView
+						contentContainerStyle={{flexGrow:1, paddingBottom:20}}
+						showsVerticalScrollIndicator={false}
+						bounces={false}
+						>
+							<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<Formik
 				initialValues={userInfos}
 				validationSchema={validationSchema}
@@ -176,9 +178,11 @@ export const SignInForm = () => {
 					);
 				}}
 			</Formik>
-		// 	</TouchableWithoutFeedback>
-		// 	</ScrollView>
-		// </KeyboardAvoidingView>
+							</TouchableWithoutFeedback>
+						</ScrollView>
+		</KeyboardAvoidingView>
+		</SafeAreaView>
+		
 	);
 };
 
