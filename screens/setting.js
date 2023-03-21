@@ -214,7 +214,7 @@ export const Profile = () => {
 
 
 		const token = userToken
-		console.log(token)
+		// console.log(token)
 
 	   const config = {
 		   headers: { Authorization: `Bearer ${token}` }
@@ -229,7 +229,7 @@ export const Profile = () => {
 		 setVisible(false);
 		 // remove the modal from view
 		 setFeedback(true);
-		 setMessage("Feedback sent successfully");
+		 setMessage("Feedback sent successfully✅");
 		}
 		 
 		}catch(e){

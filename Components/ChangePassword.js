@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ActivityIndicator, Dimensions, TouchableWithoutFeedback,  } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator, Dimensions, TouchableWithoutFeedback, Keyboard,  } from 'react-native'
 import React from 'react'
 import { Formik } from "formik";
 import { FormInput } from "../Components/FormInput";
@@ -61,14 +61,14 @@ const ChangePassword = () => {
 
 <KeyboardAvoidingView
 enabled
-behavior={Platform.OS === "ios" ? "padding" : null}
+behavior={Platform.OS === "ios" ? "padding" : "height"}
 >
 		<ScrollView
 		showsVerticalScrollIndicator={false}
 		bounces={false}
 		
 		>
-			<TouchableWithoutFeedback>		
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>		
                        <Formik
 							initialValues={userInfo}
 							validationSchema={validationSchema}

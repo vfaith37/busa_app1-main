@@ -19,10 +19,10 @@ import ChangePassword from "../Components/ChangePassword";
 
 const { width } = Dimensions.get("screen");
 export const Account = () => {
-	const [visible, setVisible] = React.useState(false);
+	const [visible, setVisible] = useState(false);
 	const [actionTriggered, setActionTriggered] = useState("");
-	// const [colour, setColour] = useState();
 	const { logout } = useContext(AuthContext);
+	
 	return (
 		<SafeAreaView style={{ paddingTop: 40 }}>
 			<View style={{ alignSelf: "center", paddingBottom: 15 }}>
@@ -102,6 +102,10 @@ export const Account = () => {
 						<ChangePassword/>
 					</View>
 				) : null}
+
+
+
+
 				{actionTriggered === "Action_2" ? (
 					<>
 						<View
