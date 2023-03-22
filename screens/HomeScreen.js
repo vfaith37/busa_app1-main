@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
@@ -8,7 +8,6 @@ import Posts from './Posts';
 import { COLORS } from '../constants/theme';
 import DailyTips from "../Components/DailyTips"
 import ErrorButton from '../Components/ErrorButton';
-
 const {width, height} = Dimensions.get("screen")
 
 const PAGE_SIZE = 10;
@@ -19,7 +18,7 @@ const HomeScreen = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [error,setError] = useState(false)
@@ -33,13 +32,12 @@ const HomeScreen = () => {
     setIsLoading(true);
 
     try {
-      const value = await AsyncStorage.getItem("userInfo");
       const userToken = await AsyncStorage.getItem("userToken");
-
-      if (value !== null && userToken !== null) {
-        const userInfo = JSON.parse(value);
-        setUserInfo(userInfo);
+          const value = await AsyncStorage.getItem("userInfo")
+      if (userToken !== null && value !== null) {
+             const userInfo = JSON.parse(value)
         setUserToken(userToken);
+        setUserInfo(userInfo)
 
         // const cacheKey = `${userInfo.lastname}-${currentPage}-${PAGE_SIZE}`;
         // const cachedData = await AsyncStorage.getItem(cacheKey);
@@ -54,12 +52,13 @@ const HomeScreen = () => {
         //   setCacheExpiry(parseInt(cacheExpiry));
         // }else{
         
-        
 
-        const token = userToken;
+        console.log(userToken)
+        console.log(userInfo)
+
         const config = {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${userToken}`,
           },
         };
 
@@ -95,6 +94,7 @@ const HomeScreen = () => {
     }
     } catch (e) {
       console.log(`${e}`);
+      console.log(e)
       setError(true);
   setErrorMessage('Oops! Something went wrong. Please try again later.');
     } finally {

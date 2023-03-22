@@ -21,14 +21,3 @@ export const FormInput = (props) => {
 	);
 };
 
-const styles = StyleSheet.create({
-    signupText: { fontSize: 15, fontFamily:"Poppins" },
-    signupInput: {
-        backgroundColor: "#C9D9F2",
-        borderRadius: 5,
-        height: 35,
-        marginBottom: 10,
-        paddingLeft: 5,
-        fontSize: 15,
-    }
-});

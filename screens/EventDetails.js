@@ -33,9 +33,9 @@ const EventDetails = ({ route }) => {
 
 
 	return (
-		<>
+		<View style={{flex:1}}>
 			<EventAbout route={route} />
-		</>
+		</View>
 	);
 };
 
@@ -126,7 +126,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 	const Indicator = ({ scrollx }) => {
 		return (
 
-			<View style={{ flexDirection: "row", alignSelf: "center", bottom:imageH*0.95, position:"absolute"}}>
+			<View style={{ flexDirection: "row", alignSelf: "center", bottom:imageH*0.96, position:"absolute"}}>
 				{image.length >1 && image.map((_, i) => {
 					const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
@@ -161,7 +161,9 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 
 	return (
 		<View style={{flex:1}}>
-  <SafeAreaView style={{flex:1}}>
+  <SafeAreaView 
+  style={{flex:1}}
+  >
 			<StatusBar hidden />
 			<View style={StyleSheet.absoluteFillObject}>
 				{image.map((image, index) => {
@@ -235,7 +237,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		position:"absolute"
 	}}
 >
-	<View style={{ marginLeft: 40, top:15}}>
+	<View style={{ marginLeft: 40, top:10}}>
 		<Text
 			style={{
 				color: "#1b5bff",
