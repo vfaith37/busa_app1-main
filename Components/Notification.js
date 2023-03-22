@@ -68,19 +68,20 @@ export const Notification = () => {
 	};
 
 	const sendPushTokenToBackend= async(pushToken)=>{
-	const body = JSON.stringify({
-		deviceID:pushToken,
-		platform:Platform.OS
-	})
+		const body = {
+			deviceID:pushToken,
+			platform:Platform.OS
+		}
 
       console.log(pushToken)
 	console.log(body)
 
 try{
-const res = await client.post(`/registerDevice`, body)
+const res = await client.post(`/registerDevice`,body
+)
 console.log(res)
 if(res.status === 200){
-	console.log("Push token sent:", res)
+	console.log("Push token sent:", res.data.data)
 }
 }catch (e){
 console.log(e)
