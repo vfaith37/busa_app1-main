@@ -206,12 +206,12 @@ const PostFooter=({post})=>{
     
     left:width/15,
       position:"absolute",
-    bottom:-height/11,
+    // paddingTop:imageH*1.3,
     width:width,
     height:width/8
      }}>
 
-      <View>
+      <View style={{paddingTop:imageH*1.1}}>
       <Text style={{textTransform:"capitalize", color:"#000000",fontSize:16, fontWeight:"600",
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 

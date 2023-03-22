@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View, ActivityIndicator, Dimensions, TouchableWithoutFeedback, Keyboard,  } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, ActivityIndicator, Dimensions, TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView, TouchableOpacity} from 'react-native'
+import React, { useState } from 'react'
 import { Formik } from "formik";
 import { FormInput } from "../Components/FormInput";
 import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../constants/theme';
-import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ModalPopUp } from './Modal';
+import { Back } from '../constants/icons';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -26,16 +26,49 @@ const validationSchema = Yup.object({
 	),
 });
 
-const ChangePassword = () => {
+// const ChangePassword = () => {
+// 	const [visible, setVisible] = useState(false)
+
+//   return (
+// 	// <ModalPopUp visible={visible}>
+// 	// 			<View style={{ alignItems: "center" }}></View>
+// 		<View style={{
+// 							alignItems: "center",
+// 						}}>
+//     <View
+// 							style={{ flexDirection: "row", justifyContent: "space-around" }}
+// 						>
+// 							<TouchableOpacity onPress={()=>setVisible(false)}>
+// 								<Back size={30} />
+// 							</TouchableOpacity>
+// 							<Text
+// 								style={{
+// 									fontSize: 20,
+// 									fontWeight: "600",
+// 									color: "rgba(39, 46, 57, 1)",
+// 									fontFamily: "Poppins3",
+// 								}}
+// 							>
+// 								Change Password
+// 							</Text>
+// 						</View>
+//              <ChangePasswordFormInput/>
+// 	</View>
+// 	// </ModalPopUp>
+//   )
+// }
+
+
+ export const ChangePasswordFormInput = ()=>{
 
 	const navigation = useNavigation();
-	const [isLoading, setIsLoading] = React.useState(false);
-	const [isDisabled, setDisabled] = React.useState(true);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isDisabled, setDisabled] = useState(true);
 
 	const userInfo = {
 		oldPassword: "",
 		password: "",
-		confirmpassword: "",
+		confirmPassword: "",
 	};
 
 	const resetPassword = async (values, formikActions) => {
@@ -54,21 +87,12 @@ const ChangePassword = () => {
 		// }
 	};
 
-
-
-  return (
-    <View style={{height:height/2.3}}>
-
-<KeyboardAvoidingView
-enabled
-behavior={Platform.OS === "ios" ? "padding" : "height"}
+	return(
+		<>
+<View 
+style={{height:height/2.3}}
 >
-		<ScrollView
-		showsVerticalScrollIndicator={false}
-		bounces={false}
-		
-		>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>		
+
                        <Formik
 							initialValues={userInfo}
 							validationSchema={validationSchema}
@@ -93,10 +117,11 @@ behavior={Platform.OS === "ios" ? "padding" : "height"}
 											onBlur={handleBlur("oldPassword")}
 											autoCapitalize="none"
 											secureTextEntry
-											// label="Current Password"
+											label="Current Password"
 											placeholder="Current Password"
 											style={styles.text}
 											TextInputStyle={styles.textInput}
+											placeholderTextColor={"#ccc"}
 										/>
 										<FormInput
 											value={password}
@@ -105,24 +130,27 @@ behavior={Platform.OS === "ios" ? "padding" : "height"}
 											onBlur={handleBlur("password")}
 											autoCapitalize="none"
 											secureTextEntry
-											// label="Password"
+											 label="Password"
 											placeholder="Password"
 											style={styles.text}
 											TextInputStyle={styles.textInput}
+											placeholderTextColor={"#ccc"}
+
 										/>
 										<FormInput
 											value={confirmPassword}
-											error={touched.confirmpassword && errors.confirmpassword}
+											error={touched.confirmPassword && errors.confirmPassword}
 											onChangeText={handleChange("confirmPassword")}
 											onBlur={handleBlur("confirmPassword")}
 											autoCapitalize="none"
 											secureTextEntry
-											// label="Confirm Password"
+											 label="Confirm Password"
 											placeholder="Confirm Password"
 											style={styles.text}
 											TextInputStyle={styles.textInput}
+											placeholderTextColor={"#ccc"}
 										/>
-										{errors === null ? setDisabled(true) : setDisabled(false)}
+										{/* {errors === null ? setDisabled(true) : setDisabled(false)} */}
 										{console.log(12, errors)}
 										{isLoading ? (
 											<View
@@ -152,41 +180,20 @@ behavior={Platform.OS === "ios" ? "padding" : "height"}
 								);
 							}}
 						</Formik>
-			</TouchableWithoutFeedback>
-		</ScrollView>
-	</KeyboardAvoidingView>
     </View>
-  )
+
+		</>
+	)
 }
 
-export default ChangePassword
+
+// export default ChangePasswordFormInput
 
 const styles = StyleSheet.create({
-	title: {
-		fontSize: 15,
-		color: "#2d2d2d",
-		// fontWeight: "bold",
-		fontFamily: "Poppins2",
-	},
-	titleContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-	container: {
-		alignSelf: "center",
-		width: width - 30,
-		padding: 10,
-		borderRadius: 12,
-		backgroundColor: "white",
-		marginBottom: "2%",
-		overflow: "hidden",
-		borderColor: "rgba(113,113,113,0.2)",
-		borderWidth: 1,
-	},
 	text: {
 		fontSize: 13.5,
 		fontFamily: "Poppins",
+		paddingLeft:10
 	},
 	textInput: {
 		borderRadius: 5,

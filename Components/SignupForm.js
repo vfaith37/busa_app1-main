@@ -20,25 +20,25 @@ const validationSchema = Yup.object({
 	firstname: Yup.string()
 		.trim()
 		.min(3, "Invalid Name")
-		.required("First Name is required!"),
+		.required("First Name required!"),
 	lastname: Yup.string()
 		.trim()
 		.min(3, "Invalid Name")
-		.required("Last Name is required!"),
+		.required("Last Name required!"),
 	email: Yup.string()
 		.trim()
 		.matches(
 			/^[\w-\.]+@+([\w-\.])+babcock+(\.)+edu(\.)ng$/gi,
 			"School Email required"
 		)
-		.required("Email is required!"),
+		.required("Email required!"),
 	password: Yup.string()
 		.trim()
 		.min(8, "Password not long enough!")
 		.required("Password required!"),
 	confirmpassword: Yup.string().equals(
 		[Yup.ref("password"), null],
-		"Password does not match"
+		"Password doesn't match"
 	),
 });
 
@@ -179,7 +179,7 @@ export const SignUpForm = () => {
 									/>
 									<FormInput
 										onChangeText={handleChange("confirmpassword")}
-										onBlur={handleBlur("confrirmpassword")}
+										onBlur={handleBlur("confirmpassword")}
 										error={touched.confirmpassword && errors.confirmpassword}
 										value={confirmpassword}
 										secureTextEntry

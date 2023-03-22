@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Profile } from "../screens/setting";
-import { Notification } from "../Components/Notification";
+import {Notification} from "../Components/Notification";
 import { Account } from "../screens/account";
 import UploadEventScreen from "../screens/UploadEventScreen";
 import UploadPostScreen from "../screens/UploadPostScreen";
@@ -8,10 +8,6 @@ import ScanTicketScreen from "../screens/ScanTicketScreen";
 import TicketDisplayScreen from "../screens/TicketDisplayScreen";
 import EventsListScreen from "../screens/EventsListScreen";
 import EventScreen from "../screens/EventScreen";
-
-
-
-// here the dunctionality is checked
 
 const Stack = createStackNavigator();
 
@@ -29,7 +25,7 @@ const ProfileStack = ()=> {
 			<Stack.Screen component={UploadEventScreen} name="UploadEventScreen"/> 
 			<Stack.Screen component={EventScreen} name="EventScreen"/> 
 			<Stack.Screen component={EventsListScreen} name="EventList"/> 
-            <Stack.Screen component={ScanTicketScreen} name="ScanTicketScreen"/>	
+            <Stack.Screen component={ScanTicketScreen} name="ScanTicketScreen"/>
 		</Stack.Navigator>
 	);
 }

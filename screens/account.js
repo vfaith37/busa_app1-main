@@ -6,6 +6,10 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	ActivityIndicator,
+	Keyboard,
+	TouchableWithoutFeedback,
+	ScrollView,
+	KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ModalPopUp } from "../Components/Modal";
@@ -14,6 +18,8 @@ import { COLORS } from "../constants/theme";
 import { AuthContext } from "../context/AuthContext";
 import { Back } from "../constants/icons";
 import ChangePassword from "../Components/ChangePassword";
+import { useNavigation } from "@react-navigation/native";
+import ChangePasswordFormInput from "../Components/ChangePassword";
 
 
 
@@ -22,16 +28,18 @@ export const Account = () => {
 	const [visible, setVisible] = useState(false);
 	const [actionTriggered, setActionTriggered] = useState("");
 	const { logout } = useContext(AuthContext);
+	const navigation = useNavigation()
 	
 	return (
 		<SafeAreaView style={{ paddingTop: 40 }}>
-			<View style={{ alignSelf: "center", paddingBottom: 15 }}>
+			<View style={{ alignSelf: "center", paddingBottom: 20 }}>
 				<Text
 					style={{ fontSize: 25, fontWeight: "600", fontFamily: "Poppins2" }}
 				>
 					Account
 				</Text>
 			</View>
+      <View>
 			<AccordionItem />
 			<View style={styles.container}>
 				<TouchableOpacity
@@ -47,7 +55,7 @@ export const Account = () => {
 				</TouchableOpacity>
 			</View>
 
-			<View style={styles.container}>
+			{/* <View style={styles.container}>
 				<TouchableOpacity
 					activeOpacity={0.7}
 					onPress={() => {
@@ -59,7 +67,8 @@ export const Account = () => {
 						<Text style={styles.title}>Deactivate Account</Text>
 					</View>
 				</TouchableOpacity>
-			</View>
+			</View> */}
+
 			<View style={styles.container}>
 				<TouchableOpacity
 					activeOpacity={0.7}
@@ -74,9 +83,19 @@ export const Account = () => {
 				</TouchableOpacity>
 			</View>
 
+
 			<ModalPopUp visible={visible}>
-				<View style={{ alignItems: "center" }}></View>
+
 				{actionTriggered === "Action_1" ? (
+ <KeyboardAvoidingView
+enabled
+behavior={Platform.OS === "ios" ? "padding" : "height"}
+>
+		<ScrollView
+		showsVerticalScrollIndicator={false}
+		bounces={false}
+		>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View
 						style={{
 							alignItems: "center",
@@ -99,14 +118,17 @@ export const Account = () => {
 								Change Password
 							</Text>
 						</View>
-						<ChangePassword/>
+						<ChangePasswordFormInput/>
 					</View>
+			</TouchableWithoutFeedback>
+		</ScrollView>
+	</KeyboardAvoidingView> 
 				) : null}
 
 
 
 
-				{actionTriggered === "Action_2" ? (
+				{/* {actionTriggered === "Action_2" ? (
 					<>
 						<View
 							style={{
@@ -194,7 +216,10 @@ export const Account = () => {
 								</View>
 						</View>
 					</>
-				) : null}
+				) : null} */}
+
+
+
 
 				{actionTriggered === "Action_3" ? (
 					<>
@@ -276,6 +301,7 @@ export const Account = () => {
 					</>
 				) : null}
 			</ModalPopUp>
+			</View>
 		</SafeAreaView>
 	);
 };
@@ -301,6 +327,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		borderColor: "rgba(113,113,113,0.2)",
 		borderWidth: 1,
+	marginVertical:30
 	},
 	text: {
 		fontSize: 13.5,
