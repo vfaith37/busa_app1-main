@@ -3,13 +3,13 @@ import React from 'react'
 import { Form } from '../Components/ProductAdd'
 
 const UploadEventScreen = () => {
-  return (
+  return ( 
     <View>
       <Form component={"Event"}/>
     </View>
   )
 }
-
+ 
 export default UploadEventScreen
 
 const styles = StyleSheet.create({})

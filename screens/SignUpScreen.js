@@ -24,7 +24,7 @@ const Bg = () => {
 				height: width * 2,
 				width: width * 2,
 				bottom: 300,
-				right: -10,
+				right: -10, 
 				position: "absolute",
 				transform: [{ rotate: "230deg" }],
 			}}
