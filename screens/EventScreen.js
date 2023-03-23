@@ -96,7 +96,7 @@ const EventScreen = () => {
     }
     } catch (e) {
       console.log(`${e}`);
-      alert(`${e}`);
+      // alert(`${e}`);
       setError(true);
       setErrorMessage('Oops! Something went wrong. Please try again later.');
     } finally {
@@ -198,7 +198,7 @@ const EventScreen = () => {
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
       />
-   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height*0.8}} color= "red"/>}
+   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height/3.5}} color= "red"/>}
     </SafeAreaView>
   );
 };

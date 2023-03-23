@@ -12,8 +12,11 @@ import * as Notifications from "expo-notifications";
 import { COLORS } from "../constants/theme";
 import { Back } from "../constants/icons";
 import { useNavigation } from "@react-navigation/native";
-const { width } = Dimensions.get("screen");
 import client from "../api/client";
+import * as Device from "expo-device";
+
+
+const { width } = Dimensions.get("screen");
 
 export const Notification = () => {
 	const navigation = useNavigation()
@@ -21,7 +24,40 @@ export const Notification = () => {
 	const [expoPushToken, setExpoPushToken] = useState(null);
 	const [notification, setNotification] = useState(false);
 
+
+	async function registerForPushNotificationsAsync() {
+		let token;
+		if (Device.isDevice) {
+		  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+		  let finalStatus = existingStatus;
+		  if (existingStatus !== 'granted') {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
+		  }
+		  if (finalStatus !== 'granted') {
+			alert('Failed to get push token for push notification!');
+			return;
+		  }
+		  token = (await Notifications.getExpoPushTokenAsync()).data;
+		  console.log("token", token);
+		} else {
+		  alert('Must use physical device for Push Notifications');
+		}
+	  
+		if (Platform.OS === 'android') {
+		  Notifications.setNotificationChannelAsync('default', {
+			name: 'default',
+			importance: Notifications.AndroidImportance.MAX,
+			vibrationPattern: [0, 250, 250, 250],
+			lightColor: '#FF231F7C',
+		  });
+		}
+	  
+		return token;
+	  }
+
               const listener = useRef()
+			  const responseListener = useRef()
 	useEffect(() => {
 		// Get the current permission status
 		Notifications.getPermissionsAsync().then((statusObj) => {
@@ -33,8 +69,28 @@ export const Notification = () => {
 			setNotification(notification);
 		  });
 
+		  responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+			console.log(response);
+		  });
+
 		// Get the Expo push token
+
+		// registerForPushNotificationsAsync().then((pushToken) => {
+		// 	console.log(pushToken);
+		// 	setExpoPushToken(pushToken.data);
+		// 	// Send the Expo push token to the backend
+		// 	sendPushTokenToBackend(pushToken.data);
+		// });
+
 		Notifications.getExpoPushTokenAsync().then((pushToken) => {
+			if (Platform.OS === 'android') {
+				Notifications.setNotificationChannelAsync('default', {
+				  name: 'default',
+				  importance: Notifications.AndroidImportance.MAX,
+				  vibrationPattern: [0, 250, 250, 250],
+				  lightColor: '#FF231F7C',
+				});
+			  }
 			console.log(pushToken);
 			setExpoPushToken(pushToken.data);
 			// Send the Expo push token to the backend
@@ -44,6 +100,7 @@ export const Notification = () => {
 		// Remove the listener when the component is unmounted
 		return () => {
 			Notifications.removeNotificationSubscription(listener.current);
+			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
 

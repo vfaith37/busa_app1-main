@@ -14,7 +14,7 @@ const ErrorButton = ({onPress, message, style, color}) => {
     </View>
     <View style={{paddingLeft:width*0.8, position:"absolute"}}>
     <TouchableOpacity onPress={onPress}>
-      <Close color={color}/>
+      <Close color={color} style={{paddingBottom:10}}/>
   </TouchableOpacity>
   </View>
   </View>
