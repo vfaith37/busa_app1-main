@@ -6,6 +6,7 @@ import client from "../api/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../constants/theme";
 const { width, height } = Dimensions.get("window");
 
 const ScanTicketScreen = ({route}) => {
@@ -170,7 +171,7 @@ const ScanLogic = (props) => {
 	    </View>
 	    } */}
 	    </View>
-	    <View style={{height:347, width:300, backgroundColor:"transparent", position:"absolute", alignSelf:"center", bottom:height/6, borderColor:"white", borderRadius:20, borderWidth:3, alignContent:"center"}}/>
+	    <View style={{height:347, width:300, backgroundColor:COLORS.transparent, position:"absolute", alignSelf:"center", bottom:height/6, borderColor:COLORS.white, borderRadius:20, borderWidth:3, alignContent:"center"}}/>
 
 	<View style={styles.animation}>
 	{showAnimation && (

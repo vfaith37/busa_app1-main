@@ -4,6 +4,7 @@ import LottieView from "lottie-react-native";
 const { width, height } = Dimensions.get("window");
 import { SignInForm } from "../Components/SigninForm";
 import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../constants/theme";
 
 
 const LoginScreen = () => {
@@ -25,7 +26,7 @@ const LoginScreen = () => {
 						<View>
 			<View
 				style={{
-					backgroundColor: "#363be8",
+					backgroundColor: COLORS.primaryblue,
 					height: 0.5 * height,
 					borderBottomRightRadius: 100,
 					alignItems: "center",
@@ -33,7 +34,7 @@ const LoginScreen = () => {
 			>
 				<Text
 					style={{
-						color: "#fff",
+						color: COLORS.white,
 						fontSize: 35,
 						fontWeight: "600",
 						paddingTop:70,
@@ -62,14 +63,14 @@ const LoginScreen = () => {
 				<View
 					style={{
 						...StyleSheet.absoluteFillObject,
-						backgroundColor: "#363be8",
+						backgroundColor: COLORS.primaryblue,
 					}}
 				/>
 				<View
 					style={{
 						paddingTop: 12.5,
 					    //  flex: 1,
-						backgroundColor: "white",
+						backgroundColor: COLORS.white,
 						borderTopLeftRadius: 100,
 						alignItems: "center",
 						height:height/2
@@ -84,7 +85,7 @@ const LoginScreen = () => {
 						style={{
 							fontWeight: "400",
 							fontSize: 15,
-							color: "#717171",
+							color: COLORS.blendgray,
 							textAlign: "center",
 							alignSelf: "center",
 							marginTop: 20,
@@ -97,7 +98,7 @@ const LoginScreen = () => {
 					<View style={{flexDirection: "row"}}>
 						<Text style={{ textAlign: "center", fontFamily:"Poppins" }}>Don't have an account?</Text>
 						<Text
-							style={{ color: "#363be8", fontWeight: "500", marginLeft: 5, fontFamily:"Poppins3"}}
+							style={{ color: COLORS.primaryblue, fontWeight: "500", marginLeft: 5, fontFamily:"Poppins3"}}
 							onPress={() => navigation.navigate("Sign-up")
 						}
 						>
@@ -123,7 +124,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "white",
+		backgroundColor: COLORS.white,
 		alignContent: "center",
 	},
 });

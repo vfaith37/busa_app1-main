@@ -5,22 +5,14 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import {SignUpForm} from "../Components/SignupForm";
 import AppForm from "../Components/AppForm";
 import { COLORS } from "../constants/theme";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const { width } = Dimensions.get("screen");
-const ArrowBack = (
-	<Icon
-		// onPress={console.warn("no link")}
-		name="arrow-left"
-		size={30}
-		color="#0D13E3"
-		style={{ alignSelf: "flex-start", paddingTop: 10, marginLeft: 20 }}
-	/>
-);
 const Bg = () => {
 	return (
 		<View
 			style={{
-				backgroundColor: "#FFF",
+				backgroundColor:COLORS.white,
 				height: width * 2,
 				width: width * 2,
 				bottom: 300,
@@ -34,7 +26,7 @@ const Bg = () => {
 
 export const SignUp = () => {
 	return (
-		<View style={{ flex: 1, backgroundColor: "#0D13E3", paddingTop: 55 }}>
+		<View style={{ flex: 1, backgroundColor:COLORS.primary, paddingTop: 55 }}>
 			<StatusBar backgroundColor={COLORS.white}/>
 			<Bg />
 			<AppForm/>

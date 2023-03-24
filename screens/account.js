@@ -22,7 +22,6 @@ import { useNavigation } from "@react-navigation/native";
 import ChangePasswordFormInput from "../Components/ChangePassword";
 
 
-
 const { width } = Dimensions.get("screen");
 export const Account = () => {
 	const [visible, setVisible] = useState(false);
@@ -111,7 +110,7 @@ behavior={Platform.OS === "ios" ? "padding" : "height"}
 								style={{
 									fontSize: 20,
 									fontWeight: "600",
-									color: "rgba(39, 46, 57, 1)",
+									color:COLORS.extra,
 									fontFamily: "Poppins3",
 								}}
 							>
@@ -308,7 +307,7 @@ behavior={Platform.OS === "ios" ? "padding" : "height"}
 const styles = StyleSheet.create({
 	title: {
 		fontSize: 15,
-		color: "#2d2d2d",
+		color:COLORS.text,
 		// fontWeight: "bold",
 		fontFamily: "Poppins2",
 	},
@@ -325,7 +324,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		marginBottom: "2%",
 		overflow: "hidden",
-		borderColor: "rgba(113,113,113,0.2)",
+		borderColor: COLORS.accordion,
 		borderWidth: 1,
 	marginVertical:30
 	},

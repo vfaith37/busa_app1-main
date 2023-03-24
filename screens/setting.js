@@ -256,12 +256,12 @@ export const Profile = () => {
 			>
 				<View style={{ flexDirection: "row", marginLeft: 10 }}>
 					<View style={styles.itemcontainer}>
-						<Text style={{ fontWeight: "600", fontSize: 30, color: COLORS.white, fontFamily:"Poppins", color:"#ececec" }}>
+						<Text style={{ fontWeight: "600", fontSize: 30, color: COLORS.white, fontFamily:"Poppins", color:COLORS.mwhite }}>
 						{userInfo?.firstname.charAt(0).toUpperCase()}{userInfo?.lastname.charAt(0).toUpperCase()}
 						</Text>
 					</View>
 					<View style={{ paddingBottom: 10, paddingLeft: 10 }}>
-						<Text style={{ fontSize: 24, fontWeight: "600", fontFamily:"Poppins", color:"#363636" }}>{userInfo?.firstname} {userInfo?.lastname}</Text>
+						<Text style={{ fontSize: 24, fontWeight: "600", fontFamily:"Poppins", color:COLORS.offblack }}>{userInfo?.firstname} {userInfo?.lastname}</Text>
 						<Text style={styles.email}>{userInfo?.email}</Text>
 					</View>
 				</View>
@@ -350,11 +350,11 @@ export const Profile = () => {
 } */}
 
                            <>
-					<View style={{width:55, height:55, backgroundColor:"#004fc7", borderRadius:50, position:"absolute", bottom:-height/4, right:15}}>
+					<View style={{width:55, height:55, backgroundColor:COLORS.primary, borderRadius:50, position:"absolute", bottom:-height/4, right:15}}>
                      <Pressable
 					onPress={()=>pressHandler()}
 					>
-                     <Text style={{bottom:7, fontFamily:"Poppins", alignSelf:"center", fontSize:48, color:"#fff"}}>+</Text>
+                     <Text style={{bottom:7, fontFamily:"Poppins", alignSelf:"center", fontSize:48, color:COLORS.white}}>+</Text>
 					</Pressable>
 					</View>
 					</>
@@ -378,7 +378,7 @@ export const Profile = () => {
                  <BottomSheet
 						ref={bottomSheetRef}
 						activeHeight={height * 0.5}
-						backgroundColor={"#fff"}
+						backgroundColor={COLORS.white}
 					>
 						<View
 							style={{
@@ -477,7 +477,7 @@ export const Profile = () => {
 										style={{
 											fontSize: 26,
 											fontWeight: "400",
-											color: "rgba(39, 46, 57, 1)",
+											color: COLORS.extra,
 											fontFamily:"Poppins3"
 										}}
 									>
@@ -489,7 +489,7 @@ export const Profile = () => {
 											fontSize: 12,
 											fontWeight: "300",
 											textAlign: "center",
-											color: "rgba(112.62, 112.62, 112.62, 1)",
+											color:COLORS.text,
 											fontFamily:"Poppins"
 										}}
 									>
@@ -509,13 +509,13 @@ export const Profile = () => {
 								secureTextEntry
 								autoCapitalize="none"
 								maxLength={32}
-								selectionColor='#363BE8'
-								cursorColor='#363be8'
+								selectionColor={COLORS.primaryblue}
+								cursorColor={COLORS.primaryblue}
 	                        style={styles.password}
 />
 								{isLoading ? (
 								<View>
-									<ActivityIndicator size="large" color="#0000ff" />
+									<ActivityIndicator size="large" color={COLORS.primary} />
 								</View>
 							) : (
 								<FormSubmitBtn
@@ -578,7 +578,7 @@ export const Profile = () => {
 										style={{
 											fontSize: 26,
 											fontWeight: "400",
-											color: "rgba(39, 46, 57, 1)",
+											color:COLORS.extra,
 											fontFamily:"Poppins3"
 										}}
 									>
@@ -590,7 +590,7 @@ export const Profile = () => {
 											fontSize: 12,
 											fontWeight: "300",
 											textAlign: "center",
-											color: "rgba(112.62, 112.62, 112.62, 1)",
+											color: COLORS.text,
 											fontFamily:"Poppins"
 										}}
 									>
@@ -603,7 +603,7 @@ export const Profile = () => {
 									placeholder="Your message here"
 									multiline={true}
 									style={{
-										borderColor: "gray",
+										borderColor: COLORS.gray,
 										width: "100%",
 										borderWidth: 1,
 										borderRadius: 10,
@@ -613,13 +613,13 @@ export const Profile = () => {
 										fontFamily:"Poppins",
 										top:3
 									}}
-									selectionColor={"blue"}
+									selectionColor={COLORS.primaryblue}
 							onChangeText={handleChange("feedback")}
 							onBlur={handleBlur("feedback")}
 								/>
 								{isLoading? (
 									<View>
-									<ActivityIndicator size="large" color="#0000ff" />
+									<ActivityIndicator size="large" color={COLORS.primary} />
 									</View>
 								)
 									:
@@ -642,7 +642,7 @@ export const Profile = () => {
 												fontSize: 16,
 												fontWeight: "500",
 												textAlign: "center",
-												color: "white",
+												color: COLORS.white,
 												fontFamily:"Poppins3"
 											}}
 
@@ -664,7 +664,7 @@ export const Profile = () => {
 						) : null}
 					</ModalPopUp>	
 				</View>
-	{feedback && <ErrorButton onPress={() => setFeedback(false)} message={message} style={{paddingTop:height*0.21}}  color= "green"/>}
+	{feedback && <ErrorButton onPress={() => setFeedback(false)} message={message} style={{paddingTop:height*0.21,}}  color={COLORS.green} bgcolor={COLORS.lightgreen} borderRadius={10} />}
 			</View>
 		</View>
 
@@ -683,17 +683,17 @@ const styles = StyleSheet.create({
 		paddingTop: 80,
 	},
 	itemcontainer: {
-		backgroundColor: "#004FC7",
+		backgroundColor: COLORS.primary,
 		height: 59,
 		width: 59,
 		borderRadius: 59,
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	email: { fontWeight: "500", color: "#717171", fontSize: 12, opacity: 0.5, fontFamily:"Roboto" },
+	email: { fontWeight: "500", color: COLORS.blendgray, fontSize: 12, opacity: 0.5, fontFamily:"Roboto" },
 	modalBackGround: {
 		flex: 1,
-		backgroundColor: "rgba(0,0,0,0.5)",
+		backgroundColor:COLORS.black,
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -711,9 +711,9 @@ const styles = StyleSheet.create({
 		alignItems: "flex-end",
 		justifyContent: "center",
 	},
-	text:{fontFamily:"Poppins", fontSize: 20, fontWeight:"300", lineHeight:30, alignItems:"center", color:"#363636", left:5, top:-2},
+	text:{fontFamily:"Poppins", fontSize: 20, fontWeight:"300", lineHeight:30, alignItems:"center", color:COLORS.offblack, left:5, top:-2},
 	password:{
-		borderColor: "gray",
+		borderColor: COLORS.gray,
 		width: "100%",
 		 borderWidth: 1,
 		borderRadius: 10,

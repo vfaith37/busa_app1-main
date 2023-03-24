@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 import { Icon } from "../constants/icons";
 import moment from "moment";
+import { COLORS } from "../constants/theme";
 
 const imageH = height * 0.417
 const imageW = width * 0.85
@@ -71,8 +72,8 @@ const EventImage = ({ event, navigation }) => {
 										borderRadius: 20,
 										resizeMode: Platform.OS === "android" ? "contain" : "cover",
 										alignSelf: "center",
-										 backgroundColor:
-										"linear-gradient(180deg, rgba(0, 0, 0, 0) 43.23%, rgba(0, 0, 0, 0.4) 56.25%, rgba(0, 0, 0, 0.722222) 81.83%, #000000 100%)",
+										//  backgroundColor:
+										// "linear-gradient(180deg, rgba(0, 0, 0, 0) 43.23%, rgba(0, 0, 0, 0.4) 56.25%, rgba(0, 0, 0, 0.722222) 81.83%, #000000 100%)",
 									}}
 									// blurRadius={1.8}
 									key={id}
@@ -101,7 +102,7 @@ const EventItems = ({ event }) => {
 					width: width*0.16,
 					height:height*0.09,
 					borderRadius: 20,
-					backgroundColor: "#ffff",
+					backgroundColor: COLORS.white,
 					position: "absolute",
 					right: 40,
 					top: 20,
@@ -114,7 +115,7 @@ const EventItems = ({ event }) => {
 						paddingTop: 5,
 						fontSize: 27,
 						fontFamily: "Poppins2",
-						color: "#000",
+						color: COLORS.black,
 					}}
 				>
 					{formattedDay}
@@ -123,7 +124,7 @@ const EventItems = ({ event }) => {
 					style={{
 						fontWeight: "600",
 						fontSize: 14,
-						color: "#8c8c8c",
+						color: COLORS.offgray,
 						alignSelf: "center",
 						bottom: 5,
 						fontFamily: "Poppins3",
@@ -133,7 +134,7 @@ const EventItems = ({ event }) => {
 				</Text>
 			</View>
 
-			<View>
+			{/* <View>
 				<Text
 					style={{
 						color: "#ffff",
@@ -148,9 +149,9 @@ const EventItems = ({ event }) => {
 				>
 					{event.title}
 				</Text>
-			</View>
+			</View> */}
 
-			<View style={{ flexDirection: "row", top: -imageH*0.05, left: 50 }}>
+			{/* <View style={{ flexDirection: "row", top: -imageH*0.05, left: 50 }}>
 				<View>
 					<Icon
 						name="time-outline"
@@ -201,7 +202,7 @@ const EventItems = ({ event }) => {
 						{event.venue}
 					</Text>
 				</View>
-			</View>
+			</View> */}
 		</>
 	);
 };

@@ -63,7 +63,7 @@ const EventScreen = () => {
 
 
         const res = await client.get(
-          `/event/get${userInfo.campus}CampusEvents/${currentPage}/${PAGE_SIZE}`,
+          `/event/get${userInfo.campus}CampusEventss/${currentPage}/${PAGE_SIZE}`,
           config
         );
 
@@ -182,7 +182,7 @@ const EventScreen = () => {
       }}>
  {events.length === 0 && !isLoading && (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>No events present</Text>
+        <Text style={{fontFamily:"Poppins"}}>No events present</Text>
       </View>
     )}
       <FlatList
@@ -198,18 +198,10 @@ const EventScreen = () => {
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
       />
-   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height/3.5}} color= "red"/>}
+   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingBottom:height/40}} color= "red" borderRadius={10}/>}
     </SafeAreaView>
   );
 };
 
 export default EventScreen;
 
-
-const styles = StyleSheet.create({
-  error:{
-    color:"red",
-    fontSize:10,
-    fontFamily:"Poppins"
-  }
-  })

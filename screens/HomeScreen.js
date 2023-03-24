@@ -121,7 +121,6 @@ const HomeScreen = () => {
   const renderItem = useCallback(
     ({ item }) => (
       <ScrollView contentContainerStyle={{ 
-        // paddingTop:10,
          height: height / 1.94
          }}
          showsVerticalScrollIndicator={false}
@@ -179,10 +178,10 @@ const HomeScreen = () => {
        <DailyTips/> 
        {posts.length === 0 && !isLoading && (
          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>No posts present</Text>
+        <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
       </View>
     )}
-    {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height*0.48}} color= "red"/>}
+    {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
       <FlatList
         onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
@@ -202,16 +201,6 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-
-
-  
-const styles = StyleSheet.create({
-error:{
-  color:"red",
-  fontSize:10,
-  fontFamily:"Poppins"
-}
-})
 
 
 

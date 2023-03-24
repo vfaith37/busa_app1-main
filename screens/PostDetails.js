@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Image, ScrollView, Platform} from 'react-native'
 import React, {useState, useRef, useCallback} from 'react'
+import { COLORS } from '../constants/theme'
 
 const {width, height}= Dimensions.get("window")
 
@@ -46,7 +47,7 @@ const PostImage=(props)=>{
 
   return(
   <View>
-   <View style={{top:20, height:height/2.3, width:width, backgroundColor:"transparent",}}>
+   <View style={{top:20, height:height/2.3, width:width, backgroundColor:COLORS.transparent,}}>
         <FlatList
         data={props.image}
         horizontal
@@ -88,7 +89,7 @@ const PostImage=(props)=>{
          style={[
            styles.dot,
            currentSlideIndex == index && {
-             backgroundColor: "#000",
+             backgroundColor: COLORS.black,
              width: 7,
              height:7,
              borderRadius:10,
@@ -115,8 +116,8 @@ style={{padding:25, top:10}}
 >
     <View 
     >
-    <Text style={{fontWeight:"600", fontSize:19, color:"#000000", width:322, height:25, lineHeight:24.7, fontFamily:"Poppins3"}}>{props.title}</Text>
-    <Text style={{fontWeight:"300", color:"#303030", fontSize:10, lineHeight:13, fontFamily:"Poppins", top:4}}>{props.date}</Text>
+    <Text style={{fontWeight:"600", fontSize:19, color:COLORS.black, width:322, height:25, lineHeight:24.7, fontFamily:"Poppins3"}}>{props.title}</Text>
+    <Text style={{fontWeight:"300", color:COLORS.darkblack, fontSize:10, lineHeight:13, fontFamily:"Poppins", top:4}}>{props.date}</Text>
     </View>
 
 <View
@@ -128,7 +129,7 @@ bounces={false}
 contentContainerStyle={{height:height }}
 >
 <Text style={{
-  fontWeight:"400", fontSize:10, lineHeight:15, color:"#999999",fontFamily:"Poppins2",
+  fontWeight:"400", fontSize:10, lineHeight:15, color:COLORS.mgray,fontFamily:"Poppins2",
 top:13, textTransform:"capitalize"
 }}
 
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     top:50,
   },
   dot:{
-    borderRadius:10, height:7, width:7, backgroundColor:"gray", marginBottom:3, marginHorizontal:3, justifyContent:"center" 
+    borderRadius:10, height:7, width:7, backgroundColor:COLORS.gray, marginBottom:3, marginHorizontal:3, justifyContent:"center" 
   },
   pagination:{
     bottom:-6,

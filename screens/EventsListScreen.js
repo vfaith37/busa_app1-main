@@ -8,6 +8,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Dropdown } from "react-native-element-dropdown";
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import { COLORS } from '../constants/theme';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -152,7 +153,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
        ?
         (
              <View style={{top:150}}>
-      <ActivityIndicator size="large" color="#0000ff"/>
+      <ActivityIndicator size="large" color={COLORS.primary}/>
       </View>
     )
      :
@@ -161,7 +162,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
           
         <View>
 		{/* possibly add more designs */}
-      <Text style={{color:"red", top:150, left:20, fontFamily:"Poppins", alignItems:"center"}}> No events available Today! pls check back</Text>
+      <Text style={{color:COLORS.red, top:150, left:20, fontFamily:"Poppins", alignItems:"center"}}> No events available Today! pls check back</Text>
       </View>
 
     ) : (
@@ -217,7 +218,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
 							<Pressable onPress={handleSubmit}>
 								<View
 									style={{
-										backgroundColor: "#004fc7",
+										backgroundColor: COLORS.primary,
 										width: 113,
 										justifyContent: "center",
 										alignSelf: "center",
@@ -231,7 +232,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
 										style={{
 											fontSize: 18,
 											fontWeight: "500",
-											color: "white",
+											color: COLORS.white,
 											fontFamily: "Poppins3",
 										}}
 									>
@@ -243,11 +244,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
 					);
 				}
 				
-				
 				}
-
-
-
 
 			</Formik>
 
@@ -275,7 +272,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		borderRadius: 12,
 		padding: 12,
-		shadowColor: "#000",
+		shadowColor: COLORS.black,
 		shadowOffset: {
 			width: 0,
 			height: 1,
@@ -287,7 +284,7 @@ const styles = StyleSheet.create({
 	},
 	icon: {
 		marginRight: 5,
-		color: "blue",
+		color: COLORS.primary,
 	},
 	item: {
 		padding: 17,
@@ -299,22 +296,22 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontSize: 16,
 		fontFamily: "Poppins",
-		color: "gray",
+		color: COLORS.gray,
 	},
 	placeholderStyle: {
 		fontSize: 16,
 		fontFamily: "Poppins3",
-		color: "#000",
+		color: COLORS.black,
 	},
 	selectedTextStyle: {
 		fontSize: 16,
-		color: "blue",
+		color: COLORS.primary,
 		fontFamily: "Poppins",
 	},
 	iconStyle: {
 		width: 20,
 		height: 20,
-		color: "blue",
+		color: COLORS.primary,
 	},
 	inputSearchStyle: {
 		height: 40,
@@ -324,7 +321,7 @@ const styles = StyleSheet.create({
 	error: {
 		fontFamily: "Poppins",
 		fontSize: 10,
-		color: "red",
+		color: COLORS.red,
 		right: 35,
 		position: "absolute",
 		top: 5,

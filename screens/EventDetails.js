@@ -20,6 +20,7 @@ import moment from "moment";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import client from "../api/client";
 import { ScrollView } from "react-native-gesture-handler";
+import { COLORS } from "../constants/theme";
 
 
 const { width, height } = Dimensions.get("screen");
@@ -142,7 +143,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 								height: 10,
 								width: 10,
 								borderRadius: 5,
-								backgroundColor: "#fff",
+								backgroundColor: COLORS.white,
 								margin: 5,
 								transform: [
 									{
@@ -203,7 +204,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 								paddingTop: 20,
 								width,
 								alignItems: "center",
-								shadowColor: "#000",
+								shadowColor: COLORS.black,
 								shadowOpacity: 0.5,
 								shadowOffset: { width: 0, height: 0 },
 								shadowRadius: 20,
@@ -231,7 +232,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		height: height*0.49,
 		width: width,
 		borderRadius: 30,
-		backgroundColor: "#fff",
+		backgroundColor: COLORS.white,
 		top:-imageH*0.87,
 		alignSelf: "center",
 		position:"absolute"
@@ -240,7 +241,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 	<View style={{ marginLeft: 40, top:10}}>
 		<Text
 			style={{
-				color: "#1b5bff",
+				color: COLORS.lightblue,
 				fontFamily: "Poppins2",
 				fontSize: 10,
 				fontWeight: "300",
@@ -254,7 +255,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 			style={{
 				fontWeight: "500",
 				fontSize: 23,
-				color: "#000",
+				color: COLORS.black,
 				fontFamily: "Poppins2",
 				textTransform: "uppercase",
 				top:13
@@ -265,7 +266,7 @@ const formattedNumber = formatter.format(num).replace(/\.00$/, '');
 		<Text
 			style={{
 				fontWeight: "600",
-				color: "#000",
+				color: "COLORS.black",
 				fontFamily: "Poppins2",
 				fontSize: 14,
 				textTransform: "uppercase",
@@ -291,7 +292,7 @@ bounces={false}
 				fontSize: 11,
 				fontFamily: "Poppins",
 				fontWeight: "300",
-				color: "#999999",
+				color: COLORS.darkgray,
 				lineHeight: 12.5,
 				height:110,
 				alignItems:"center",
@@ -328,7 +329,7 @@ bounces={false}
 {isLoading ?
 (
 <View style={{left:width/3.5}}>
-<ActivityIndicator size="large" color="#0000ff" />
+<ActivityIndicator size="large" color={COLORS.primary} />
 </View>
 )
 : 
@@ -338,7 +339,7 @@ bounces={false}
 						width: 100,
 						height: 37,
 						borderRadius: 10,
-						backgroundColor: "#004fc7",
+						backgroundColor: COLORS.primary,
 						alignSelf: "center",
 						left:width/1.9,
 						position:"absolute",
@@ -351,7 +352,7 @@ bounces={false}
 						>
 					<Text
 						style={{
-							color: "#fff",
+							color: COLORS.white,
 							fontSize: 14,
 							fontWeight: "600",
 							lineHeight: 21,

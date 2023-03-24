@@ -3,15 +3,7 @@ import React from 'react'
 import { useRef, useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment/moment';
-const COLORS = {
-  primary: "#004FC7", // blue
-  secondary: "#F6F6F6",   // gray
-
-  black: "#1E1F20",
-  white: "#FFFFFF",
-  events:"#2b3b67",
-  home: "#4d4a95"
-}
+import { COLORS } from '../constants/theme';
 
 const {width, height}= Dimensions.get("screen")
 const imageH = height*0.37
@@ -91,7 +83,7 @@ const PostImage=({post, navigation})=>{
 
   return(
     <View>
-   <View style={{backgroundColor:"transparent", alignSelf:"center", top:20, 
+   <View style={{backgroundColor:COLORS.transparent, alignSelf:"center", top:20, 
    height:imageH,                   
    width:imageW, 
 
@@ -151,7 +143,7 @@ const PostImage=({post, navigation})=>{
                style={[
                  styles.dot,
                  currentSlideIndex == index &&{
-                   backgroundColor: "#000",
+                   backgroundColor:COLORS.black,
                    width: 7,
                    height:7,
                    borderRadius:10,
@@ -161,12 +153,12 @@ const PostImage=({post, navigation})=>{
     
           {
             currentSlideIndex==index &&(
-              <Animated.View style={{backgroundColor:"#d9d9d9", width:33, height:17, borderRadius:20, bottom:width*0.68, position:"absolute", right:-imageW/2.7, 
+              <Animated.View style={{backgroundColor:COLORS.offwhite, width:33, height:17, borderRadius:20, bottom:width*0.68, position:"absolute", right:-imageW/2.7, 
               opacity:fadeAnim,
             }}
             key={imageId}
               >
-                <Text style={{color:"#000", fontFamily:"Poppins", alignSelf:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
+                <Text style={{color:COLORS.black, fontFamily:"Poppins", alignSelf:"center", top:-2, position:"absolute",}} >{index+1}/{post.images.length}</Text>
               </Animated.View>
             )
           }
@@ -179,8 +171,8 @@ const PostImage=({post, navigation})=>{
             )
             : null}
 {isRecent && 
-<View style={{width:55, height:18, backgroundColor:"#fff", borderRadius:2, left:30, position:"absolute", top:imageH*0.13}}>
-<Text style={{color:"#000", fontSize:11, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
+<View style={{width:55, height:18, backgroundColor:COLORS.white, borderRadius:2, left:30, position:"absolute", top:imageH*0.13}}>
+<Text style={{color:COLORS.black, fontSize:11, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
 </View>
 }
 </View> 
@@ -212,11 +204,11 @@ const PostFooter=({post})=>{
      }}>
 
       <View style={{paddingTop:imageH*1.1}}>
-      <Text style={{textTransform:"capitalize", color:"#000000",fontSize:16, fontWeight:"600",
+      <Text style={{textTransform:"capitalize", color:COLORS.black,fontSize:16, fontWeight:"600",
       fontFamily:"Poppins3"
     }}>{post.title}</Text> 
-    <Text style={{fontWeight:"200", fontSize:10, color:"#303030",fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
-    <Text style={{fontWeight:"400", fontSize:11, color:"#999999", width:width*0.95, height:height/10, top:5, fontFamily:"Poppins", right:-3,}}>
+    <Text style={{fontWeight:"200", fontSize:10, color:COLORS.darkblack,fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
+    <Text style={{fontWeight:"400", fontSize:11, color:COLORS.mgray, width:width*0.95, height:height/10, top:5, fontFamily:"Poppins", right:-3,}}>
       {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
       </Text>
       </View>
@@ -262,7 +254,7 @@ const styles = StyleSheet.create({
     width:40,
     
   },
-  dot:{borderRadius:10, height:7, width:7, backgroundColor:"gray", marginBottom:3, marginHorizontal:3, justifyContent:"center" }
+  dot:{borderRadius:10, height:7, width:7, backgroundColor:COLORS.gray, marginBottom:3, marginHorizontal:3, justifyContent:"center" }
 })
 
 
