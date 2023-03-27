@@ -32,5 +32,6 @@ export const COLORS = {
     home: "#4d4a95",
     new:"rgba(112.62, 112.62, 112.62, 1)",
     green:"green",
-    mwhite:"#ececec"
+    mwhite:"#ececec",
+    onboarding:"#4484e4"
 };

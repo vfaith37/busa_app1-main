@@ -116,7 +116,7 @@ const VerifyLogic = (props) => {
 		  <View >
 			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>verify Account</Text>
 	  <LottieView
-	  source={require("../assets/animations/email-verification.json")}
+	  source={require("../assets/animations/email_verification.json")}
 	  style={{
 		width: 300,
 		height: 300,

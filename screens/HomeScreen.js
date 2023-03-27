@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useScrollToTop} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Posts from './Posts';
@@ -170,12 +170,17 @@ const HomeScreen = () => {
     }
   }, [getPostData]);
 
-
+const renderHeader =()=>{
+  return(
+    <View>
+      <DailyTips/>
+    </View>
+  )
+}
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop:50}}>
       <StatusBar backgroundColor={COLORS.white}/>
-       <DailyTips/> 
        {posts.length === 0 && !isLoading && (
          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
@@ -183,6 +188,7 @@ const HomeScreen = () => {
     )}
     {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
       <FlatList
+      ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.1}
         onEndReached={loadMorePosts}
         showsVerticalScrollIndicator={false}

@@ -9,6 +9,9 @@ import { ActivityIndicator, View } from 'react-native';
 
 const AppNavigation = () => {
   const {isLoading, userToken} = useContext(AuthContext)
+
+
+  console.log(userToken)
   if(isLoading){
     return(
     <View style ={{flex:1, justifyContext:"center", alignItems:"center"}}>
@@ -20,7 +23,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
     <SafeAreaProvider>
-      {userToken!==null ?  // meant to be userToken
+      {userToken!==null ?  
       //when a user is signed in
     <MainStack/>
     :

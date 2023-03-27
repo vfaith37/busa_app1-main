@@ -9,6 +9,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import client from '../api/client';
+import { COLORS } from '../constants/theme';
 
 const DropdownComponent=()=>{
   const [userInfo, setUserInfo] = useState(null)
@@ -162,7 +163,7 @@ if(res.status === 201){
 
 
  return(
-<View style={{top:60}}>
+<View style={{paddingTop:60}}>
 
 <View>
 <Text style={styles.error}>{JSON.stringify(formik.errors.gender)}</Text>
@@ -183,7 +184,7 @@ if(res.status === 201){
        onChange={(value) => handleDropdownValueChange(value)}
        onChangeText={formik.handleChange("gender")}
       renderLeftIcon={() => (
-        <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
+        <AntDesign style={styles.icon} color={COLORS.black}    name="Safety" size={20} />
       )}
     />
     {/* <Text style={{fontFamily:"Poppins", fontSize:5}}>{JSON.stringify(formik.touched)}</Text> */}
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 12,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
       height: 1,
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
-    color:"blue"
+    color:COLORS.primaryblue
   },
   item: {
     padding: 17,
@@ -308,18 +309,18 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
-    color:"blue",
+    color:COLORS.primaryblue,
     fontFamily:"Poppins"
   },
   iconStyle: {
     width: 20,
     height: 20,
-    color:"blue"
+    color:COLORS.primaryblue
   },
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
     fontFamily:"Poppins"
   },
-  error:{fontFamily:"Poppins", fontSize:13, color:"red", right:25, position:"absolute", top:-6}
+  error:{fontFamily:"Poppins", fontSize:13, color:COLORS.red, right:25, position:"absolute", top:-6}
 });

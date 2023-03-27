@@ -47,7 +47,11 @@ useEffect(()=>{
 
 		</Stack.Navigator>
 	 )
-	);
+	)
+;
+
+
+
 }
 
 //in the aunthentication stack, if the user is just coming ti the app for the first time, show the onboarding screen and save the result to the async storage

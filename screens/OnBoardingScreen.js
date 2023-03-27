@@ -16,13 +16,15 @@ import LottieView from 'lottie-react-native';
 import { COLORS } from '../constants/theme';
 const {width, height} = Dimensions.get('window');
 
-const bgs = ['#A5BBFF', "#A5BBFF", "#000000", "#A5BBFF"];
+
+  const bgs = [COLORS.onboarding,COLORS.onboarding,COLORS.onboarding,COLORS.onboarding, ];
+
 
 const Posts = [
     {
       id: "1",
       title: "Connecting the Babcock Space",
-      animation: require("../assets/animations/people.json")
+      animation: require("../assets/animations/connect_to_people.json")
     },
     {
       id: "2",
@@ -38,7 +40,7 @@ const Posts = [
     {
       id: "4",
       title: "Get your E-tickets",
-      animation: require("../assets/animations/tickets.json"),
+      animation: require("../assets/animations/ticket.json"),
   
     }
   ]
@@ -198,7 +200,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.primary}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.onboarding}}>
       <StatusBar backgroundColor={COLORS.white}/>
       <Backdrop scrollx={scrollx}/> 
       <Square scrollx={scrollx}/> 
@@ -207,7 +209,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
         onMomentumScrollEnd={updateCurrentSlideIndex}
         showsHorizontalScrollIndicator={false}
         horizontal
-        // scrollEventThrottle={32}
+         scrollEventThrottle={32}
         onScroll={Animated.event(
             [{nativeEvent: {contentOffset:{x:scrollx}}}],
             {useNativeDriver:false }
@@ -263,4 +265,7 @@ const styles = StyleSheet.create({
   },
 });
 export default OnBoardingScreen;
+
+
+
 

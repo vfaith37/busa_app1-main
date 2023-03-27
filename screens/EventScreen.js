@@ -64,7 +64,7 @@ const EventScreen = () => {
 
 
         const res = await client.get(
-          `/event/get${userInfo.campus}CampusEventss/${currentPage}/${PAGE_SIZE}`,
+          `/event/get${userInfo.campus}CampusEvents/${currentPage}/${PAGE_SIZE}`,
           config
         );
 
@@ -147,7 +147,7 @@ const EventScreen = () => {
       <ScrollView
       contentContainerStyle={{ 
         paddingTop:5,
-         height: height/2.2
+        //  height: height/2.2
          }}
          showsVerticalScrollIndicator={false}
          bounces={false}
