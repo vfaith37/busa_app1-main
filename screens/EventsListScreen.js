@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { Dropdown } from "react-native-element-dropdown";
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import { COLORS } from '../constants/theme';
+import ErrorButton from '../Components/ErrorButton';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -24,6 +25,8 @@ const EventsListScreen = () => {
   const [userInfo, setUserInfo] = useState(null);
 	const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error,setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const navigation = useNavigation()
 	
@@ -42,6 +45,7 @@ const getListofEVents = async () => {
 	const today = moment().format('DD/MM/YYYY');
 
 	console.log(today)
+	setIsLoading(true)
   
 	try {
 	  const value = await AsyncStorage.getItem('userInfo');
@@ -65,17 +69,15 @@ const getListofEVents = async () => {
 		  },
 		};
 
-		setIsLoading(true)
   
-		await client
-		  .post('event/getEventByDate', formData, config)
-		  .then(async (res) => {
+		const res = await client
+		  .post('event/getEventByDate', formData,config)
+
 			console.log(res.data.data)
 			if (res.status === 200) {
 
 			  if (res.data.data.length === 0) {
 				setEvents([]);
-				setIsLoading(false)
 			  } else {
 
 				if (res.data.data.length === 1) {
@@ -88,7 +90,6 @@ const getListofEVents = async () => {
 				  ];
 				  setEvents(items);
 				  await AsyncStorage.setItem('eventTime', items[0].endTime);
-				  setIsLoading(false)
 				} 
 				
 				else if (res.data.data.length > 1) {
@@ -98,18 +99,16 @@ const getListofEVents = async () => {
 					endTime: event.endTime,
 				  }));
 				  setEvents(eventsList);
-				setIsLoading(false)
 				}
 			  }
 			}
-			setIsLoading(false)
-		  })
-		  .catch((e) => {
-			console.log(e);
-		  });
 	  }
 	} catch (e) {
 	  console.log(e);
+	  setError(true);
+	  setErrorMessage('Oops! Something went wrong. Please try again later.');
+	}finally{
+		setIsLoading(false)
 	}
   };
   
@@ -137,124 +136,95 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
   }
 
 };
-// eventTitle is passed through props to the scanTicketScreen
 
-    // here in this logic, check from the backend if the array is empty. if it is, display no events avaliable
-
-  return (
-
-
-	
-
-    <View>
-
-       {
-	   isLoading 
-       ?
-        (
-             <View style={{top:150}}>
-      <ActivityIndicator size="large" color={COLORS.primary}/>
-      </View>
-    )
-     :
-
-      events.length === 0 ? (
-          
-        <View>
-		{/* possibly add more designs */}
-      <Text style={{color:COLORS.red, top:150, left:20, fontFamily:"Poppins", alignItems:"center"}}> No events available Today! pls check back</Text>
-      </View>
-
-    ) : (
-
-
-      <Formik
-				initialValues={{
-					eventTitle: "",
-				}}
-				onSubmit={Next}
-				validationSchema={validationSchema}
-			>
-				{({
-					values,
-					errors,
-					touched,
-					handleChange,
-					handleBlur,
-					handleSubmit,
-					setFieldValue,
-				}) => {
-					const {eventTitle} = values;
-					return (
-                  <View style={{top:200}}>
-							<View style={{alignSelf:"center"}}>
-								{errors.eventTitle && touched.eventTitle && (
-									<Text style={styles.error}>{errors.eventTitle}</Text>
-								)}
-								<Dropdown
-									style={styles.dropdown}
-									placeholderStyle={styles.placeholderStyle}
-									selectedTextStyle={styles.selectedTextStyle}
-									inputSearchStyle={styles.inputSearchStyle}
-									iconStyle={styles.iconStyle}
-									itemTextStyle={styles.textItem}
-									data={events}
-									maxHeight={300}
-									labelField="label"
-									valueField="value"
-									placeholder="Pick Event"
-                                   search
-                                  searchPlaceholder="Search..."
-									value={eventTitle}
-									onChangeText={handleChange("eventTitle")}
-									onChange={
-										(value) =>{ setFieldValue("eventTitle", value.value)
-										AsyncStorage.setItem("eventTime", value.endTime);
-								}
-							}
-								/>
-							</View>
-
-							<Pressable onPress={handleSubmit}>
-								<View
-									style={{
-										backgroundColor: COLORS.primary,
-										width: 113,
-										justifyContent: "center",
-										alignSelf: "center",
-										alignItems: "center",
-										borderRadius: 8,
-										marginTop: 13,
-										height: 37,
-									}}
-								>
-									<Text
-										style={{
-											fontSize: 18,
-											fontWeight: "500",
-											color: COLORS.white,
-											fontFamily: "Poppins3",
-										}}
-									>
-										Next
-									</Text>
-								</View>
-							</Pressable>
-              </View>    
-					);
-				}
-				
-				}
-
-			</Formik>
-
-      )} 
-
-
-
-	  
-    </View>
-  )
+return (
+	<View>
+	  {isLoading ? (
+		<View style={{ top: 150 }}>
+		  <ActivityIndicator size="large" color={COLORS.primary} />
+		</View>
+	  ) : error ? (
+		<View style={{ paddingTop: height*0.75 }}>
+		  <ErrorButton
+			onPress={() => {
+			  setError(false);
+			  getListofEVents();
+			}}
+			message={errorMessage}
+			color={COLORS.red}
+			borderRadius={10}
+		  />
+		</View>
+	  ) : events.length === 0 ? (
+		<View>
+		  <Text
+			style={{
+			  color: COLORS.red,
+			  top: 150,
+			  left: 20,
+			  fontFamily: "Poppins",
+			  alignItems: "center",
+			}}
+		  >
+			No events available today! Please check back.
+		  </Text>
+		</View>
+	  ) : (
+		<View style={{ top: 200 }}>
+		  <Formik
+			initialValues={{
+			  eventTitle: "",
+			}}
+			onSubmit={Next}
+			validationSchema={validationSchema}
+		  >
+			{({
+			  values,
+			  errors,
+			  touched,
+			  handleChange,
+			  handleBlur,
+			  handleSubmit,
+			  setFieldValue,
+			}) => {
+			  const { eventTitle } = values;
+			  return (
+				<View>
+				  <View style={{ alignSelf: "center" }}>
+					{errors.eventTitle && touched.eventTitle && (
+					  <Text style={styles.error}>{errors.eventTitle}</Text>
+					)}
+					<Dropdown
+					  style={styles.dropdown}
+					  placeholderStyle={styles.placeholderStyle}
+					  selectedTextStyle={styles.selectedTextStyle}
+					  inputSearchStyle={styles.inputSearchStyle}
+					  iconStyle={styles.iconStyle}
+					  itemTextStyle={styles.textItem}
+					  data={events}
+					  maxHeight={300}
+					  labelField="label"
+					  valueField="value"
+					  placeholder="Pick Event"
+					  search
+					  searchPlaceholder="Search..."
+					  value={eventTitle}
+					  onChangeText={handleChange("eventTitle")}
+					  onChange={(value) => {
+						setFieldValue("eventTitle", value.value);
+						AsyncStorage.setItem("eventTime", value.endTime);
+					  }}
+					/>
+				  </View>
+				</View>
+			  );
+			}}
+		  </Formik>
+		</View>
+	  )}
+	</View>
+  );
+  
 }
 
 export default EventsListScreen

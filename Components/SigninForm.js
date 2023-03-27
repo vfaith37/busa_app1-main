@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "../api/client";
+import { COLORS } from "../constants/theme";
 
 const {width, height} =Dimensions.get("screen")
 
@@ -133,7 +134,7 @@ export const SignInForm = () => {
 								style={styles.text}
 								TextInputStyle={styles.textInput}
 								maxLength={50}
-								selectionColor='#363BE8'
+								selectionColor={COLORS.primaryblue}
 							/>
 							<FormInput
 								placeholder="*********"
@@ -147,21 +148,19 @@ export const SignInForm = () => {
 								style={styles.text}
 								TextInputStyle={styles.textInput}
 								maxLength={32}
-								selectionColor='#363BE8'
-								cursorColor='#363be8'
+								selectionColor={COLORS.primaryblue}
+								cursorColor={COLORS.primaryblue}
 							/>
 							{isLoading ? (
 								<View>
-									<ActivityIndicator size="large" color="#363be8" />
+									<ActivityIndicator size="large" color={COLORS.primaryblue} />
 								</View>
 							) : (
-								// <View style={{paddingTop:20}}>
 								<FormSubmitBtn
 									Submitting={isSubmitting}
 									onPress={handleSubmit}
 									title={"Log in"}
 								/>
-								// </View>
 							)}
 						</View>
 						</View>
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
 	text: {
 		fontWeight: "400",
 		fontSize: 13,
-		color: "#363be8",
+		color: COLORS.primaryblue,
 		fontFamily:"Poppins",
 
 

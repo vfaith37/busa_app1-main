@@ -195,7 +195,7 @@ export const SignUpForm = () => {
 									) : (
 										<FormSubmitBtn
 											Submitting={isSubmitting}
-											onPress={handleSubmit}
+											 onPress={handleSubmit}
 											title={"Create Account"}
 										/>
 									)}

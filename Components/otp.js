@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, TextInput, Dimensions, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { COLORS } from "../constants/theme";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -96,8 +97,8 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		backgroundColor: "#fff",
 		borderBottomWidth: 1.5,
-		borderBottomColor: "#363BE8",
+		borderBottomColor: COLORS.onboarding,
 		fontFamily:"Poppins",
-		color:"#363be8"
+		color:COLORS.onboarding
 	},
 });

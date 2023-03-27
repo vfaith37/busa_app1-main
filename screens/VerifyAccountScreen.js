@@ -20,6 +20,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { COLORS } from "../constants/theme";
 
 
 
@@ -34,7 +35,7 @@ const VerifyAccountScreen =({route})=>{
 
 
 const VerifyLogic = (props) => {
-	 const {email, password} = props.route.params
+	const {email, password} = props.route.params
 
 	const navigation= useNavigation()
 	const [isLoading, setIsLoading] = useState(false);
@@ -100,6 +101,9 @@ const VerifyLogic = (props) => {
 		}
 	  };
 	  
+	  const resendCode = async()=>{
+    
+	  }
 
 	return (
 		<View style={styles.container}>
@@ -160,6 +164,7 @@ const VerifyLogic = (props) => {
 		  <Text style={{textAlign:"center", fontWeight:"600", fontSize:13, color:"#ffff", fontFamily:"Poppins3"}}>Didn't receive a code?</Text>
 		  <TouchableOpacity
 		  activeOpacity={0.6}
+		//   onPress={resendCode()}
 		  >
 			  <Text style={{alignItems:"center", fontWeight:"600", fontSize:14, textAlign:"center", color:"#ffff", textDecorationLine:"underline", fontFamily:"Poppins3"}}>Resend code</Text>
 		  </TouchableOpacity>
@@ -190,8 +195,8 @@ const styles = StyleSheet.create({
 	},
 	container:{
         flex:1.5,
-		backgroundColor:
-"linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
-
+// 		backgroundColor:
+// "linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
+backgroundColor:COLORS.onboarding
     }
 });
