@@ -199,7 +199,7 @@ const EventScreen = () => {
         refreshing={isLoading && events.length === 0}
         onRefresh={handleRefresh}
       />
-   {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingBottom:height/40}} color= "red" borderRadius={10}/>}
+   {error && <ErrorButton onPress={() =>{ setError(false); getEventData();}} message={errorMessage} style={{paddingBottom:height/40}} color= "red" borderRadius={10}/>}
     </SafeAreaView>
   );
 };

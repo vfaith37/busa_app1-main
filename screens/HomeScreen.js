@@ -186,21 +186,21 @@ const renderHeader =()=>{
         <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
       </View>
     )}
-    {error && <ErrorButton onPress={() => setError(false)} message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
       <FlatList
       ListHeaderComponent={renderHeader}
-        onEndReachedThreshold={0.1}
-        onEndReached={loadMorePosts}
-        showsVerticalScrollIndicator={false}
-        data={posts}
-        bounces={false}
-        decelerationRate={'fast'}
-         ListFooterComponent={renderLoader}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id}
-         refreshing={isLoading && posts.length === 0}
-         onRefresh={handleRefresh}
+      onEndReachedThreshold={0.1}
+      onEndReached={loadMorePosts}
+      showsVerticalScrollIndicator={false}
+      data={posts}
+      bounces={false}
+      decelerationRate={'fast'}
+      ListFooterComponent={renderLoader}
+      renderItem={renderItem}
+      keyExtractor={(item) => item._id}
+      refreshing={isLoading && posts.length === 0}
+      onRefresh={handleRefresh}
       />
+      {error && <ErrorButton onPress={() =>{ setError(false); getPostData();}}message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
     </SafeAreaView>
   );
 };

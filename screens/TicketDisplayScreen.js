@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView} from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView, FlatList} from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import client from '../api/client';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FlatList } from 'react-native-gesture-handler';
 import TicketCard from './TicketCard';
+import ErrorButton from '../Components/ErrorButton';
+import { COLORS } from '../constants/theme';
 const {height, width} = Dimensions.get("screen")
 
 const TicketDisplayScreen = () =>{
@@ -22,10 +23,9 @@ const TicketDisplayScreen = () =>{
 	const navigation = useNavigation();
           const [userInfo, setUserInfo] = useState(null)
           const [userToken, setUserToken] = useState(null)
-
   const [isLoading, setIsLoading] = useState(false)
-
-
+  const [error,setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const  getTicketData = async () => {
 	try {
@@ -53,28 +53,27 @@ const TicketDisplayScreen = () =>{
 					}
 				}
 
-				// if (tickets.length === 0){
 
-					await client.get(`/tickets/getTicketByEmail/${email}`, config,
-					)
-				.then((res)=> {
-					console.log(res)
-				console.log(res.data)
+				const res =	await client.get(`/tickets/getTicketByEmail/${email}`, config)
+
+				console.log(res.data.data)
 				if(res.status === 200){
 					setTickets([...tickets, ...res.data.data])
-					setIsLoading(false)
 				}
-				})
-				.catch((e)=>{
-					console.log(`${e}`)
-				})
-				// }else{
-				// 	setIsLoading(false)
-				// }
-			}
+
+				 if(res.data.data.length===0){
+                    setTickets([])
+					setError(true);
+					setErrorMessage('Oops! Pls kindly purchase a ticket.');
+				}
+				}
 	  
 	} catch(e) {
 	  console.log(`${e}`)
+	  setError(true);
+	  setErrorMessage('Oops! Something went wrong. Please try again later.');
+	}finally{
+		setIsLoading(false)
 	}
   }
 
@@ -96,42 +95,43 @@ const TicketDisplayScreen = () =>{
 		}
 
 
-		// const TicketIndicator =({tickets})=>{
+		const TicketIndicator =({tickets})=>{
 
-		// 	return(
-		// 		<View>
-		// { 
-		// tickets.length > 1?
-		// (
-		// 	<View style={styles.pagination}>
-		//    {tickets.map((_, index) => {
-		// 	  return (
-		// 		 <View
-		// 		 key={index}
-		// 		 style={[
-		// 		   styles.dot,
-		// 		currentSlideIndex == index && {
-		// 			 backgroundColor: "#000",
-		// 			 width: 7,
-		// 			 height:7,
-		// 			 borderRadius:10,
-		// 		   }
-		// 		 ]}
-		// 	   />
-		// 	   )
-		// 	  })} 
-		// 	  </View>
-		// )
-		// :null
-		// 	}
-		// 		</View>
-		// 	)
-		// }
+			return(
+				<View>
+		{ 
+		tickets.length > 1?
+		(
+			<View style={styles.pagination}>
+		   {tickets.map((_, index) => {
+			  return (
+				 <View
+				 key={index}
+				 style={[
+				   styles.dot,
+				currentSlideIndex == index && {
+					 backgroundColor: "#000",
+					 width: 7,
+					 height:7,
+					 borderRadius:10,
+				   }
+				 ]}
+			   />
+			   )
+			  })} 
+			  </View>
+		)
+		:null
+			}
+				</View>
+			)
+		}
 
  return(
 	<View style={{
 		height:height*0.50, width:width*0.83, alignContent:"center", borderRadius:20, alignSelf:"center", backgroundColor:"#fff", top:200
 	}}>
+    {error && <ErrorButton onPress={() =>{setError(false); getTicketData()}} message={errorMessage} style={{paddingTop:height*0.52}} color= {COLORS.red} borderRadius={10}/>}
  
 	<FlatList
 horizontal
