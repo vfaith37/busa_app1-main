@@ -14,6 +14,7 @@ import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import client from "../api/client";
+import { COLORS } from "../constants/theme";
 const { width, height } = Dimensions.get("screen");
 
 const validationSchema = Yup.object({
@@ -90,7 +91,7 @@ export const SignUpForm = () => {
 				 >
 			<View
 				style={{
-					marginTop: height/120,
+					marginTop: height/30,
 					height: height / 1.38,
 					width: width - 60,
 					borderRadius: 17,
@@ -98,7 +99,7 @@ export const SignUpForm = () => {
 					alignSelf: "center",
 					justifyContent: "center",
 					borderWidth: 1,
-					borderColor: "rgba(73, 137, 242, 0.48)",
+					borderColor:COLORS.primaryblue,
 				}}
 			>
 				<Text
@@ -190,7 +191,7 @@ export const SignUpForm = () => {
 									/>
 									{isLoading ? (
 										<View>
-											<ActivityIndicator size="large" color="#0000ff"/>
+											<ActivityIndicator size="large" color={COLORS.primaryblue}/>
 										</View>
 									) : (
 										<FormSubmitBtn
@@ -223,7 +224,7 @@ export const SignUpForm = () => {
 					<View style={{flexDirection: "row"}}>
 						<Text style={{ textAlign: "center", fontFamily:"Poppins" }}>Have an account?</Text>
 						<Text
-							style={{ color: "#363be8", fontWeight: "500", marginLeft: 5, fontFamily:"Poppins3"}}
+							style={{ color:COLORS.primaryblue, fontWeight: "500", marginLeft: 5, fontFamily:"Poppins3"}}
 							onPress={() => navigation.navigate("Log-in")
 						}
 						>

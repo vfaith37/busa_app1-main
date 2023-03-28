@@ -27,6 +27,8 @@ import {  Calendars, Time, Back } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import client from "../api/client";
+import ErrorButton from "./ErrorButton";
+import { COLORS } from "../constants/theme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -38,6 +40,8 @@ export const Form = ({ component }) => {
 	const [image, setImage] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [loading, setLoading] = useState(false)
+	const [error,setError] = useState(false)
+	const [errorMessage, setErrorMessage] = useState("")
 	
 	
 	const validationSchema = Yup.object({
@@ -113,7 +117,8 @@ export const Form = ({ component }) => {
 				await client
 				.post(
 					`/event/uploadEvent`,
-					formData ,config
+					 formData ,
+					config
 					
 				)
 				.then((res) => {
@@ -129,16 +134,19 @@ export const Form = ({ component }) => {
 							  },
 							}),
 						  );
+						navigation.goBack();
 
-						  navigation.goBack();
+						setError(true);
+					setErrorMessage('Oops! Something went wrong. Please try again later.');
 
-						// res is succesful, dispatch the user to event screen to see what he posted
+					// res is succesful, dispatch the user to event screen to see what he posted
 					}
-						  setLoading(false)
-                  
+				 setLoading(false)
 				})
 				.catch((e) => {
 					console.log(`${e}`);
+					setError(true);
+					setErrorMessage('Oops! Something went wrong. Please try again later.');	
 				});
 				setLoading(false)
 			   }
@@ -148,15 +156,14 @@ export const Form = ({ component }) => {
 				await client
 				.post(
 					`/news/addNews`,
-					formData ,config
-					
+					formData,
+					config
 				)
 				.then((res) => {
 					console.log(res);
-
                      
 					if (res.status === 200) {
-						navigation.dispatch(StackActions.replace("Tab"))
+					 navigation.dispatch(StackActions.replace("Tab"))
 						console.log("successful");
 					}
 					setLoading(false)
@@ -164,13 +171,15 @@ export const Form = ({ component }) => {
 				})
 				.catch((e) => {
 					console.log(`${e}`);
+					setError(true);
+					setErrorMessage('Oops! Something went wrong. Please try again later.');
 				});
 				setLoading(false)
 			   }
-
-			
 			}
 		} catch (e) {
+			setError(true);
+			setErrorMessage('Oops! Something went wrong. Please try again later.');
 			console.log(`${e}`);
 		}
 
@@ -237,8 +246,6 @@ export const Form = ({ component }) => {
 	return (
 		// add status bar with the color
 
-
-
 		<View style={{ alignSelf: "center", width: width - 40, paddingTop: 55 }}>
 			<View style={{ flexDirection: "row"}}>
 				<TouchableOpacity activeOpacity={1} onPress={() => navigation.goBack()}>
@@ -284,7 +291,6 @@ export const Form = ({ component }) => {
 				}) => {
 					const { title, image, content, campus, ticketPrice, venue } = values;
 					return (
-
 
                              <ScrollView
 							 showsVerticalScrollIndicator={false}
@@ -385,14 +391,7 @@ export const Form = ({ component }) => {
                                         
 								{errors.image && touched.image && (
 									<Text
-										// style={{
-										// 	color: "red",
-										// 	fontFamily: "Poppins",
-										// 	fontSize: 10,
-										// 	top: -13,
-										// 	alignSelf: "center",
-										// }}
-										style={[styles.error, {top:70, alignContent:"center", fontSize:10, right:width/4.5}]}
+										style={[styles.error, {top:35, alignContent:"center", fontSize:10, right:width/4.5}]}
 									>
 										{errors.image}
 									</Text>
@@ -527,9 +526,6 @@ export const Form = ({ component }) => {
 													 <Time size={25}/>
 												</TouchableOpacity>
 											</View>
-
-
-
 										</View>
 
                                              
@@ -813,9 +809,12 @@ export const Form = ({ component }) => {
 
                            </View>
 
-
 						</View>
+						
+			 {error && <ErrorButton onPress={() =>{ setError(false);}}message={errorMessage} style={{paddingTop:height/22}} color= {COLORS.red} borderRadius={5} bgcolor={"#004fc7"}/>} 
+						
 						</ScrollView>
+					
 					);
 				}}
 			</Formik>

@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {createContext, useEffect, useState} from "react";
-import {Login} from "../Components/Login";
 
 export const AuthContext = createContext();
  
@@ -12,6 +11,9 @@ export const AuthProvider =({children})=>{
    const [userInfo, setUserInfo] = useState(null)
    const [eventTitle, setEventTitle] = useState(null)
    const [eventTime, setEventTime] = useState(null)
+
+
+   
    const logout = async()=>{
     setIsLoading(true)
     setUserToken(null)

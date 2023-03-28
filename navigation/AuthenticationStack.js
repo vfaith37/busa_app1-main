@@ -1,4 +1,4 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from "../screens/LoginScreen";
 import { SignUp } from "../screens/SignUpScreen";
 import SignUpScreen2 from "../screens/SignupScreen2"
@@ -7,9 +7,11 @@ import { TabNavigator } from "./TabStack";
 import React, {useEffect, useState} from "react"
 import OnBoardingScreen from "../screens/OnBoardingScreen"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createStackNavigator } from '@react-navigation/stack';
 
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator()
+
 
 const AuthenticationStack =()=> {
 	
@@ -34,11 +36,11 @@ useEffect(()=>{
 
 
 	return (
-     isAppFirstLaunched!==null &&(
+      isAppFirstLaunched!==null &&(
 		<Stack.Navigator
 			screenOptions={{ headerShown: false }}
 		>
-			{isAppFirstLaunched && (<Stack.Screen component={OnBoardingScreen} name="OnBoarding"/>)} 
+		{isAppFirstLaunched && (<Stack.Screen component={OnBoardingScreen} name="OnBoarding"/>)}
 			 <Stack.Screen component={LoginScreen} name="Log-in" /> 
 			   <Stack.Screen component={SignUp} name="Sign-up" />  
 			   <Stack.Screen component={VerifyAccountScreen} name="verify" /> 
@@ -54,7 +56,7 @@ useEffect(()=>{
 
 }
 
-//in the aunthentication stack, if the user is just coming ti the app for the first time, show the onboarding screen and save the result to the async storage
+//in the aunthentication stack, if the user is just coming to the app for the first time, show the onboarding screen and save the result to the async storage
 
 
 export default AuthenticationStack

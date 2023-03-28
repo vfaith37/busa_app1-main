@@ -6,6 +6,7 @@ import { MainStack } from './MainStack';
 import AuthenticationStack from './AuthenticationStack';
 import { AuthContext } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
+import { COLORS } from '../constants/theme';
 
 const AppNavigation = () => {
   const {isLoading, userToken} = useContext(AuthContext)
@@ -15,7 +16,7 @@ const AppNavigation = () => {
   if(isLoading){
     return(
     <View style ={{flex:1, justifyContext:"center", alignItems:"center"}}>
-      <ActivityIndicator size={"large"}/>
+      <ActivityIndicator size={"large"} color={COLORS.transparent}/>
     </View>
     )
   }

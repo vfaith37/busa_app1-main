@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useRef } from 'react';
 import {
   SafeAreaView,
@@ -14,33 +13,35 @@ import {
 } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { COLORS } from '../constants/theme';
+
 const {width, height} = Dimensions.get('window');
 
-
-  const bgs = [COLORS.onboarding,COLORS.onboarding,COLORS.onboarding,COLORS.onboarding, ];
-
+// const COLORS = {primary: '#A5BBFF', white: '#fff'};
+const bgs =[COLORS.onboarding, COLORS.onboarding,COLORS.onboarding,COLORS.onboarding,]
 
 const Posts = [
     {
       id: "1",
       title: "Connecting the Babcock Space",
-      animation: require("../assets/animations/connect_to_people.json")
+      animation: require("../assets/animations/information.json")
     },
     {
       id: "2",
       title: "Get Trusted Information",
-      animation: require("../assets/animations/animation2.json")
+      animation: require("../assets/animations/information.json")
+      
     },
     {
-      // this would be a future update
       id: "3",
       title: "Meet Trusted Sellers",
-      animation: require("../assets/animations/marketing.json")
+      animation: require("../assets/animations/information.json")
+      
     },
     {
       id: "4",
       title: "Get your E-tickets",
-      animation: require("../assets/animations/ticket.json"),
+      animation: require("../assets/animations/tickets.json")
+    
   
     }
   ]
@@ -52,14 +53,16 @@ const Slide = ({item}) => {
     <View style={{width,alignItems: 'center', padding:20}}>
         <View style={{flex:.7, justifyContent:"center"}}>
       <LottieView
-        source={item?.animation}
-        style={{width: width/1.3,
-        height: width/1.3,
-        resizeMode:"cover",}}
-        loop={true}
-        autoPlay
-        speed={0.5}
-      />
+					source={item.animation}
+					style={{
+            width: width/1.3,
+            height: width/1.3,
+           resizeMode:"cover",
+					}}
+					loop={true}
+					autoPlay
+          speed={0.5}
+				/>
       </View>
       <View>
         <Text style={styles.title}>{item?.title}</Text>
@@ -113,7 +116,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
    style={{
     width:height,
     height:height,
-    backgroundColor:COLORS.white,
+    backgroundColor:"#fff",
     borderRadius:86,
     position:"absolute",
     top:-height*0.65,
@@ -136,7 +139,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
     useEffect(() => {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 7000,
+        duration: 10000,
         useNativeDriver: true,
       }).start()
       // }).start(()=>fadeOut());
@@ -200,7 +203,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.onboarding}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.primary}}>
       <StatusBar backgroundColor={COLORS.white}/>
       <Backdrop scrollx={scrollx}/> 
       <Square scrollx={scrollx}/> 
@@ -209,7 +212,7 @@ const scrollx = React.useRef(new Animated.Value(0)).current
         onMomentumScrollEnd={updateCurrentSlideIndex}
         showsHorizontalScrollIndicator={false}
         horizontal
-         scrollEventThrottle={32}
+        // scrollEventThrottle={32}
         onScroll={Animated.event(
             [{nativeEvent: {contentOffset:{x:scrollx}}}],
             {useNativeDriver:false }
@@ -250,7 +253,7 @@ const styles = StyleSheet.create({
   indicator: {
     height: 10,
     width: 10,
-    backgroundColor: COLORS.gray,
+    backgroundColor: 'grey',
     marginHorizontal: 3,
     borderRadius: 25,
   },
@@ -258,14 +261,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     borderRadius: 5,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#fff',
     justifyContent: 'center',
     width:150,
     alignSelf: 'center',
   },
 });
 export default OnBoardingScreen;
-
-
-
-
