@@ -16,14 +16,18 @@ import { COLORS } from '../constants/theme';
 
 const {width, height} = Dimensions.get('window');
 
-// const COLORS = {primary: '#A5BBFF', white: '#fff'};
-const bgs =[COLORS.onboarding, COLORS.onboarding,COLORS.onboarding,COLORS.onboarding,]
+// const bgs =[COLORS.onboarding, COLORS.onboarding,COLORS.onboarding,COLORS.onboarding,]
+
+const bgs =["#4484e4",
+"#4eaee9",
+"#5dc5ed",
+"#7bb1eb"]
 
 const Posts = [
     {
       id: "1",
       title: "Connecting the Babcock Space",
-      animation: require("../assets/animations/information.json")
+      animation: require("../assets/animations/people.json")
     },
     {
       id: "2",
@@ -34,7 +38,7 @@ const Posts = [
     {
       id: "3",
       title: "Meet Trusted Sellers",
-      animation: require("../assets/animations/information.json")
+      animation: require("../assets/animations/marketing.json")
       
     },
     {
@@ -212,13 +216,14 @@ const scrollx = React.useRef(new Animated.Value(0)).current
         onMomentumScrollEnd={updateCurrentSlideIndex}
         showsHorizontalScrollIndicator={false}
         horizontal
-        // scrollEventThrottle={32}
+        scrollEventThrottle={32}
         onScroll={Animated.event(
             [{nativeEvent: {contentOffset:{x:scrollx}}}],
             {useNativeDriver:false }
             )}
         data={Posts}
         pagingEnabled
+        scrollEnabled
         // decelerationRate={"fast"}
         renderItem={({item}) => <Slide item={item} />}
       />

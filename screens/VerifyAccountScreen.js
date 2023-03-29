@@ -43,6 +43,8 @@ const VerifyLogic = (props) => {
 	const [userToken, setUserToken]= useState(null)
 
 	const verify = async (value) => {
+
+		if(value.token !== "" || value.token!==null){
 		 setIsLoading(true);
 		console.log(value.token)
 		try {
@@ -51,12 +53,11 @@ const VerifyLogic = (props) => {
 		  }).then((res) => {
 			console.log(res)
 			if (res.status === 200) {
-			  //since the response was succesful, then email and password is valid
-			  // get the refreshtoken and run the login function
+			//   since the response was succesful, then email and password is valid
+			//   get the refreshtoken and run the login function
 	  
-			  // run the login function
-	  
-			  client.post("/signin", {
+			//   run the login function
+			client.post("/signin", {
 				email: email,
 				password: password
 			  }).then(async (res) => {
@@ -99,10 +100,11 @@ const VerifyLogic = (props) => {
 		} finally {
 		  setIsLoading(false);
 		}
+	}
 	  };
 	  
 	  const resendCode = async()=>{
-    
+    // logic to still be added
 	  }
 
 	return (
@@ -120,7 +122,7 @@ const VerifyLogic = (props) => {
 		  <View >
 			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>verify Account</Text>
 	  <LottieView
-	  source={require("../assets/animations/email_verification.json")}
+	  source={require("../assets/animations/information.json")}
 	  style={{
 		width: 300,
 		height: 300,
@@ -158,7 +160,10 @@ const VerifyLogic = (props) => {
 			    onFinish={(value) => verify(value)}
 				  />
   
-		  <Text style={{fontWeight:"500", color:"#363BE8", textAlign:"center", bottom:95, fontFamily:"Poppins", fontSize:12.5}}>enter code sent to your email address</Text>
+		  <Text style={{fontWeight:"500", color:"#363BE8", textAlign:"center", bottom:95, fontFamily:"Poppins", fontSize:12.5}}>
+			{/* enter code sent to your email address */}
+			currently in test mode🧪; enter any token of your choice😁
+			</Text>
 	  </View>
 		  <View style={{top:20}}>
 		  <Text style={{textAlign:"center", fontWeight:"600", fontSize:13, color:"#ffff", fontFamily:"Poppins3"}}>Didn't receive a code?</Text>

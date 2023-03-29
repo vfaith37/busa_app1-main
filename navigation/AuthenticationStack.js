@@ -41,7 +41,7 @@ useEffect(()=>{
 			screenOptions={{ headerShown: false }}
 		>
 		{isAppFirstLaunched && (<Stack.Screen component={OnBoardingScreen} name="OnBoarding"/>)}
-			 <Stack.Screen component={LoginScreen} name="Log-in" /> 
+			  <Stack.Screen component={LoginScreen} name="Log-in" /> 
 			   <Stack.Screen component={SignUp} name="Sign-up" />  
 			   <Stack.Screen component={VerifyAccountScreen} name="verify" /> 
 			   <Stack.Screen component={SignUpScreen2} name="Sign-up2" /> 

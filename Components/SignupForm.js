@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React from "react";
+import React, {useState} from "react";
 import {
 	Dimensions,
 	KeyboardAvoidingView,
@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import client from "../api/client";
 import { COLORS } from "../constants/theme";
+import ErrorButton from "./ErrorButton";
 const { width, height } = Dimensions.get("screen");
 
 const validationSchema = Yup.object({
@@ -43,8 +44,11 @@ const validationSchema = Yup.object({
 	),
 });
 
-export const SignUpForm = () => {
-	const [isLoading, setIsLoading] = React.useState(false);
+export const SignUpForm = ({onError}) => {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error,setError] = useState(false)
+	const [errorMessage, setErrorMessage] = useState("")
+
 	const navigation = useNavigation();
 	const userInfo = {
 		firstname: "",
@@ -53,24 +57,34 @@ export const SignUpForm = () => {
 		password: "",
 		confirmpassword: "",
 	};
-	const signUp = async (values, formikActions) => {
-		setIsLoading(true);
-		const res = await client.post("/signup", {
-			...values,
-		});
 
-		if (res.data.success) {
+	const signUp = async (values) => {
 
-               navigation.dispatch(
-						StackActions.replace("verify"
-						, {
-					 email: values.email,
-					password:values.password,
-						}
-						)
-						);
-
-						console.log(res.data)
+		try{
+			setIsLoading(true);
+			const res = await client.post("/signup", {
+				...values,
+			});
+			if (res.data.success) {
+	
+				   navigation.dispatch(
+							StackActions.replace("verify"
+							, {
+						 email: values.email,
+						password:values.password,
+							}
+							)
+							);
+	
+							console.log(res.data)
+			}
+		}catch(e){
+          console.log(e)
+		  setError(true);
+		setErrorMessage('Oops! Something went wrong. Please try again!.');
+		onError && onError(errorMessage)
+		}finally{
+			setIsLoading(false)
 		}
 	};
 	return (
@@ -89,6 +103,7 @@ export const SignUpForm = () => {
 				<TouchableWithoutFeedback
 				 onPress={Keyboard.dismiss}
 				 >
+					<View>
 			<View
 				style={{
 					marginTop: height/30,
@@ -232,6 +247,7 @@ export const SignUpForm = () => {
 						</Text>
 					</View>
 				</View>
+			</View>
 			</View>
 		</TouchableWithoutFeedback>
 			</ScrollView>
