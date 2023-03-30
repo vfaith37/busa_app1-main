@@ -161,6 +161,7 @@ const PostImage=({post, navigation})=>{
           </View>
             )
             : null}
+            
 {isRecent && 
 <View style={{width:55, height:18, backgroundColor:COLORS.white, borderRadius:2, left:30, position:"absolute", top:imageH*0.13}}>
 <Text style={{color:COLORS.black, fontSize:11, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
