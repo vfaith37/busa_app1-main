@@ -172,7 +172,8 @@ export const Form = ({ component }) => {
 				.catch((e) => {
 					console.log(`${e}`);
 					setError(true);
-					setErrorMessage('Oops! Something went wrong. Please try again later.');
+					// setErrorMessage('Oops! Something went wrong. Please try again later.');
+					setErrorMessage(e.message)
 				});
 				setLoading(false)
 			   }
