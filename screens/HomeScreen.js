@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
-import { useNavigation, useScrollToTop} from '@react-navigation/native';
+import { useNavigation} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Posts from './Posts';
@@ -96,7 +96,7 @@ const HomeScreen = () => {
       console.log(`${e}`);
       console.log(e)
       setError(true);
-  setErrorMessage('Oops! Something went wrong. Please try again later.');
+  setErrorMessage('Oops! Something went wrong. Please try again .');
     } finally {
       setIsLoading(false);
     }

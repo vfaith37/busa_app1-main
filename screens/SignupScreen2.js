@@ -1,19 +1,24 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button, Dimensions, ActivityIndicator } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {  useFormik } from 'formik';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import client from '../api/client';
 import { COLORS } from '../constants/theme';
+import { FormSubmitBtn } from '../Components/FormSubmitBtn';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+
+const {width, height} = Dimensions.get("screen")
 
 const DropdownComponent=()=>{
   const [userInfo, setUserInfo] = useState(null)
   const [userToken, setUserToken] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const navigation = useNavigation()
 
   const getUserId = async()=>{
@@ -112,6 +117,7 @@ const config = {
   headers: { Authorization: `Bearer ${token}` },
 };
 
+setIsLoading(true)
 
 await client.put(`/user/${userInfo?._id}`,{
  gender:gender,
@@ -135,14 +141,16 @@ if(res.status === 201){
     await AsyncStorage.setItem("userInfo", JSON.stringify(userData))
   }catch(e){
     console.log(`Async Storage error: ${e}`)
+    setIsLoading(false)
   }
   // if succesful, dispatch to homescreen
   navigation.dispatch(StackActions.replace("Tab"));
 }
 }).catch((e)=>{
   console.log(`${e}`)
+  setIsLoading(false)
 })
-
+setIsLoading(false)
     }
   })
 
@@ -163,8 +171,10 @@ if(res.status === 201){
 
 
  return(
-<View style={{paddingTop:60}}>
-
+  <SafeAreaView style={{flex:1, backgroundColor:COLORS.primary}}>
+  <View style={{height:height, width:width,}}>
+<View style={{paddingTop:150}}>
+    <Text style={{fontFamily:"Poppins", color:COLORS.white, alignSelf:"center", fontSize:15, paddingBottom:20}}>Just a few more details 😁</Text>
 <View>
 <Text style={styles.error}>{JSON.stringify(formik.errors.gender)}</Text>
 <Dropdown
@@ -210,6 +220,7 @@ if(res.status === 201){
       renderLeftIcon={() => (
         <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
       )}
+      showsVerticalScrollIndicator={false}
     />
 </View>
 
@@ -261,8 +272,23 @@ if(res.status === 201){
     />
 </View>
 
-   <Button title="Continue" onPress={formik.handleSubmit} />
+   {/* <Button title="Continue" onPress={formik.handleSubmit} /> */}
+
+{isLoading? 
+(
+<ActivityIndicator size="large" color={COLORS.primaryblue}/>
+ )
+  :
+(
+   <FormSubmitBtn
+   title={"Welcome"}
+   onPress={formik.handleSubmit}
+   />
+)
+}
 </View>
+</View>
+  </SafeAreaView>
  )
 
 }

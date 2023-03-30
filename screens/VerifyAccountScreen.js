@@ -35,7 +35,7 @@ const VerifyAccountScreen =({route})=>{
 
 
 const VerifyLogic = (props) => {
-	const {email, password} = props.route.params
+	 const {email, password} = props.route.params
 
 	const navigation= useNavigation()
 	const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +43,8 @@ const VerifyLogic = (props) => {
 	const [userToken, setUserToken]= useState(null)
 
 	const verify = async (value) => {
+      console.log(value)
+		if(value.token !== "" && value.token!==null){
 		 setIsLoading(true);
 		console.log(value.token)
 		try {
@@ -51,12 +53,11 @@ const VerifyLogic = (props) => {
 		  }).then((res) => {
 			console.log(res)
 			if (res.status === 200) {
-			  //since the response was succesful, then email and password is valid
-			  // get the refreshtoken and run the login function
+			//   since the response was succesful, then email and password is valid
+			//   get the refreshtoken and run the login function
 	  
-			  // run the login function
-	  
-			  client.post("/signin", {
+			//   run the login function
+			client.post("/signin", {
 				email: email,
 				password: password
 			  }).then(async (res) => {
@@ -74,10 +75,10 @@ const VerifyLogic = (props) => {
 				  try {
 					// axios.defaults.headers.common.Authorization = `Bearer ${token}`
 					// stringify the user object
-					await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
+					 await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
 	  
 					// get the user token
-					await AsyncStorage.setItem("userToken", token)
+					 await AsyncStorage.setItem("userToken", token)
 				  } catch (e) {
 					console.log(`Async Storage error: ${e}`)
 				  }
@@ -99,11 +100,9 @@ const VerifyLogic = (props) => {
 		} finally {
 		  setIsLoading(false);
 		}
+	}
 	  };
 	  
-	  const resendCode = async()=>{
-    
-	  }
 
 	return (
 		<View style={styles.container}>
@@ -120,7 +119,7 @@ const VerifyLogic = (props) => {
 		  <View >
 			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>verify Account</Text>
 	  <LottieView
-	  source={require("../assets/animations/email_verification.json")}
+	  source={require("../assets/animations/email-verification.json")}
 	  style={{
 		width: 300,
 		height: 300,
@@ -135,30 +134,17 @@ const VerifyLogic = (props) => {
 
 	  <View style={{marginTop:50, height:height}}>
 	  <View style={{width:315, height:172, backgroundColor:"#ffff", borderRadius:10, alignSelf:"center"}}>
-		{/* {
-			isLoading?(
-            <View>
-			<ActivityIndicator size="large" color="#0000ff" />
-			</View>
-			):
-			(
-				<OTP
-				codeCount={5}
-				containerStyle={{ marginTop: 65 }}
-				otpStyles={{ backgroundColor: "#fff" }}
-			    onFinish={(value) => verify(value)}
-				  />
-			)
-		} */}
-
                   <OTP
 				codeCount={5}
 				containerStyle={{ marginTop: 65 }}
 				otpStyles={{ backgroundColor: "#fff" }}
-			    onFinish={(value) => verify(value)}
+			     onFinish={(value) => verify(value)}
 				  />
   
-		  <Text style={{fontWeight:"500", color:"#363BE8", textAlign:"center", bottom:95, fontFamily:"Poppins", fontSize:12.5}}>enter code sent to your email address</Text>
+		  <Text style={{fontWeight:"500", color:"#363BE8", textAlign:"center", bottom:95, fontFamily:"Poppins", fontSize:12.5}}>
+			{/* enter code sent to your email address */}
+			currently in test mode🧪; enter any token of your choice😁
+			</Text>
 	  </View>
 		  <View style={{top:20}}>
 		  <Text style={{textAlign:"center", fontWeight:"600", fontSize:13, color:"#ffff", fontFamily:"Poppins3"}}>Didn't receive a code?</Text>

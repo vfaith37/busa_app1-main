@@ -12,8 +12,7 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0,
-      "enabled": true
+      "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
@@ -37,9 +36,9 @@
       "eas": {
         "projectId": "4afe2469-846a-4407-b4da-e48b9505efcf"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
-
-
-

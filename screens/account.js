@@ -17,7 +17,6 @@ import { AccordionItem } from "../Components/AccordionItem";
 import { COLORS } from "../constants/theme";
 import { AuthContext } from "../context/AuthContext";
 import { Back } from "../constants/icons";
-import ChangePassword from "../Components/ChangePassword";
 import { useNavigation } from "@react-navigation/native";
 import ChangePasswordFormInput from "../Components/ChangePassword";
 
@@ -26,6 +25,7 @@ const { width } = Dimensions.get("screen");
 export const Account = () => {
 	const [visible, setVisible] = useState(false);
 	const [actionTriggered, setActionTriggered] = useState("");
+	
 	const { logout } = useContext(AuthContext);
 	const navigation = useNavigation()
 	

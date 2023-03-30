@@ -87,19 +87,20 @@ const PostImage=({post, navigation})=>{
    height:imageH,                   
    width:imageW, 
 
-   borderRadius:20, alignItems:"center",}}>
+   borderRadius:20, alignItems:"center"}}>
         <Animated.FlatList
        onMomentumScrollEnd={()=>fadeOut()}
         data={post.images}
-        horizontal bounces={false}
+        horizontal 
+        bounces={false}
         onViewableItemsChanged={onViewableItemsChanged.current}
         viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         scrollEventThrottle={32}
         scrollEnabled
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}, id)=>(
+        keyExtractor={(index) => index.toString()}
+        renderItem={({item})=>(
           <View>
           <TouchableOpacity
           activeOpacity={1}
@@ -134,7 +135,7 @@ const PostImage=({post, navigation})=>{
               <View style={styles.pagination}
           >
         
-          {post.images.map((_, index, id) => {
+          {post.images.map((_, index) => {
     
               const imageId = `${post._id}_${index}`;
             return (

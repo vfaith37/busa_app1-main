@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, ScrollView, Keyboard, SafeAreaView} from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text,SafeAreaView} from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
@@ -44,40 +44,43 @@ export const SignInForm = () => {
 	const navigation = useNavigation()
 
 	const signIn = async (values) => {
-		setIsLoading(true)
-			 await client.post("/signin", {
-					...values,
-		}).then(async(res)=>{
-			console.log(res)
-			if (res.status === 200) {
-				// also store the users values as an object and pass it round
-				console.log(res.data);
-				let userInfo = res.data.user
-				console.log(userInfo)
-	
-				setUserInfo(userInfo)
-				let token = res.data.refreshToken
-				setUserToken(token)
-	
-				try{
-					//axios.defaults.headers.common.Authorization = `Bearer ${token}`
-					// stringify the user object
-					await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
-					 
-					// get the user token
-					await AsyncStorage.setItem("userToken",token)
-				}catch(e){
-					console.log(`Async Storage error: ${e}`)
-				}
-				navigation.dispatch(StackActions.replace("Tab"));
-				setIsLoading(false)
+		console.log("button works")
+		try{
+			setIsLoading(true)
+		const res = await client.post("/signin", {
+				   ...values,
+	   })
 
-			}
-			else if (res.status === 401){
-				setIsLoading(false)
-				setError("Invalid username or password.");
-			}
-		}).catch((e)=>{
+	   console.log(res)
+	   if (res.status === 200) {
+		   // also store the users values as an object and pass it round
+		   console.log(res.data);
+		   let userInfo = res.data.user
+		   console.log(userInfo)
+
+		   setUserInfo(userInfo)
+		   let token = res.data.refreshToken
+		   setUserToken(token)
+
+		   try{
+			   //axios.defaults.headers.common.Authorization = `Bearer ${token}`
+			   // stringify the user object
+			   await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
+				
+			   // get the user token
+			   await AsyncStorage.setItem("userToken",token)
+		   }catch(e){
+			   console.log(`Async Storage error: ${e}`)
+		   }
+		   navigation.dispatch(StackActions.replace("Tab"));
+		   setIsLoading(false)
+
+	   }
+	   else if (res.status === 401){
+		   setIsLoading(false)
+		   setError("Invalid username or password.");
+	   }
+		}catch(e){
 			console.log(e)
 			if (e.response && e.response.status === 401) {
 				setError (`${e.response.data.error}`)
@@ -90,11 +93,10 @@ export const SignInForm = () => {
 			else{
 		    setError("An error occurred. Please try again later.");
 			}
-		}
-		)
-		.finally(() => {
+
+		}finally{
 			setIsLoading(false);
-		  });
+		  }
 	}
 
 
@@ -157,7 +159,7 @@ export const SignInForm = () => {
 								</View>
 							) : (
 								<FormSubmitBtn
-									Submitting={isSubmitting}
+									// Submitting={isSubmitting}
 									onPress={handleSubmit}
 									title={"Log in"}
 								/>

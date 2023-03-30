@@ -1,11 +1,8 @@
 import React from "react";
-import { StatusBar } from "expo-status-bar";
-import { Dimensions, StyleSheet, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import {SignUpForm} from "../Components/SignupForm";
+import { Dimensions, StyleSheet, Text, View, StatusBar } from "react-native";
+
 import AppForm from "../Components/AppForm";
 import { COLORS } from "../constants/theme";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const { width } = Dimensions.get("screen");
 const Bg = () => {
@@ -27,10 +24,10 @@ const Bg = () => {
 export const SignUp = () => {
 	return (
 		<View style={{ flex: 1, backgroundColor:COLORS.primary, paddingTop: 55 }}>
-			<StatusBar backgroundColor={COLORS.white}/>
+			<StatusBar backgroundColor={COLORS.transparent}/>
 			<Bg />
 			<AppForm/>
 		</View>
 	);
 };
-const styles = StyleSheet.create({});
+
