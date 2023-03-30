@@ -21,9 +21,12 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import client from "../api/client";
 import { ScrollView } from "react-native-gesture-handler";
 import { COLORS } from "../constants/theme";
+import ErrorButton from "../Components/ErrorButton";
 
 
 const { width, height } = Dimensions.get("screen");
+
+const {innerWidth} = Dimensions.get("window")
 
 const imageW= width*0.95
 const imageH = height/2.36
@@ -48,6 +51,8 @@ const EventAbout = (props) => {
 	const [userInfo, setUserInfo] = useState(null);
 	const [userToken, setUserToken] = useState(null);
 	const [isLoading, setIsLoading] = useState(false)
+	const [error,setError] = useState(false)
+	const [errorMessage, setErrorMessage] = useState("")
 	const navigation = useNavigation();
 
 	//run the async to get email and also get title being passed as a prop
@@ -85,7 +90,7 @@ console.log(Title)
 			  
 				setIsLoading(true);
 			  
-			await	client
+			await client
 				  .post(`/pay/payForTicket`, formData, config)
 				  .then((res) => {
 					console.log(res);
@@ -100,6 +105,8 @@ console.log(Title)
 				  })
 				  .catch((e) => {
 					console.log(`The error is: ${e}`);
+					setError(true);
+					setErrorMessage('Oops! Something went wrong. Please try again .');
 				  })
 				  .finally(() => {
 					setIsLoading(false);
@@ -109,18 +116,29 @@ console.log(Title)
 
 		}catch (e){
 			console.log(`${e}`);
+			setError(true);
+			setErrorMessage('Oops! Something went wrong. Please try again .');
 		}finally{
 			setIsLoading(false)
 		}
 			  };
 			  
-	const num = ticketPrice;
-const formatter = new Intl.NumberFormat('en-NG', {
-  style: 'currency',
-  currency: 'NGN',
-});
+	// const num = ticketPrice;
+// const formatter = new Intl.NumberFormat('en-NG', {
+//   style: 'currency',
+//   currency: 'NGN',
+// });
 
-const formattedNumber = formatter.format(num).replace(/\.00$/, '');
+// // const formattedNumber = formatter.format(num).replace(/\.00$/, '');
+
+function numberWithCommas(x) {
+
+	const parts = x.toString().split(".");
+	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	return parts.join(".");
+  }
+
+  const formattedTicketPrice = numberWithCommas(ticketPrice);
 
 	const scrollX = React.useRef(new Animated.Value(0)).current;
 
@@ -320,10 +338,12 @@ bounces={false}
 					width:92,
 					height:33,
 					backgroundColor:"transparent",
-					top:width/85
+					top:width/85,
+					position:"absolute"
 				}}
 			>
-				{formattedNumber}
+				₦{formattedTicketPrice}
+
 			</Text>
 
 {isLoading ?
@@ -370,6 +390,7 @@ bounces={false}
 }
 		</View>
 	</View>
+	{error && <ErrorButton onPress={() =>{ setError(false); }}message={errorMessage} style={{paddingBottom:height/120, bottom:35}} color= {COLORS.red} borderRadius={10} bgcolor={COLORS.primary}/>}
 </View>
 
 

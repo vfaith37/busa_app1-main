@@ -1,10 +1,10 @@
-import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 const { width } = Dimensions.get("window");
 export const FormSubmitBtn = ({ title, onPress, submitting }) => {
 	const backgroundColor = submitting ? "#FFF" : "#0D13E3";
 	return (
-		<TouchableOpacity
+		<Pressable
 			activeOpacity={0.7}
 			onPress={submitting ? null : onPress}
 			style={[styles.container, { backgroundColor }]}
@@ -20,7 +20,7 @@ export const FormSubmitBtn = ({ title, onPress, submitting }) => {
 			>
 				{title}
 			</Text>
-		</TouchableOpacity>
+		</Pressable>
 	);
 };
 

@@ -1,11 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "../screens/LoginScreen"
-import VerifyAccountScreen from "../screens/VerifyAccountScreen"
-import { SignUp } from "../screens/SignUpScreen";
+
 import { TabNavigator } from "./TabStack";
-import SignUpScreen2 from "../screens/SignupScreen2"
-import  { Form } from "../Components/ProductAdd"
-import OnBoardingScreen from "../screens/OnBoardingScreen";
 
 const Stack = createStackNavigator();
 export function MainStack() {

@@ -96,7 +96,7 @@ const HomeScreen = () => {
       console.log(`${e}`);
       console.log(e)
       setError(true);
-  setErrorMessage('Oops! Something went wrong. Please try again later.');
+  setErrorMessage('Oops! Something went wrong. Please try again .');
     } finally {
       setIsLoading(false);
     }

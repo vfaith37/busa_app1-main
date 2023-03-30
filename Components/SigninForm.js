@@ -44,7 +44,7 @@ export const SignInForm = () => {
 	const navigation = useNavigation()
 
 	const signIn = async (values) => {
-		
+		console.log("button works")
 		try{
 			setIsLoading(true)
 		const res = await client.post("/signin", {
@@ -159,7 +159,7 @@ export const SignInForm = () => {
 								</View>
 							) : (
 								<FormSubmitBtn
-									Submitting={isSubmitting}
+									// Submitting={isSubmitting}
 									onPress={handleSubmit}
 									title={"Log in"}
 								/>
