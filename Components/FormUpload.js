@@ -485,7 +485,7 @@ export const Form = ({ component }) => {
 												<TouchableOpacity
 												activeOpacity={0.9}
 													onPress={() => {
-														setMode("date"), setShow(true);
+														setMode("date"); setShow(true);
 													}}
 												>
 													{Calendars}
@@ -521,7 +521,7 @@ export const Form = ({ component }) => {
 												</Text>
 												<TouchableOpacity
 													onPress={() => {
-														setMode("time"), setShow(true);
+														setMode("time"); setShow(true);
 													}}
 												>
 													 <Time size={25}/>
@@ -600,7 +600,7 @@ export const Form = ({ component }) => {
 												<TouchableOpacity
 												activeOpacity={0.6}
 													onPress={() => {
-														setNewMode("date"), setView(true);
+														setNewMode("date"); setView(true);
 													}}
 												>
 													{Calendars}
@@ -634,7 +634,7 @@ export const Form = ({ component }) => {
 												</Text>
 												<TouchableOpacity
 													onPress={() => {
-														setNewMode("time"), setView(true);
+														setNewMode("time"); setView(true);
 													}}
 												>
 													 <Time size={25}/>

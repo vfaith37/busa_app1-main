@@ -65,8 +65,9 @@ export const SignUpForm = ({onError}) => {
 			const res = await client.post("/signup", {
 				...values,
 			});
-			if (res.data.success) {
-	
+
+			console.log(res)
+			if (res.data.success && res.status === 200) {
 				   navigation.dispatch(
 							StackActions.replace("verify"
 							, {

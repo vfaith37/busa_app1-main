@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions, Animated, TouchableOpacity, Platform, FlatList } from 'react-native'
 import React from 'react'
 import { useRef, useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -60,16 +60,6 @@ const PostImage=({post, navigation})=>{
   }, [fadeAnim]);
 
 
-  function fadeOut (){
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 10000,
-        useNativeDriver: true,
-      }).start
-  }
-
-
-
 
  const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
   const onViewableItemsChanged = useRef((item)=>{
@@ -88,8 +78,7 @@ const PostImage=({post, navigation})=>{
    width:imageW, 
 
    borderRadius:20, alignItems:"center"}}>
-        <Animated.FlatList
-       onMomentumScrollEnd={()=>fadeOut()}
+        <FlatList
         data={post.images}
         horizontal 
         bounces={false}
@@ -97,7 +86,7 @@ const PostImage=({post, navigation})=>{
         viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        scrollEventThrottle={32}
+        // scrollEventThrottle={32}
         scrollEnabled
         keyExtractor={(index) => index.toString()}
         renderItem={({item})=>(
@@ -164,6 +153,7 @@ const PostImage=({post, navigation})=>{
             )
           }
            </React.Fragment>
+           
            ) 
           })
           } 

@@ -10,7 +10,6 @@ import {
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
-import { Icon } from "../constants/icons";
 import moment from "moment";
 import { COLORS } from "../constants/theme";
 
