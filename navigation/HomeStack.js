@@ -10,9 +10,8 @@ export function HomeStack() {
 		<Stack.Navigator
 			screenOptions={{ headerShown: false }}
 		>
-{/* <Stack.Screen component={OnBoardingScreen} name="OnBoarding"/> */}
 	  <Stack.Screen component={HomeScreen} name="HomeScreen" />
-	<Stack.Screen name ="PostDetails" component={PostDetails}/> 
+	<Stack.Screen component={PostDetails} name ="PostDetails"/> 
 		</Stack.Navigator>
 	);
 }

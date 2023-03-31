@@ -57,7 +57,7 @@ const TicketDisplayScreen = () =>{
 
 				formData.append("email", email)
 
-				const res =	await client.post(`/tickets/getTicketByEmail/`,formData, config)
+				const res =	await client.post(`/tickets/getTicketByEmail/`, config)
 
 				console.log(res.data.data)
 				if(res.status === 200){
@@ -67,14 +67,15 @@ const TicketDisplayScreen = () =>{
 				 if(res.data.data.length===0){
                     setTickets([])
 					setError(true);
-					setErrorMessage('Oops! Pls kindly purchase a ticket.');
+					setErrorMessage('Oops! Pls kindly purchase a ticket😁.');
 				}
 				}
 	  
 	} catch(e) {
 	  console.log(`${e}`)
 	  setError(true);
-	  setErrorMessage('Oops! Something went wrong. Please try again later.');
+	//   setErrorMessage('Oops! Something went wrong. Please try again later.');
+	setErrorMessage(e.message)
 	}finally{
 		setIsLoading(false)
 	}

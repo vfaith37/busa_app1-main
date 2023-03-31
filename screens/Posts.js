@@ -54,7 +54,7 @@ const PostImage=({post})=>{
   // console.log(newTime)
   // console.log(date.format('MMMM Do YYYY, h:mm:ss a'));
   
-  const presentDate = moment().format('MMMM Do YYYY, h:mm:ss a');
+  // const presentDate = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   // console.log(presentDate)
   
@@ -74,15 +74,15 @@ const PostImage=({post})=>{
 
 
 
- const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
-  const onViewableItemsChanged = useRef((item)=>{
-  const index = item.viewableItems[0].index
-        setCurrentSlideIndex(index)
-      })
+//  const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
+//   const onViewableItemsChanged = useRef((item)=>{
+//   const index = item.viewableItems[0].index
+//         setCurrentSlideIndex(index)
+//       })
       
-      const viewabilityConfig = useRef({
-        itemVisiblePercentThreshold:50,
-      })  
+//       const viewabilityConfig = useRef({
+//         itemVisiblePercentThreshold:50,
+//       })  
 
   return(
     <View>
@@ -95,11 +95,10 @@ const PostImage=({post})=>{
         data={post.images}
         horizontal 
         bounces={false}
-        onViewableItemsChanged={onViewableItemsChanged.current}
-        viewabilityConfig={viewabilityConfig.current}
+        // onViewableItemsChanged={onViewableItemsChanged.current}
+        // viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        //scrollEventThrottle={32}
         scrollEnabled
         keyExtractor={(index) => index.toString()}
         renderItem={({item})=>(
@@ -118,7 +117,7 @@ const PostImage=({post})=>{
                    height:imageH, 
                    width:imageW, 
                    borderRadius:20, 
-                    resizeMode: Platform.OS === "android" ? 'contain' :null,
+                    resizeMode: Platform.OS === "android" ? "contain" :"cover",
                     alignSelf:"center",
                   }}
                   key={item._id}
@@ -131,7 +130,7 @@ const PostImage=({post})=>{
 />
 </View> 
 
-{post.images.length> 1 ? 
+{/* {post.images.length> 1 ? 
              (
     
               <View style={styles.pagination}
@@ -173,7 +172,7 @@ const PostImage=({post})=>{
           
           </View>
             )
-            : null}
+            : null} */}
             
 {isRecent && 
 <View style={{width:55, height:18, backgroundColor:COLORS.white, borderRadius:2, left:30, position:"absolute", top:imageH*0.13}}>

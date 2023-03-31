@@ -198,6 +198,8 @@ export const Profile = () => {
 			}
 		}).catch((e)=>{
 			console.log(`${e}`)
+			setFeedback(true);
+			setMessage("Something went wrong, Please try again!");
 		})
 
 
