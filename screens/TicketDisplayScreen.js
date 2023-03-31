@@ -53,8 +53,11 @@ const TicketDisplayScreen = () =>{
 					}
 				}
 
+				const formData = new FormData();
 
-				const res =	await client.get(`/tickets/getTicketByEmail/${email}`, config)
+				formData.append("email", email)
+
+				const res =	await client.post(`/tickets/getTicketByEmail/`,formData, config)
 
 				console.log(res.data.data)
 				if(res.status === 200){

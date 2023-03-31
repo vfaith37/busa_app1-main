@@ -37,7 +37,7 @@ const HomeScreen = () => {
       if (userToken !== null && value !== null) {
              const userInfo = JSON.parse(value)
         setUserToken(userToken);
-        setUserInfo(userInfo)
+        setUserInfo(userInfo);
 
         // const cacheKey = `${userInfo.lastname}-${currentPage}-${PAGE_SIZE}`;
         // const cachedData = await AsyncStorage.getItem(cacheKey);
@@ -52,13 +52,13 @@ const HomeScreen = () => {
         //   setCacheExpiry(parseInt(cacheExpiry));
         // }else{
         
-
+const token = userToken
         console.log(userToken)
         console.log(userInfo)
 
         const config = {
           headers: {
-            Authorization: `Bearer ${userToken}`,
+            Authorization: `Bearer ${token}`,
           },
         };
 

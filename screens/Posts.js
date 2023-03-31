@@ -4,16 +4,29 @@ import { useRef, useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment/moment';
 import { COLORS } from '../constants/theme';
+import { useNavigation } from '@react-navigation/native';
 
 const {width, height}= Dimensions.get("screen")
 const imageH = height*0.37
 const imageW = width*0.9
 
 
+const Posts = ({post}) => {
+  return (
+    <View
+    style={{flex:1}}
+    >
+      <StatusBar backgroundColor={COLORS.white}/>
+      <View> 
+         <PostImage post={post}/>
+        <PostFooter post={post}/>
+        </View>
+    </View>
+  )
+}
 
-
-const PostImage=({post, navigation})=>{
-
+const PostImage=({post})=>{
+ const navigation = useNavigation()
   const [isRecent, setIsRecent]= useState(false)
 
   useEffect(() => {
@@ -86,7 +99,7 @@ const PostImage=({post, navigation})=>{
         viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        // scrollEventThrottle={32}
+        //scrollEventThrottle={32}
         scrollEnabled
         keyExtractor={(index) => index.toString()}
         renderItem={({item})=>(
@@ -211,21 +224,7 @@ const PostFooter=({post})=>{
 }
 
 
-const Posts = ({post, navigation}) => {
 
-
-  return (
-    <View
-    style={{flex:1}}
-    >
-      <StatusBar backgroundColor={COLORS.white}/>
-      <View> 
-         <PostImage post={post} navigation ={navigation}/>
-        <PostFooter post={post}/>
-        </View>
-    </View>
-  )
-}
 
 
 

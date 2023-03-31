@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Text,SafeAreaView} from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Text,SafeAreaView, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";
 import * as Yup from "yup";
@@ -8,6 +8,7 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "../api/client";
 import { COLORS } from "../constants/theme";
+
 
 const {width, height} =Dimensions.get("screen")
 
@@ -103,6 +104,11 @@ export const SignInForm = () => {
 	return (
 		<SafeAreaView 
 		>
+			{/* maybe the keyboard avoiding view and scroll view component should be included here also just for ios to work well */}
+           {/* <KeyboardAvoidingView>
+			<ScrollView>
+				<TouchableWithoutFeedback onPress ={Keyboard.dismiss}> */}
+				<View>
 			<Formik
 				initialValues={userInfos}
 				validationSchema={validationSchema}
@@ -169,6 +175,11 @@ export const SignInForm = () => {
 					);
 				}}
 			</Formik>
+			</View>
+			{/* </TouchableWithoutFeedback>
+
+			</ScrollView>
+		   </KeyboardAvoidingView> */}
 		</SafeAreaView>
 		
 	);
@@ -193,7 +204,7 @@ const styles = StyleSheet.create({
 		 paddingTop: height*0.02,
 		borderColor: "000",
 		borderBottomColor: "grey",
-		borderBottomWidth: StyleSheet.hairlineWidth,
+		// borderBottomWidth: StyleSheet.hairlineWidth,
 		height:height*0.04,
 		 marginBottom: height*0.01,
 		paddingLeft: 5,
