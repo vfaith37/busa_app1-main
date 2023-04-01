@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from "../screens/LoginScreen";
 import { SignUp } from "../screens/SignUpScreen";
 import SignUpScreen2 from "../screens/SignupScreen2"
@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createStackNavigator } from '@react-navigation/stack';
 
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 
 const AuthenticationStack =()=> {

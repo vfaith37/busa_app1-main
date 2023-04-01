@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
 import { useNavigation} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
@@ -69,17 +69,20 @@ const token = userToken
         const responseData = res.data.data;
 
         if (responseData.length === 0) {
-          setHasMoreData(false);
+          // setHasMoreData(false);
           setIsLoading(false)
-          // return;
-        }
+          return;
+        // setPosts(prevPosts => [...prevPosts, ...responseData]);
 
-        if(currentPage>1){
+        }
         setPosts(prevPosts => [...prevPosts, ...responseData]);
-        }
-        else{
-          setPosts([...posts, ...responseData])
-        }
+
+        // if(currentPage>1){
+        // }
+        // else{
+        //   setPosts([...posts, ...responseData])
+        // }
+        
       //   setCacheExpiry(Date.now());
       //   await AsyncStorage.setItem(cacheKey, JSON.stringify(responseData));
       //   await AsyncStorage.setItem(
@@ -106,20 +109,23 @@ const token = userToken
 
 
   const loadMorePosts = useCallback(async () => {
-    if (isLoading || !hasMoreData) {
-     console.log("no more")
-       return;
-    }
-    console.log("load more")
+    // if (isLoading || !hasMoreData) {
+    //  console.log("no more")
+    //    return;
+    // }
+    // console.log("load more")
     
-    setCurrentPage(prevPage => prevPage + 1);
-  }, [isLoading, hasMoreData]);
+    // setCurrentPage(prevPage => prevPage + 1);
+    setCurrentPage(currentPage+1)
+  }, [isLoading]);
+
+
 
 
   const renderLoader =()=>{
     return(
     isLoading ?
-    <View style={{marginVertical:80, alignItems:"center"}}>
+    <View style={{marginVertical:60, alignItems:"center"}}>
        <LottieView
           source={require('../assets/animations/loader.json')}
           style={{
@@ -144,7 +150,7 @@ const token = userToken
          showsVerticalScrollIndicator={false}
          bounces={false}
          >
-        <Posts post={item} key={item.id} navigation={navigation} />
+        <Posts post={item} key={item.id} navigation={navigation}/>
        </ScrollView>
     ),
     [navigation]
@@ -188,7 +194,7 @@ const renderHeader =()=>{
     )}
       <FlatList
       ListHeaderComponent={renderHeader}
-      onEndReachedThreshold={0.1}
+      onEndReachedThreshold={0}
       onEndReached={loadMorePosts}
       showsVerticalScrollIndicator={false}
       data={posts}

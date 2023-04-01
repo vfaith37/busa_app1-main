@@ -21,19 +21,20 @@ const imageH = height * 0.37;
 const imageW = width * 0.9;
 
 const Posts = ({ post }) => {
-  const navigation = useNavigation();
+  const time = post.addedAt;
+
+  const date = moment(time).format("MMM D, YYYY");;
+
+  const navigation = useNavigation()
   return (
-    <View style={{ flex: 1 }}>
-      {/* <StatusBar backgroundColor={COLORS.white}/> */}
       <View>
-        <PostImage post={post} navigation={navigation} />
-        <PostFooter post={post} />
+        <PostImage post={post} navigation ={navigation}/>
+        <PostFooter post={post} date={date} />
       </View>
-    </View>
   );
 };
 
-const PostImage = ({ post, navigation }) => {
+const PostImage = ({ post, navigation}) => {
   const [isRecent, setIsRecent] = useState(false);
 
   useEffect(() => {
@@ -98,7 +99,7 @@ const PostImage = ({ post, navigation }) => {
           alignItems: "center",
         }}
       >
-        <FlatList
+        <Animated.FlatList
           data={post.images}
           horizontal
           bounces={false}
@@ -131,7 +132,7 @@ const PostImage = ({ post, navigation }) => {
                   }}
                   // key={item._id}
                    key={id}
-                  source={{ uri: item }}
+                  source={{uri: item }}
                 />
               </TouchableOpacity>
             </View>
@@ -212,13 +213,7 @@ const PostImage = ({ post, navigation }) => {
   );
 };
 
-const PostFooter = ({ post }) => {
-  let time = post.addedAt;
-
-  var date = moment(time);
-
-  var newTime = date.format("MMM D, YYYY");
-
+const PostFooter = ({ post, date }) => {
   return (
     <>
       <View
@@ -253,7 +248,7 @@ const PostFooter = ({ post }) => {
             }}
           >
             {" "}
-            {newTime}
+            {date}
           </Text>
           <Text
             style={{

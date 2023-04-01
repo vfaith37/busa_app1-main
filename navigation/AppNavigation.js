@@ -10,9 +10,7 @@ import { COLORS } from '../constants/theme';
 
 const AppNavigation = () => {
   const {isLoading, userToken} = useContext(AuthContext)
-
-
-  console.log(userToken)
+  
   if(isLoading){
     return(
     <View style ={{flex:1, justifyContext:"center", alignItems:"center"}}>

@@ -5,7 +5,6 @@ import { COLORS } from '../constants/theme'
 const {width, height}= Dimensions.get("window")
 
 
-
 const PostDetails = ({route}) => {
 
 
@@ -56,7 +55,6 @@ const PostImage=(props)=>{
         viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        scrollEventThrottle={32}
         scrollEnabled
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}, id)=>(
@@ -67,7 +65,7 @@ const PostImage=(props)=>{
               <Image
                   style={{
                     height:height/2.3, width:width, 
-                    resizeMode: Platform.OS === "android"? "stretch" :null
+                    // resizeMode: Platform.OS === "android"? "cover" :null
                   }}
                   key={id}
                   source={{uri:item}}
