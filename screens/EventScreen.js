@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, FlatList, View, StyleSheet, Text, Dimensions, ScrollView} from 'react-native';
+import { SafeAreaView, FlatList, View, Text, Dimensions, ScrollView, StatusBar} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '../api/client';
 import Events from './Events';
 import ErrorButton from '../Components/ErrorButton';
+import { COLORS } from '../constants/theme';
 
 const PAGE_SIZE = 10;
 const {width, height} = Dimensions.get("screen")
@@ -55,7 +56,6 @@ const EventScreen = () => {
 
 
         const token = userToken;
-        //dshdsghdsdghsdgshdgshdgsdsh
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -97,9 +97,8 @@ const EventScreen = () => {
     }
     } catch (e) {
       console.log(`${e}`);
-      // alert(`${e}`);
       setError(true);
-      setErrorMessage('Oops! Something went wrong. Please try again later.');
+      setErrorMessage('Oops! Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +165,7 @@ const EventScreen = () => {
       setIsLoading(true);
 
       await getEventData(1);
-      setCacheExpiry(null); 
+      // setCacheExpiry(null); 
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -181,6 +180,7 @@ const EventScreen = () => {
     <SafeAreaView style={{ flex: 1,
      paddingTop: 45
       }}>
+      <StatusBar backgroundColor={COLORS.darkgray}/>
  {events.length === 0 && !isLoading && (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{fontFamily:"Poppins"}}>No events present</Text>

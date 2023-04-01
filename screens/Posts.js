@@ -1,33 +1,40 @@
-import { StyleSheet, Text, View, Image, Dimensions, Animated, TouchableOpacity, Platform, FlatList } from 'react-native'
-import React from 'react'
-import { useRef, useState, useEffect} from 'react';
-import { StatusBar } from 'expo-status-bar';
-import moment from 'moment/moment';
-import { COLORS } from '../constants/theme';
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  Animated,
+  TouchableOpacity,
+  Platform,
+  FlatList,
+  StatusBar,
+} from "react-native";
+import React from "react";
+import { useRef, useState, useEffect } from "react";
+import moment from "moment";
+import { COLORS } from "../constants/theme";
+import { useNavigation } from "@react-navigation/native";
 
-const {width, height}= Dimensions.get("screen")
-const imageH = height*0.37
-const imageW = width*0.9
+const { width, height } = Dimensions.get("screen");
+const imageH = height * 0.37;
+const imageW = width * 0.9;
 
-
-const Posts = ({post}) => {
+const Posts = ({ post }) => {
+  const navigation = useNavigation();
   return (
-    <View
-    style={{flex:1}}
-    >
-      <StatusBar backgroundColor={COLORS.white}/>
-      <View> 
-         <PostImage post={post}/>
-        <PostFooter post={post}/>
-        </View>
+    <View style={{ flex: 1 }}>
+      {/* <StatusBar backgroundColor={COLORS.white}/> */}
+      <View>
+        <PostImage post={post} navigation={navigation} />
+        <PostFooter post={post} />
+      </View>
     </View>
-  )
-}
+  );
+};
 
-const PostImage=({post})=>{
- const navigation = useNavigation()
-  const [isRecent, setIsRecent]= useState(false)
+const PostImage = ({ post, navigation }) => {
+  const [isRecent, setIsRecent] = useState(false);
 
   useEffect(() => {
     const postDate = new Date(post.addedAt);
@@ -45,21 +52,17 @@ const PostImage=({post})=>{
     }
   }, [post.addedAt]);
 
-
-  let time = post.addedAt
+  let time = post.addedAt;
 
   var date = moment(time);
 
-  var newTime = date.format('MMM DD, YYYY')
+  var newTime = date.format("MMM DD, YYYY");
   // console.log(newTime)
   // console.log(date.format('MMMM Do YYYY, h:mm:ss a'));
-  
+
   // const presentDate = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   // console.log(presentDate)
-  
- 
-
 
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
@@ -68,69 +71,75 @@ const PostImage=({post})=>{
       toValue: 1,
       duration: 10000,
       useNativeDriver: true,
-    }).start()
+    }).start();
     // }).start(()=>fadeOut());
   }, [fadeAnim]);
 
+   const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
+  //   const onViewableItemsChanged = useRef((item)=>{
+  //   const index = item.viewableItems[0].index
+  //         setCurrentSlideIndex(index)
+  //       })
 
+  //       const viewabilityConfig = useRef({
+  //         itemVisiblePercentThreshold:50,
+  //       })
 
-//  const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
-//   const onViewableItemsChanged = useRef((item)=>{
-//   const index = item.viewableItems[0].index
-//         setCurrentSlideIndex(index)
-//       })
-      
-//       const viewabilityConfig = useRef({
-//         itemVisiblePercentThreshold:50,
-//       })  
-
-  return(
+  return (
     <View>
-   <View style={{backgroundColor:COLORS.transparent, alignSelf:"center", top:20, 
-   height:imageH,                   
-   width:imageW, 
-
-   borderRadius:20, alignItems:"center"}}>
+      <View
+        style={{
+          backgroundColor: COLORS.transparent,
+          alignSelf: "center",
+          top: 20,
+          height: imageH,
+          width: imageW,
+          borderRadius: 20,
+          alignItems: "center",
+        }}
+      >
         <FlatList
-        data={post.images}
-        horizontal 
-        bounces={false}
-        // onViewableItemsChanged={onViewableItemsChanged.current}
-        // viewabilityConfig={viewabilityConfig.current}
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        scrollEnabled
-        keyExtractor={(index) => index.toString()}
-        renderItem={({item})=>(
-          <View>
-          <TouchableOpacity
-          activeOpacity={1}
-          onPress={()=>navigation.navigate("PostDetails", {
-            image:post.images,
-            title:post.title,
-        date: newTime,
-        content: post.content,
-          })}
-          >
-              <Image
+          data={post.images}
+          horizontal
+          bounces={false}
+          // onViewableItemsChanged={onViewableItemsChanged.current}
+          // viewabilityConfig={viewabilityConfig.current}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          scrollEnabled
+          keyExtractor={(index) => index.toString()}
+          renderItem={({ item }, id) => (
+            <View>
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() =>
+                  navigation.navigate("PostDetails", {
+                    image: post.images,
+                    title: post.title,
+                    date: newTime,
+                    content: post.content,
+                  })
+                }
+              >
+                <Image
                   style={{
-                   height:imageH, 
-                   width:imageW, 
-                   borderRadius:20, 
-                    resizeMode: Platform.OS === "android" ? "contain" :"cover",
-                    alignSelf:"center",
+                    height: imageH,
+                    width: imageW,
+                    borderRadius: 20,
+                    resizeMode: Platform.OS === "android" ? "contain" : "cover",
+                    alignSelf: "center",
                   }}
-                  key={item._id}
-                  source={{uri:item}}
-                  />
-                  </TouchableOpacity>
-                  </View>
-  
-  )}
-/>
-</View> 
+                  // key={item._id}
+                   key={id}
+                  source={{ uri: item }}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
 
-{/* {post.images.length> 1 ? 
+       {post.images.length> 1 ? 
              (
     
               <View style={styles.pagination}
@@ -172,116 +181,134 @@ const PostImage=({post})=>{
           
           </View>
             )
-            : null} */}
-            
-{isRecent && 
-<View style={{width:55, height:18, backgroundColor:COLORS.white, borderRadius:2, left:30, position:"absolute", top:imageH*0.13}}>
-<Text style={{color:COLORS.black, fontSize:11, fontFamily:"Poppins3", alignSelf:"center", fontWeight:"200"}}>Recent</Text>
-</View>
-}
-</View> 
+            : null} 
 
-  )
-}
+      {isRecent && (
+        <View
+          style={{
+            width: 55,
+            height: 18,
+            backgroundColor: COLORS.white,
+            borderRadius: 2,
+            left: 30,
+            position: "absolute",
+            top: imageH * 0.13,
+          }}
+        >
+          <Text
+            style={{
+              color: COLORS.black,
+              fontSize: 11,
+              fontFamily: "Poppins3",
+              alignSelf: "center",
+              fontWeight: "200",
+            }}
+          >
+            Recent
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
 
-
-
-
-
-const PostFooter=({post})=>{ 
-  
-  let time = post.addedAt
+const PostFooter = ({ post }) => {
+  let time = post.addedAt;
 
   var date = moment(time);
-  
-  var newTime = date.format('MMM D, YYYY')
- 
-  return(
-  <>
-   <View style={{
-    
-    left:width/15,
-      position:"absolute",
-    // paddingTop:imageH*1.3,
-    width:width,
-    height:width/8
-     }}>
 
-      <View style={{paddingTop:imageH*1.1}}>
-      <Text style={{textTransform:"capitalize", color:COLORS.black,fontSize:16, fontWeight:"600",
-      fontFamily:"Poppins3"
-    }}>{post.title}</Text> 
-    <Text style={{fontWeight:"200", fontSize:10, color:COLORS.darkblack,fontFamily:"Poppins3", lineHeight:13 }}> {newTime}</Text>
-    <Text style={{fontWeight:"400", fontSize:11, color:COLORS.mgray, width:width*0.95, height:height/10, top:5, fontFamily:"Poppins", right:-3,}}>
-      {post.content.length > 125 ? post.content.charAt(0).toUpperCase()+ post.content.slice(1,124).toLowerCase()+'...' : post.content.charAt(0).toUpperCase()+ post.content.slice(1,`${post.content.length}`).toLowerCase()+'...'}
-      </Text>
-      </View>
+  var newTime = date.format("MMM D, YYYY");
 
+  return (
+    <>
+      <View
+        style={{
+          left: width / 15,
+          position: "absolute",
+          // paddingTop:imageH*1.3,
+          width: width,
+          height: width / 8,
+        }}
+      >
+        <View style={{ paddingTop: imageH * 1.1 }}>
+          <Text
+            style={{
+              textTransform: "capitalize",
+              color: COLORS.black,
+              fontSize: 16,
+              fontWeight: "600",
+              fontFamily: "Poppins3",
+            }}
+          >
+            {post.title} 
+            {/* run a jd function to check if the text is more than a certain character so as to make effects immediately */}
+          </Text>
+          <Text
+            style={{
+              fontWeight: "200",
+              fontSize: 10,
+              color: COLORS.darkblack,
+              fontFamily: "Poppins3",
+              lineHeight: 13,
+            }}
+          >
+            {" "}
+            {newTime}
+          </Text>
+          <Text
+            style={{
+              fontWeight: "400",
+              fontSize: 11,
+              color: COLORS.mgray,
+              width: width * 0.95,
+              height: height / 10,
+              top: 5,
+              fontFamily: "Poppins",
+              right: -3,
+            }}
+          >
+            {post.content.length > 125
+              ? post.content.charAt(0).toUpperCase() +
+                post.content.slice(1, 124).toLowerCase() +
+                "..."
+              : post.content.charAt(0).toUpperCase() +
+                post.content.slice(1, `${post.content.length}`).toLowerCase() +
+                "..."}
+          </Text>
         </View>
-  </>
-  )
-}
+      </View>
+    </>
+  );
+};
 
-
-
-
-
-
-
-
-export default Posts
+export default Posts;
 
 const styles = StyleSheet.create({
-  container:{
-    top:80,
+  container: {
+    top: 80,
   },
-  pagination:{
-    bottom:-6,
-    left:(width*0.93)/2,
-    position:"absolute",
-    flexDirection:"row",
-    justifyContent:"center",
-    width:40,
-    
+  pagination: {
+    bottom: -6,
+    left: (width * 0.93) / 2,
+    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "center",
+    width: 40,
   },
-  dot:{borderRadius:10, height:7, width:7, backgroundColor:COLORS.gray, marginBottom:3, marginHorizontal:3, justifyContent:"center" }
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  dot: {
+    borderRadius: 10,
+    height: 7,
+    width: 7,
+    backgroundColor: COLORS.gray,
+    marginBottom: 3,
+    marginHorizontal: 3,
+    justifyContent: "center",
+  },
+});
 
 ///for tips of the day;
-         {/* <View>
+{
+  /* <View>
           <View style={{height:210, width:375, backgroundColor:"#f6f6f6"}}>
             <Text style={{fontWeight:"300", color:"#717171", fontSize:12, textAlign:"center", textTransform:"uppercase", top:10}}>Tip of the Day</Text>
             <View >
@@ -301,4 +328,5 @@ const styles = StyleSheet.create({
 
             </View>
           </View>
-        </View>  */}
+        </View>  */
+}

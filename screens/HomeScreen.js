@@ -53,9 +53,6 @@ const HomeScreen = () => {
         // }else{
         
 const token = userToken
-        console.log(userToken)
-        console.log(userInfo)
-
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -118,23 +115,8 @@ const token = userToken
     setCurrentPage(prevPage => prevPage + 1);
   }, [isLoading, hasMoreData]);
 
-  const renderItem = useCallback(
-    ({ item }) => (
-      <ScrollView contentContainerStyle={{ 
-         height: height / 1.94
-         }}
-         showsVerticalScrollIndicator={false}
-         bounces={false}
-         >
-        <Posts post={item} key={item.id} navigation={navigation} />
-       </ScrollView>
-    ),
-    [navigation]
-  );
 
-
-
- const renderLoader =()=>{
+  const renderLoader =()=>{
     return(
     isLoading ?
     <View style={{marginVertical:80, alignItems:"center"}}>
@@ -154,6 +136,24 @@ const token = userToken
     )
   }
 
+  const renderItem = useCallback(
+    ({ item }) => (
+      <ScrollView contentContainerStyle={{ 
+         height: height / 1.94
+         }}
+         showsVerticalScrollIndicator={false}
+         bounces={false}
+         >
+        <Posts post={item} key={item.id} navigation={navigation} />
+       </ScrollView>
+    ),
+    [navigation]
+  );
+
+
+
+
+
    const handleRefresh = useCallback(async () => {
     try {
       setPosts([]);
@@ -161,7 +161,7 @@ const token = userToken
       setIsLoading(true);
 
       await getPostData(1);
-      setCacheExpiry(null); 
+      // setCacheExpiry(null); 
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -180,7 +180,7 @@ const renderHeader =()=>{
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop:50}}>
-      <StatusBar backgroundColor={COLORS.white}/>
+      <StatusBar backgroundColor={COLORS.darkgray}/>
        {posts.length === 0 && !isLoading && (
          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
@@ -207,84 +207,4 @@ const renderHeader =()=>{
 
 export default HomeScreen;
 
-
-
-
-//   const getPostData = useCallback(async (currentPage) => {
-//     setIsLoading(true);
-
-//     try {
-//         const value = await AsyncStorage.getItem("userInfo");
-//         const userToken = await AsyncStorage.getItem("userToken");
-
-//         if (value !== null && userToken !== null) {
-//             const userInfo = JSON.parse(value);
-//             setUserInfo(userInfo);
-//             setUserToken(userToken);
-
-//             const cacheKey = `${userInfo.campus}-${currentPage}-${PAGE_SIZE}`;
-
-//             const cacheData = await AsyncStorage.getItem(cacheKey);
-//             if (cacheData !== null) {
-//                 const parsedData = JSON.parse(cacheData);
-//                 setPosts([...posts, ...parsedData.posts]);
-//                 setHasMoreData(parsedData.hasMoreData);
-//                 setCacheExpiry(parsedData.cacheExpiry);
-//                 setIsLoading(false);
-//                 return;
-//             }
-
-//             const token = userToken;
-//             const config = {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                 },
-//             };
-
-//             let allPosts = []; // New variable to hold all the posts
-//             let hasMore = true; // New variable to determine if there is more data to load
-
-//             while (hasMore) { // Loop until there is no more data
-//                 const res = await client.get(
-//                     `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
-//                     config
-//                 );
-
-//                 console.log(res.data.data);
-
-//                 const responseData = res.data.data;
-
-//                 if (responseData.length === 0) {
-//                     hasMore = false;
-//                 } else {
-//                     allPosts = [...allPosts, ...responseData];
-//                     currentPage++;
-//                 }
-//             }
-
-//             if (allPosts.length === 0) {
-//                 setHasMoreData(false);
-//                 setIsLoading(false);
-//                 return;
-//             }
-
-//             // const cacheExpiry = new Date().getTime() + CACHE_EXPIRY_TIME;
-//             // const cacheValue = JSON.stringify({
-//             //     posts: allPosts,
-//             //     hasMoreData: false,
-//             //     cacheExpiry,
-//             // });
-
-//             // await AsyncStorage.setItem(cacheKey, cacheValue);
-
-//             setPosts([...posts, ...allPosts]);
-//             // setCacheExpiry(cacheExpiry);
-//         }
-//     } catch (e) {
-//         console.log(`${e}`);
-//         alert(`${e}`);
-//     } finally {
-//         setIsLoading(false);
-//     }
-// }, []);
   
