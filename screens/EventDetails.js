@@ -26,7 +26,6 @@ import ErrorButton from "../Components/ErrorButton";
 
 const { width, height } = Dimensions.get("screen");
 
-const {innerWidth} = Dimensions.get("window")
 
 const imageW= width*0.95
 const imageH = height/2.36

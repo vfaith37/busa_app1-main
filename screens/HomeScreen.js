@@ -115,8 +115,8 @@ const token = userToken
     // }
     // console.log("load more")
     
-    // setCurrentPage(prevPage => prevPage + 1);
-    setCurrentPage(currentPage+1)
+    setCurrentPage(prevPage => prevPage + 1);
+    // setCurrentPage(currentPage+1)
   }, [isLoading]);
 
 
@@ -214,3 +214,12 @@ const renderHeader =()=>{
 export default HomeScreen;
 
   
+
+
+
+
+
+
+
+
+

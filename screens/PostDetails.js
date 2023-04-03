@@ -1,21 +1,17 @@
-import { StyleSheet, Text, View, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Image, ScrollView, Platform} from 'react-native'
-import React, {useState, useRef, useCallback} from 'react'
+import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity, Image, ScrollView} from 'react-native'
+import React, {useState, useRef} from 'react'
 import { COLORS } from '../constants/theme'
 
-const {width, height}= Dimensions.get("window")
+const {width, height}= Dimensions.get("screen")
 
+const imageW = width
+const imageH = height/2.3
 
 const PostDetails = ({route}) => {
 
-
   return (
       <View style={styles.container}>
-        <ScrollView
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        >
   <About route ={route}/>
-  </ScrollView>
       </View>
   )
 }
@@ -34,28 +30,24 @@ const {image, title, date, content}= props.route.params
 }
 
 const PostImage=(props)=>{
+
   const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
-  const onViewableItemsChanged = useRef((item)=>{
-    const index = item.viewableItems[0].index
-    setCurrentSlideIndex(index)
-    console.log(index)
-  })
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold:50,
-  })
+  const handleScroll = (event) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / imageW);
+    setCurrentSlideIndex(index);
+  };
 
   return(
   <View>
-   <View style={{top:20, height:height/2.3, width:width, backgroundColor:COLORS.transparent,}}>
+   <View style={{top:10, height:imageH, width:imageW, backgroundColor:COLORS.transparent,}}>
         <FlatList
         data={props.image}
         horizontal
         bounces={false}
-        onViewableItemsChanged={onViewableItemsChanged.current}
-        viewabilityConfig={viewabilityConfig.current}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         scrollEnabled
+					onScroll={handleScroll}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}, id)=>(
           <View>
@@ -65,7 +57,7 @@ const PostImage=(props)=>{
               <Image
                   style={{
                     height:height/2.3, width:width, 
-                    // resizeMode: Platform.OS === "android"? "cover" :null
+                    resizeMode: Platform.OS === "android"? "cover" :null
                   }}
                   key={id}
                   source={{uri:item}}
@@ -98,6 +90,7 @@ const PostImage=(props)=>{
       })} 
       </View>
 :null}
+
   </View>
   )
 
@@ -112,6 +105,13 @@ return(
 <View 
 style={{padding:25, top:10}}
 >
+<ScrollView
+showsVerticalScrollIndicator
+bounces={false}
+contentContainerStyle={{height:height*1.9}}
+// scrollIndicatorInsets={{width:10}}
+// indicatorStyle={"red"}
+>
     <View 
     >
     <Text style={{fontWeight:"600", fontSize:19, color:COLORS.black, width:322, height:25, lineHeight:24.7, fontFamily:"Poppins3"}}>{props.title}</Text>
@@ -121,21 +121,18 @@ style={{padding:25, top:10}}
 <View
 >
 
-<ScrollView
-showsVerticalScrollIndicator
-bounces={false}
-contentContainerStyle={{height:height }}
->
+
 <Text style={{
   fontWeight:"400", fontSize:10, lineHeight:15, color:COLORS.mgray,fontFamily:"Poppins2",
 top:13, textTransform:"capitalize"
 }}
 
->{props.content}</Text>
+>{props.content}
+</Text>
 
-</ScrollView>
 </View>
 
+</ScrollView>
 </View>
 </>
 

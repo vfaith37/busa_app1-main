@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ActivityIndicator, Dimensions, TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView, TouchableOpacity} from 'react-native'
+import { StyleSheet,  View, ActivityIndicator, Dimensions, TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView, TouchableOpacity} from 'react-native'
 import React, { useState } from 'react'
 import { Formik } from "formik";
 import { FormInput } from "../Components/FormInput";
@@ -6,8 +6,6 @@ import { FormSubmitBtn } from "../Components/FormSubmitBtn";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../constants/theme';
-import { ModalPopUp } from './Modal';
-import { Back } from '../constants/icons';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -22,44 +20,11 @@ const validationSchema = Yup.object({
 		.required("Password required!"),
 	confirmPassword: Yup.string().equals(
 		[Yup.ref("password"), null],
-		"Password does not match"
+		"Password doesn't match"
 	),
 });
 
-// const ChangePassword = () => {
-// 	const [visible, setVisible] = useState(false)
-
-//   return (
-// 	// <ModalPopUp visible={visible}>
-// 	// 			<View style={{ alignItems: "center" }}></View>
-// 		<View style={{
-// 							alignItems: "center",
-// 						}}>
-//     <View
-// 							style={{ flexDirection: "row", justifyContent: "space-around" }}
-// 						>
-// 							<TouchableOpacity onPress={()=>setVisible(false)}>
-// 								<Back size={30} />
-// 							</TouchableOpacity>
-// 							<Text
-// 								style={{
-// 									fontSize: 20,
-// 									fontWeight: "600",
-// 									color: "rgba(39, 46, 57, 1)",
-// 									fontFamily: "Poppins3",
-// 								}}
-// 							>
-// 								Change Password
-// 							</Text>
-// 						</View>
-//              <ChangePasswordFormInput/>
-// 	</View>
-// 	// </ModalPopUp>
-//   )
-// }
-
-
- export const ChangePasswordFormInput = ()=>{
+  const ChangePasswordFormInput = ()=>{
 
 	const navigation = useNavigation();
 	const [isLoading, setIsLoading] = useState(false);
@@ -185,15 +150,14 @@ style={{height:height/2.3}}
 		</>
 	)
 }
-
-
-// export default ChangePasswordFormInput
+ export default ChangePasswordFormInput
 
 const styles = StyleSheet.create({
 	text: {
 		fontSize: 13.5,
 		fontFamily: "Poppins",
-		paddingLeft:10
+		paddingLeft:10,
+		// position:"absolute"
 	},
 	textInput: {
 		borderRadius: 5,
@@ -205,5 +169,6 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		borderWidth: 1,
 		borderColor: COLORS.primary,
+		// marginVertical:10
 	},
 });

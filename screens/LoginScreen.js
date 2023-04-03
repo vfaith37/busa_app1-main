@@ -22,7 +22,7 @@ const LoginScreen = () => {
 				bounces={false}
 				// contentContainerStyle={{height:height}}
 				>
-					<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+					{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 						<View>
 			<View
 				style={{
@@ -47,9 +47,9 @@ const LoginScreen = () => {
 					source={require("../assets/animations/information.json")}
 					style={{
 						position: "relative",
-						width: 250,
-						height: 250,
-						paddingTop:5,
+						width: height/2.5,
+						height: height/2.5,
+						paddingTop:3,
 						alignSelf: "center",
 					}}
 					loop={true}
@@ -111,7 +111,7 @@ const LoginScreen = () => {
 			         </View>
 
 					 </View>
-					</TouchableWithoutFeedback>
+					{/* </TouchableWithoutFeedback> */}
 				</ScrollView>
 			
 			</KeyboardAvoidingView>
@@ -128,3 +128,124 @@ const styles = StyleSheet.create({
 		alignContent: "center",
 	},
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, {useContext, useState} from 'react';
+// import {
+//   Text,
+//   TouchableOpacity,
+//   Image,
+//   StyleSheet,
+//   ScrollView
+// } from 'react-native';
+
+// import { FormSubmitBtn } from '../Components/FormSubmitBtn';
+// import LoginInput from '../Components/LoginInput';
+
+// import { AuthContext } from '../context/AuthContext';
+// import { COLORS } from '../constants/theme';
+
+// const LoginScreen = ({navigation}) => {
+//   const [email, setEmail] = useState();
+//   const [password, setPassword] = useState();
+
+// //   const {login, googleLogin, fbLogin} = useContext(AuthContext);
+
+//   return (
+//     <ScrollView contentContainerStyle={styles.container}>
+
+// 	{/* here can be an animation or better still the busa logo */}
+//       <Image
+//         source={require('../assets/ice.jpg')}
+//         style={styles.logo}
+//       />
+//       <Text style={styles.text}>Welcome Back</Text>
+
+//       <LoginInput
+//         labelValue={email}
+//         onChangeText={(userEmail) => setEmail(userEmail)}
+//         placeholderText="Email"
+//         // iconType="user"
+//         keyboardType="email-address"
+//         autoCapitalize="none"
+//         autoCorrect={false}
+//       />
+
+//       <LoginInput
+//         labelValue={password}
+//         onChangeText={(userPassword) => setPassword(userPassword)}
+//         placeholderText="Password"
+//         // iconType="lock"
+//         secureTextEntry={true}
+//       />
+
+//       <FormSubmitBtn
+//         title="Sign In"
+// 		//onPress={handleSubmit}
+//       />
+
+//       <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
+//         <Text style={styles.navButtonText}>Forgot Password?</Text>
+//       </TouchableOpacity>
+
+//       <TouchableOpacity
+//         style={styles.forgotButton}
+//         onPress={() => navigation.navigate('Sign-up')}>
+//         <Text style={styles.navButtonText}>
+//           Don't have an acount? Create here
+//         </Text>
+//       </TouchableOpacity>
+//     </ScrollView>
+//   );
+// };
+
+// export default LoginScreen;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     padding: 20,
+//     paddingTop: 50,
+// 	backgroundColor:COLORS.password,
+// 	flex:1
+//   },
+//   logo: {
+//     height: 150,
+//     width: 150,
+//     resizeMode: 'cover',
+//   },
+//   text: {
+//     fontFamily: 'Poppins',
+//     fontSize: 20,
+//     marginBottom: 10,
+//     color: '#051d5f',
+//   },
+//   navButton: {
+//     marginTop: 15,
+//   },
+//   forgotButton: {
+//     marginVertical: 35,
+// 	fontSize:5
+//   },
+//   navButtonText: {
+//     fontSize: 13,
+//     fontWeight: '500',
+//     color: '#2e64e5',
+//     fontFamily: 'Poppins',
+//   },
+// });
