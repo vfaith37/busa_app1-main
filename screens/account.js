@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color:COLORS.text,
 		// fontWeight: "bold",
-		fontFamily: "Poppins2",
+		fontFamily: "Poppins3",
 	},
 	titleContainer: {
 		flexDirection: "row",

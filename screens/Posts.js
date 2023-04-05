@@ -1,29 +1,4 @@
 
-// ///for tips of the day;
-// {
-//   /* <View>
-//           <View style={{height:210, width:375, backgroundColor:"#f6f6f6"}}>
-//             <Text style={{fontWeight:"300", color:"#717171", fontSize:12, textAlign:"center", textTransform:"uppercase", top:10}}>Tip of the Day</Text>
-//             <View >
-
-//             <View style={{top:30, alignItems:"flex-start", right:-165}}>
-//             <Text style={{fontWeight:"600", fontSize:14, lineHeight:18.2, color:"#000",
-//              maxWidth:"45%"
-//              }}>Start your day with a glass of water</Text>
-//             <Text style={{fontWeight:"300", fontSize:10, lineHeight:18,color:"#717171", maxWidth:"53%", maxHeight:"80%", top:10}}>Your body goes quite a few hours without hydration as you sleep. 
-//               Drinking a full glass of water in the morning can aid digestion, flush out toxins, enhance skin health and give you an energy boost.
-//             </Text>
-//                 <Image
-//                 style={{width:130, height:140, shadowColor:"#717171", opacity:1.2, bottom:125, right:143}}
-//                 source={require("../assets/images/shirt.jpg")}
-//                 />
-//             </View>
-
-//             </View>
-//           </View>
-//         </View>  */
-// }
-
 
 import {
 	Dimensions,
@@ -34,9 +9,10 @@ import {
 	Platform,
 	FlatList,
 	StyleSheet,
+  ScrollView,
 	Animated
 } from "react-native";
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, memo, useCallback} from "react";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import { COLORS } from "../constants/theme";
@@ -51,14 +27,18 @@ const Posts = ({ post }) => {
 	 const time = post.addedAt;
    const date = moment(time).format("MMM D, YYYY");;
 	return (
-		<View>
+		<ScrollView
+    contentContainerStyle={{ height: height / 1.94 }}
+    showsVerticalScrollIndicator={false}
+    bounces={false}
+    >
 			<PostImage post={post} navigation={navigation} date={date} />
 			<PostFooter post={post} date={date} />
-			</View>
+			</ScrollView>
 	);
 };
 
-const PostImage = ({ post, navigation, date}) => {
+const PostImage = memo( ({ post, navigation, date}) => {
 
   const [isRecent, setIsRecent] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
@@ -99,6 +79,7 @@ const handleScroll = (event) => {
 
 
 
+  const keyExtractor = useCallback((_, index) => `${post._id}_${index}`, [post._id]);
 
 	return (
 		<>
@@ -120,7 +101,8 @@ const handleScroll = (event) => {
 					showsHorizontalScrollIndicator={false}
 					pagingEnabled
 					scrollEnabled
-					keyExtractor={(index) => index.toString()}
+					// keyExtractor={(index) => index.toString()}
+          keyExtractor={keyExtractor}
 					onScroll={handleScroll}
 					renderItem={({ item }, id) => (
 						<View>
@@ -152,8 +134,7 @@ const handleScroll = (event) => {
 				/>
 			</View>
 
-
-
+      
       {post.images.length> 1 ? 
              (
     
@@ -179,7 +160,7 @@ const handleScroll = (event) => {
     
           {
             currentSlideIndex==index &&(
-              <Animated.View style={{backgroundColor:COLORS.offwhite, width:33, height:17, borderRadius:20, bottom:width*0.68, position:"absolute", right:-imageW/2.7, 
+              <Animated.View style={{backgroundColor:COLORS.offwhite, width:33, height:17, borderRadius:20, bottom:imageH*0.83, position:"absolute", right:-imageW/2.7, 
               opacity:fadeAnim,
             }}
             key={imageId}
@@ -196,7 +177,9 @@ const handleScroll = (event) => {
           
           </View>
             )
-            : null} 
+            : null}
+
+
 {isRecent && (
         <View
           style={{
@@ -222,26 +205,19 @@ const handleScroll = (event) => {
           </Text>
         </View>
       )}
-			
+{/* <PostFooter post ={post} date ={date}/> */}
 		</>
 	);
-};
+});
 
 
 
 const PostFooter = ({ post, date }) => {
   return (
-    <>
-      <View
-        style={{
-          left: width / 15,
-          position: "absolute",
-          // paddingTop:imageH*1.3,
-          width: width,
-          height: width / 8,
-        }}
-      >
-        <View style={{ paddingTop: imageH * 1.1 }}>
+    <View>
+        <View 
+        style={{ paddingTop: imageH/10, position:"absolute", paddingLeft:20, marginVertical:5 }}
+        >
           <Text
             style={{
               textTransform: "capitalize",
@@ -249,10 +225,12 @@ const PostFooter = ({ post, date }) => {
               fontSize: 16,
               fontWeight: "600",
               fontFamily: "Poppins3",
+              width:imageW,
             }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
-            {post.title} 
-            {/* run a js function to check if the text is more than a certain character so as to make effects immediately */}
+            {post.title}
           </Text>
           <Text
             style={{
@@ -261,36 +239,29 @@ const PostFooter = ({ post, date }) => {
               color: COLORS.darkblack,
               fontFamily: "Poppins3",
               lineHeight: 13,
+              paddingTop:2
             }}
           >
-            {" "}
             {date}
           </Text>
+          <View>
           <Text
             style={{
               fontWeight: "400",
               fontSize: 11,
               color: COLORS.mgray,
-              width: width * 0.95,
-              height: height / 10,
-              top: 5,
+              width:imageW,
+              paddingTop: 7,
               fontFamily: "Poppins",
-              right: -3,
             }}
+            numberOfLines={2}
+            ellipsizeMode="tail"
           >
-            {post.content.length > 125
-              ? post.content.charAt(0).toUpperCase() +
-                post.content.slice(1, 124).toLowerCase() +
-                "..."
-              : post.content.charAt(0).toUpperCase() +
-                post.content.slice(1, `${post.content.length}`).toLowerCase() 
-				// +
-                // "..."
-				}
+         {post.content}  
           </Text>
+          </View>
         </View>
       </View>
-    </>
   );
 };
 
@@ -300,8 +271,8 @@ const styles = StyleSheet.create({
     top: 80,
   },
   pagination: {
-    bottom: -6,
-    left: (width * 0.93) / 2,
+    top: imageH *0.98,
+    left: imageW/ 2,
     position: "absolute",
     flexDirection: "row",
     justifyContent: "center",
@@ -318,4 +289,54 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Posts;
+export default memo (Posts);
+
+
+
+
+
+
+
+
+
+
+
+{/* {post.content.length > 125
+  ? post.content.charAt(0).toUpperCase() +
+    post.content.slice(1, 124).toLowerCase() +
+    "..."
+  : post.content.charAt(0).toUpperCase() +
+    post.content.slice(1, `${post.content.length}`).toLowerCase() 
+} */}
+
+
+
+
+
+
+
+// ///for tips of the day;
+// {
+  //   /* <View>
+  //           <View style={{height:210, width:375, backgroundColor:"#f6f6f6"}}>
+  //             <Text style={{fontWeight:"300", color:"#717171", fontSize:12, textAlign:"center", textTransform:"uppercase", top:10}}>Tip of the Day</Text>
+  //             <View >
+  
+  //             <View style={{top:30, alignItems:"flex-start", right:-165}}>
+  //             <Text style={{fontWeight:"600", fontSize:14, lineHeight:18.2, color:"#000",
+  //              maxWidth:"45%"
+  //              }}>Start your day with a glass of water</Text>
+//             <Text style={{fontWeight:"300", fontSize:10, lineHeight:18,color:"#717171", maxWidth:"53%", maxHeight:"80%", top:10}}>Your body goes quite a few hours without hydration as you sleep. 
+//               Drinking a full glass of water in the morning can aid digestion, flush out toxins, enhance skin health and give you an energy boost.
+//             </Text>
+//                 <Image
+//                 style={{width:130, height:140, shadowColor:"#717171", opacity:1.2, bottom:125, right:143}}
+//                 source={require("../assets/images/shirt.jpg")}
+//                 />
+//             </View>
+
+//             </View>
+//           </View>
+//         </View>  */
+// }
+

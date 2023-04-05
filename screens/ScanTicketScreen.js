@@ -65,7 +65,8 @@ const ScanLogic = (props) => {
             await AsyncStorage.removeItem('eventTitle');
             alert("sorry Admin, your time as a scanner for this event is elapsed")
             } catch (e) {
-            console.log(e);
+            // console.log(e);
+			alert(`${e}`)
             }
             navigation.navigate('ProfileScreen');
             return;
@@ -80,6 +81,7 @@ const ScanLogic = (props) => {
 	      }
 	    } catch(e) {
 	      console.log(`${e}`)
+		  alert (`${e.message}`)
 	    }
 	    }
 

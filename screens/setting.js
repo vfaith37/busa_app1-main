@@ -166,6 +166,7 @@ export const Profile = () => {
 			  }
 			} catch (e) {
 			  console.log(e);
+			  alert (e.message)
 			}
 		  };
 		  
@@ -352,12 +353,14 @@ export const Profile = () => {
 } */}
 
                            <>
-					<View style={{width:55, height:55, backgroundColor:COLORS.primary, borderRadius:50, position:"absolute", bottom:-height/4.8, right:15}}>
+						   <View style={{paddingTop:height*0.53, position:"absolute", paddingLeft:width*0.8}}>
+					<View style={{width:55, height:55, backgroundColor:COLORS.primary, borderRadius:50, right:15}}>
                      <Pressable
 					onPress={()=>pressHandler()}
 					>
                      <Text style={{bottom:7, fontFamily:"Poppins", alignSelf:"center", fontSize:48, color:COLORS.white}}>+</Text>
 					</Pressable>
+					</View>
 					</View>
 					</>
 

@@ -82,7 +82,7 @@ export const SignUpForm = ({onError}) => {
 		}catch(e){
           console.log(e)
 		  setError(true);
-		setErrorMessage('Oops! Something went wrong. Please try again!.');
+		setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
 		onError && onError(errorMessage)
 		}finally{
 			setIsLoading(false)

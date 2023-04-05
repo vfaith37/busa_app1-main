@@ -10,7 +10,6 @@ import {
   Keyboard,
   ScrollView,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
 } from "react-native";
 import { FormInput } from "./FormInput";
 import { FormSubmitBtn } from "./FormSubmitBtn";

@@ -1,32 +1,28 @@
-import React, { useState } from "react";
+
 import {
 	View,
 	Text,
 	StyleSheet,
-	Image,
 	Dimensions,
-	ActivityIndicator,
 	KeyboardAvoidingView,
 	ScrollView,
 	TouchableWithoutFeedback,
 } from "react-native";
 import OTP from "../Components/otp";
-import { SafeAreaView } from "react-native-safe-area-context";
 const { height, width } = Dimensions.get("screen");
 import client from "../api/client";
-import axios from "axios";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../constants/theme";
+import { useState } from "react";
 
 
 
-const VerifyAccountScreen =({route})=>{
+const VerifyPasswordToken =({route})=>{
 	return(
-		<VerifyLogic route={route}/>
+		<VerifyTokenLogic route={route}/>
 	)
 }
 
@@ -34,8 +30,8 @@ const VerifyAccountScreen =({route})=>{
 
 
 
-const VerifyLogic = (props) => {
-	const {email, password} = props.route.params
+const VerifyTokenLogic = (props) => {
+	const email = props.route.params
 	const navigation= useNavigation()
 	const [isLoading, setIsLoading] = useState(false);
 	const [userInfo, setUserInfo] = useState(null)
@@ -52,44 +48,9 @@ const VerifyLogic = (props) => {
 		  }).then((res) => {
 			console.log(res)
 			if (res.status === 200) {
-			//   since the response was succesful, then email and password is valid
-			//   get the refreshtoken and run the login function
-	  
-				//  run the login function
-				client.post("/signin", {
-					email: email,
-					password: password
-				  }).then(async (res) => {
-					console.log(res)
-					if (res.status === 200) {
-					  // also store the users values as an object and pass it round
-					  console.log(res.data);
-					  let userInfo = res.data.user
-					  console.log(userInfo)
-		  
-					  setUserInfo(userInfo)
-					  let token = res.data.refreshToken
-					  setUserToken(token)
-		  
-					  try {
-						// axios.defaults.headers.common.Authorization = `Bearer ${token}`
-						// stringify the user object
-						 await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
-		  
-						// get the user token
-						 await AsyncStorage.setItem("userToken", token)
-					  } catch (e) {
-						console.log(`Async Storage error: ${e}`)
-					  }
-		  
-					  navigation.dispatch(StackActions.replace("Sign-up2"));
-					} else {
-					  console.error("Error with Login Functionality")
-					}
-				  }).catch((e) => {
-					console.log(`This is the login function error: ${e}`)
-				  })
-
+					  navigation.dispatch(StackActions.replace("PasswordInput",{
+						email:email
+					  }));
 			} else {
 			  console.error("Invalid token")
 			}
@@ -121,7 +82,7 @@ const VerifyLogic = (props) => {
 			>
 				<TouchableWithoutFeedback>
 		  <View >
-			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>verify Account</Text>
+			<Text style={{color:"#fff", textAlign:"center", fontWeight:"600", fontSize:33, top:96, fontFamily:"Poppins3"}}>Reset Password</Text>
 	  <LottieView
 	  source={require("../assets/animations/email-verification.json")}
 	  style={{
@@ -169,8 +130,6 @@ const VerifyLogic = (props) => {
 };
 
 
-export default VerifyAccountScreen;
-
 const styles = StyleSheet.create({
 	text: {
 		fontSize: 15,
@@ -185,8 +144,9 @@ const styles = StyleSheet.create({
 	},
 	container:{
         flex:1.5,
-// 		backgroundColor:
-// "linear-gradient(168deg, rgba(60.30, 171.77, 234.47, 1), rgba(63.88, 132.68, 235.88, 1) 23%, rgba(68, 132, 228, 1) 38%, rgba(54, 59, 232, 1) 80%)",
-backgroundColor:COLORS.onboarding
+backgroundColor:COLORS.lightblue
     }
 });
+
+
+export default VerifyPasswordToken

@@ -128,10 +128,7 @@ export const Form = ({ component }) => {
                 navigation.goBack();
 
                 setError(true);
-                setErrorMessage(
-                  "Oops! Something went wrong. Please try again later."
-                );
-
+      setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
                 // res is succesful, dispatch the user to event screen to see what he posted
               }
               setLoading(false);
@@ -139,9 +136,8 @@ export const Form = ({ component }) => {
             .catch((e) => {
               console.log(`${e}`);
               setError(true);
-              setErrorMessage(
-                "Oops! Something went wrong. Please try again later."
-              );
+      setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
+           
             });
           setLoading(false);
         } else if (component === "Post") {
@@ -161,15 +157,14 @@ export const Form = ({ component }) => {
             .catch((e) => {
               console.log(`${e}`);
               setError(true);
-              // setErrorMessage('Oops! Something went wrong. Please try again later.');
-              setErrorMessage(e.message);
+      setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
             });
           setLoading(false);
         }
       }
     } catch (e) {
       setError(true);
-      setErrorMessage("Oops! Something went wrong. Please try again later.");
+      setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
       console.log(`${e}`);
     }
   };
@@ -188,16 +183,18 @@ export const Form = ({ component }) => {
   ];
 
   const pickImage = async (setFieldValue) => {
-    setIsLoading(true);
     try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      // const permissionResult =
+      //   await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-      if (permissionResult.granted === false) {
-        alert("Permission to access camera roll is required!");
-        return;
-      }
-     // setIsLoading(true);
+      // if (permissionResult.granted === false) {
+      //   alert("Permission to access camera roll is required!");
+      //   return;
+      // }
+
+       // No permissions request is necessary for launching the image library
+      
+       setIsLoading(true);
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
         allowsMultipleSelection: true,
         mediaTypes: ImagePicker.MediaTypeOptions.Images,

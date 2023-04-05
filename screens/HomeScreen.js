@@ -24,6 +24,7 @@ const HomeScreen = () => {
   const [error,setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [cacheExpiry, setCacheExpiry] = useState(null);
+  const [shouldLoadMorePosts, setShouldLoadMorePosts] = useState(false);
 
 
   const getPostData = useCallback(async (currentPage) => {
@@ -96,16 +97,31 @@ const token = userToken
       console.log(`${e}`);
       console.log(e)
       setError(true);
-  setErrorMessage('Oops! Something went wrong. Please try again .');
+      setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
+  
     } finally {
       setIsLoading(false);
-    }
+    }  
   }, []);
 
   useEffect(() => {
     setIsLoading(false)
     getPostData(currentPage);
   }, [currentPage, getPostData]);
+
+  // useEffect(() => {
+  //   if (shouldLoadMorePosts) {
+  //     setCurrentPage(prevPage => prevPage + 1);
+  //     setShouldLoadMorePosts(false);
+  //   }
+  // }, [shouldLoadMorePosts]);
+
+  // const loadMorePosts = useCallback(() => {
+  //   if (isLoading || !hasMoreData) {
+  //     return;
+  //   }
+  //   setShouldLoadMorePosts(true);
+  // }, [isLoading, hasMoreData]);
 
 
   const loadMorePosts = useCallback(async () => {
@@ -144,14 +160,15 @@ const token = userToken
 
   const renderItem = useCallback(
     ({ item }) => (
-      <ScrollView contentContainerStyle={{ 
-         height: height / 1.94
-         }}
-         showsVerticalScrollIndicator={false}
-         bounces={false}
-         >
+      // <ScrollView 
+      // contentContainerStyle={{ 
+      //    height: height / 1.94
+      //    }}
+      //    showsVerticalScrollIndicator={false}
+      //    bounces={false}
+      //    >
         <Posts post={item} key={item.id} navigation={navigation}/>
-       </ScrollView>
+      //  </ScrollView>
     ),
     [navigation]
   );
@@ -193,8 +210,9 @@ const renderHeader =()=>{
       </View>
     )}
       <FlatList
+      //  removeClippedSubviews
       ListHeaderComponent={renderHeader}
-      onEndReachedThreshold={0}
+      onEndReachedThreshold={0.1}
       onEndReached={loadMorePosts}
       showsVerticalScrollIndicator={false}
       data={posts}

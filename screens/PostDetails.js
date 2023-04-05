@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity, Image, ScrollView} from 'react-native'
-import React, {useState, useRef} from 'react'
+import React, {useState} from 'react'
 import { COLORS } from '../constants/theme'
 
 const {width, height}= Dimensions.get("screen")
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   pagination:{
     bottom:-6,
-    left:(width)/2,
+    left:imageW/2.3,
     position:"absolute",
     flexDirection:"row",
     // justifyContent:"center",

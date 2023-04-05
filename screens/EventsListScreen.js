@@ -108,7 +108,7 @@ const getListofEVents = async () => {
 	} catch (e) {
 	  console.log(e);
 	  setError(true);
-	  setErrorMessage('Oops! Something went wrong. Please try again later.');
+	  setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
 	}finally{
 		setIsLoading(false)
 	}
@@ -136,6 +136,7 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
 }))
   } catch (e) {
     console.log(`${e}`);
+	setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
   }finally{
 	setLoading(false)
   }
