@@ -5,7 +5,6 @@ import {
 	View,
 	TouchableOpacity,
 	Dimensions,
-	ActivityIndicator,
 	Keyboard,
 	TouchableWithoutFeedback,
 	ScrollView,
@@ -21,8 +20,8 @@ import { useNavigation } from "@react-navigation/native";
 import ChangePasswordFormInput from "../Components/ChangePassword";
 
 
-const { width } = Dimensions.get("screen");
-export const Account = () => {
+const { width } = Dimensions.get("screen")
+const Account = () => {
 	const [visible, setVisible] = useState(false);
 	const [actionTriggered, setActionTriggered] = useState("");
 	
@@ -309,7 +308,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color:COLORS.text,
 		// fontWeight: "bold",
-		fontFamily: "Poppins2",
+		fontFamily: "Poppins3",
 	},
 	titleContainer: {
 		flexDirection: "row",
@@ -344,3 +343,5 @@ const styles = StyleSheet.create({
 		borderColor: COLORS.primary,
 	},
 });
+
+export default Account

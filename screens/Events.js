@@ -6,13 +6,14 @@ import {
 	Image,
 	Platform,
 	FlatList,
+	StatusBar,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-const { width, height } = Dimensions.get("window");
-import { Icon } from "../constants/icons";
 import moment from "moment";
 import { COLORS } from "../constants/theme";
+
+const { width, height } = Dimensions.get("screen");
 
 const imageH = height * 0.417
 const imageW = width * 0.85
@@ -23,7 +24,7 @@ const Events = ({ event }) => {
 		<View>
 			<EventImage event={event} navigation={navigation} />
 			<EventItems event={event} />
-		</View>
+			</View>
 	);
 };
 
@@ -48,7 +49,7 @@ const EventImage = ({ event, navigation }) => {
 					showsHorizontalScrollIndicator={false}
 					pagingEnabled
 					scrollEnabled
-					keyExtractor={(item, index) => index.toString()}
+					keyExtractor={(index) => index.toString()}
 					renderItem={({ item }, id) => (
 						<View>
 							<TouchableOpacity

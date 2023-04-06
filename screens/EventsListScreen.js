@@ -10,6 +10,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import { COLORS } from '../constants/theme';
 import ErrorButton from '../Components/ErrorButton';
+import { FormSubmitBtn } from '../Components/FormSubmitBtn';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -25,6 +26,7 @@ const EventsListScreen = () => {
   const [userInfo, setUserInfo] = useState(null);
 	const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [error,setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
 
@@ -106,7 +108,7 @@ const getListofEVents = async () => {
 	} catch (e) {
 	  console.log(e);
 	  setError(true);
-	  setErrorMessage('Oops! Something went wrong. Please try again later.');
+	  setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
 	}finally{
 		setIsLoading(false)
 	}
@@ -120,6 +122,7 @@ const getListofEVents = async () => {
 
 
 const Next = async (values) => {
+	setLoading(true)
   try {
     const title = values.eventTitle
     console.log(title)
@@ -133,6 +136,9 @@ navigation.dispatch(StackActions.replace("ScanTicketScreen",{
 }))
   } catch (e) {
     console.log(`${e}`);
+	setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
+  }finally{
+	setLoading(false)
   }
 
 };
@@ -215,6 +221,16 @@ return (
 						AsyncStorage.setItem("eventTime", value.endTime);
 					  }}
 					/>
+					{loading ? 
+					<View>
+                  <ActivityIndicator size={"large"} color={COLORS.primaryblue}/>
+					</View> 
+					:
+					<FormSubmitBtn
+					title={"Next"}
+					onPress={handleSubmit}
+					/>
+					}
 				  </View>
 				</View>
 			  );

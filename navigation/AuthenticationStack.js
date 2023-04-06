@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from "../screens/LoginScreen";
 import { SignUp } from "../screens/SignUpScreen";
 import SignUpScreen2 from "../screens/SignupScreen2"
@@ -8,9 +8,12 @@ import React, {useEffect, useState} from "react"
 import OnBoardingScreen from "../screens/OnBoardingScreen"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createStackNavigator } from '@react-navigation/stack';
+import ForgotPassword from "../screens/ForgotPassword";
+import VerifyPasswordToken from "../screens/VerifyPasswordToken";
+import PasswordInput from "../screens/PasswordInput";
 
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 
 const AuthenticationStack =()=> {
@@ -45,6 +48,9 @@ useEffect(()=>{
 			   <Stack.Screen component={SignUp} name="Sign-up" />
 			   <Stack.Screen component={VerifyAccountScreen} name="verify" /> 
 			   <Stack.Screen component={SignUpScreen2} name="Sign-up2" /> 
+			   <Stack.Screen component={ForgotPassword} name="password" /> 
+			   <Stack.Screen component={VerifyPasswordToken} name="verifyPasswordToken"/> 
+			   <Stack.Screen component={PasswordInput} name="PasswordInput"/> 
 			 <Stack.Screen component={TabNavigator} name="Tab" /> 
 
 		</Stack.Navigator>

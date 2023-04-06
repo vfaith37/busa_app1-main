@@ -11,6 +11,7 @@ import client from '../api/client';
 import { COLORS } from '../constants/theme';
 import { FormSubmitBtn } from '../Components/FormSubmitBtn';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ErrorButton from '../Components/ErrorButton';
 
 
 const {width, height} = Dimensions.get("screen")
@@ -19,6 +20,8 @@ const DropdownComponent=()=>{
   const [userInfo, setUserInfo] = useState(null)
   const [userToken, setUserToken] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error,setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const navigation = useNavigation()
 
   const getUserId = async()=>{
@@ -148,6 +151,7 @@ if(res.status === 201){
 }
 }).catch((e)=>{
   console.log(`${e}`)
+  setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
   setIsLoading(false)
 })
 setIsLoading(false)
@@ -287,6 +291,7 @@ setIsLoading(false)
 )
 }
 </View>
+{error && <ErrorButton onPress={() =>{ setError(false);}}message={errorMessage} style={{paddingTop:height/35}} color= {COLORS.red} borderRadius={10}/>}
 </View>
   </SafeAreaView>
  )

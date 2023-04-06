@@ -56,44 +56,46 @@ const VerifyLogic = (props) => {
 			//   since the response was succesful, then email and password is valid
 			//   get the refreshtoken and run the login function
 	  
-			//   run the login function
-			client.post("/signin", {
-				email: email,
-				password: password
-			  }).then(async (res) => {
-				console.log(res)
-				if (res.status === 200) {
-				  // also store the users values as an object and pass it round
-				  console.log(res.data);
-				  let userInfo = res.data.user
-				  console.log(userInfo)
-	  
-				  setUserInfo(userInfo)
-				  let token = res.data.refreshToken
-				  setUserToken(token)
-	  
-				  try {
-					// axios.defaults.headers.common.Authorization = `Bearer ${token}`
-					// stringify the user object
-					 await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
-	  
-					// get the user token
-					 await AsyncStorage.setItem("userToken", token)
-				  } catch (e) {
-					console.log(`Async Storage error: ${e}`)
-				  }
-	  
-				  navigation.dispatch(StackActions.replace("Sign-up2"));
-				} else {
-				  console.error("Error with Login Functionality")
-				}
-			  }).catch((e) => {
-				console.log(`This is the login function error: ${e}`)
-			  })
+				//  run the login function
+				client.post("/signin", {
+					email: email,
+					password: password
+				  }).then(async (res) => {
+					console.log(res)
+					if (res.status === 200) {
+					  // also store the users values as an object and pass it round
+					  console.log(res.data);
+					  let userInfo = res.data.user
+					  console.log(userInfo)
+		  
+					  setUserInfo(userInfo)
+					  let token = res.data.refreshToken
+					  setUserToken(token)
+		  
+					  try {
+						// axios.defaults.headers.common.Authorization = `Bearer ${token}`
+						// stringify the user object
+						 await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
+		  
+						// get the user token
+						 await AsyncStorage.setItem("userToken", token)
+					  } catch (e) {
+						console.log(`Async Storage error: ${e}`)
+					  }
+		  
+					  navigation.dispatch(StackActions.replace("Sign-up2"));
+					} else {
+					  console.error("Error with Login Functionality")
+					}
+				  }).catch((e) => {
+					console.log(`This is the login function error: ${e}`)
+				  })
+
 			} else {
 			  console.error("Invalid token")
 			}
-		  })
+		  }
+		  )
 		} catch (e) {
 		  console.log(` This is the verify token error: ${e}`);
 		  setIsLoading(false)

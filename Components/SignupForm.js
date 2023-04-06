@@ -65,8 +65,9 @@ export const SignUpForm = ({onError}) => {
 			const res = await client.post("/signup", {
 				...values,
 			});
-			if (res.data.success) {
-	
+
+			console.log(res)
+			if (res.data.success && res.status === 200) {
 				   navigation.dispatch(
 							StackActions.replace("verify"
 							, {
@@ -81,7 +82,7 @@ export const SignUpForm = ({onError}) => {
 		}catch(e){
           console.log(e)
 		  setError(true);
-		setErrorMessage('Oops! Something went wrong. Please try again!.');
+		setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
 		onError && onError(errorMessage)
 		}finally{
 			setIsLoading(false)

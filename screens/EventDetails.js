@@ -26,7 +26,6 @@ import ErrorButton from "../Components/ErrorButton";
 
 const { width, height } = Dimensions.get("screen");
 
-const {innerWidth} = Dimensions.get("window")
 
 const imageW= width*0.95
 const imageH = height/2.36
@@ -106,7 +105,7 @@ console.log(Title)
 				  .catch((e) => {
 					console.log(`The error is: ${e}`);
 					setError(true);
-					setErrorMessage('Oops! Something went wrong. Please try again .');
+					setErrorMessage( e.message ? e.message : 'Oops! Something went wrong. Please try again .');
 				  })
 				  .finally(() => {
 					setIsLoading(false);
@@ -117,7 +116,7 @@ console.log(Title)
 		}catch (e){
 			console.log(`${e}`);
 			setError(true);
-			setErrorMessage('Oops! Something went wrong. Please try again .');
+			setErrorMessage( e.message ? e.message: 'Oops! Something went wrong. Please try again .');
 		}finally{
 			setIsLoading(false)
 		}
@@ -302,7 +301,9 @@ function numberWithCommas(x) {
 showsVerticalScrollIndicator
 vertical 
 bounces={false}
+// contentContainerStyle={{height:height*0.7, paddingTop:3}}
 >
+	<View>
 		<Text
 			style={{
 				marginTop: 30,
@@ -311,7 +312,7 @@ bounces={false}
 				fontFamily: "Poppins",
 				fontWeight: "300",
 				color: COLORS.darkgray,
-				lineHeight: 12.5,
+				lineHeight: 18,
 				height:110,
 				alignItems:"center",
 				right:-6,
@@ -319,6 +320,7 @@ bounces={false}
 		>
 			{content}
 		</Text>
+		</View>
 </ScrollView>
 
 		<View

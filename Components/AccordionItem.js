@@ -122,9 +122,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	title: {
-		fontSize: 20,
+		fontSize: 17,
 		color: "#2d2d2d",
-		fontFamily: "Poppins2",
+		fontFamily: "Poppins3",
 	},
 	body: {
 		paddingHorizontal: "2%",

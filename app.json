@@ -11,6 +11,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Busa access to your photos, to let you share them."
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },

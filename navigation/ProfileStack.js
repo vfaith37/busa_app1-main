@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Profile } from "../screens/setting";
 import {Notification} from "../Components/Notification";
-import { Account } from "../screens/account";
+import  Account from "../screens/account";
 import UploadEventScreen from "../screens/UploadEventScreen";
 import UploadPostScreen from "../screens/UploadPostScreen";
 import ScanTicketScreen from "../screens/ScanTicketScreen";
