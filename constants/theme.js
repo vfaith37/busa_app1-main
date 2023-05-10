@@ -31,5 +31,6 @@ export const COLORS = {
     new:"rgba(112.62, 112.62, 112.62, 1)",
     green:"green",
     mwhite:"#ececec",
-    onboarding:"#4484e4"
+    onboarding:"#4484e4",
+    tasks: "#E5F2FF"
 };

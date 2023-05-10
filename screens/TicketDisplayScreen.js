@@ -50,6 +50,7 @@ const TicketDisplayScreen = () =>{
 		const config ={
 				headers: {
 					Authorization: `Bearer ${token}`,
+					"content-type": "multipart/form-data",
 					}
 				}
 

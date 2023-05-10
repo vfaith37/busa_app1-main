@@ -123,7 +123,7 @@ contentContainerStyle={{height:height*1.9}}
 
 
 <Text style={{
-  fontWeight:"400", fontSize:10, lineHeight:15, color:COLORS.mgray,fontFamily:"Poppins2",
+  fontWeight:"normal", fontSize:13, lineHeight:15, color:COLORS.mgray,fontFamily:"Poppins2",
 top:13, textTransform:"capitalize"
 }}
 

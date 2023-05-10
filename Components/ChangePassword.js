@@ -63,6 +63,7 @@ const validationSchema = Yup.object({
 				const config = {
 				  headers: {
 					Authorization: `Bearer ${token}`,
+					"content-type": "multipart/form-data",
 				  },
 				};
 		
@@ -82,7 +83,7 @@ const validationSchema = Yup.object({
 					  console.log("successful")
 					  setFeedback(true);
 					  setMessage( "Password sucessfully changed");
-					  navigation.goBack()
+					//   navigation.goBack()
 				}
 			}
 			
@@ -101,7 +102,7 @@ const validationSchema = Yup.object({
 	return(
 		<>
 <View 
-style={{height:height/1.85}}
+style={{height: feedback? height/1.85 : height/2.1}}
 >
 
                        <Formik
@@ -196,8 +197,7 @@ style={{height:height/1.85}}
 							}}
 						</Formik>
 
- {feedback && <ErrorButton onPress={() =>{ setFeedback(false)}}message={message} style={{paddingTop:19}} color= {COLORS.red} borderRadius={10} bgWidth={width-120} pBottom={1}/>}
-
+ {feedback && <ErrorButton onPress={() =>{ setFeedback(false)}}message={message} style={{paddingTop:19}} color= {COLORS.red} borderRadius={10} bgWidth={width-120} pBottom={-3} pLeft={200}/>}
     </View>
 
 		</>

@@ -280,7 +280,7 @@ behavior={Platform.OS === "ios" ? "padding" : "height"}
 										style={{
 											width: 126,
 											height: 42,
-											backgroundColor: COLORS.primary,
+											backgroundColor: COLORS.lightblue,
 											justifyContent: "center",
 											alignItems: "center",
 											marginLeft: 25,

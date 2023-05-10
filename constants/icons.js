@@ -17,3 +17,4 @@ export const Calendars = <Ionicons name="calendar-outline" size={25} color="#717
 export const Time =  ({size})=> <Ionicons name="time-outline" size={size} color="#717171" light  style={{marginTop:5,}}/>
 export const Close = ({style, color})=><Ionicons name="close-circle" size={25} color={color} style={style} light/>
 export const Location = <Ionicons name="location-outline" size={16} color="#000" light />
+export const FilterOutline =({style, color, size, onPress})=><Ionicons name="filter-outline" size={size} color={color} style={style} onPress={onPress}/>

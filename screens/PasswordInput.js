@@ -60,6 +60,7 @@ const PasswordLogic =(props)=>{
   const [userToken, setUserToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [feedback, setFeedback] = useState(null)
 
   const userInfos = {
     password: "",
@@ -68,17 +69,10 @@ const PasswordLogic =(props)=>{
 
 
   const verify = async (values) => {
-    console.log(email)
     try {
      setIsLoading(true);
-  //     const userToken = await AsyncStorage.getItem("userToken");
-  //     const value = await AsyncStorage.getItem("userInfo")
-
-  //     if (userToken !== null && value !== null) {
-  //       const userInfo = JSON.parse(value)
-  //  setUserToken(userToken);
-  //  setUserInfo(userInfo);
-
+     setError(false)
+     setFeedback(false)
 const formData = new FormData()
 
 formData.append("email", email.email);
@@ -92,68 +86,19 @@ console.log(formData)
       if (res.status === 200) {
 
         console.log("successful")
-         navigation.dispatch(StackActions.replace("Log-in"));
+        setFeedback("Password reset successful ✅")
 
+        // navigate the user after 2 seconds to provide a better user experience
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace("Log-in"));
+        }, 3000);
 
-//         const token = userToken
-//         const config = {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         };
-
-
-// // // navigate back to login
-// // // sign in the user with the current password inputed and then he'll move on
-
-// const signinres = await client.post("/signin", formData, config);
-
-// console.log(signinres)
-
-// if (signinres.status === 200) {
-//   // also store the users values as an object and pass it round
-//   console.log(signinres.data);
-//   let userInfo = signinres.data.user;
-//   console.log(userInfo);
-
-//   setUserInfo(userInfo);
-//   let token = signinres.data.refreshToken;
-//   setUserToken(token);
-
-//   try {
-//     //axios.defaults.headers.common.Authorization = `Bearer ${token}`
-//     // stringify the user object
-//     await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-//     // get the user token
-//     await AsyncStorage.setItem("userToken", token);
-//   } catch (e) {
-//     console.log(`Async Storage error: ${e}`);
-//   }
-//   navigation.dispatch(StackActions.replace("Tab"));
-//   setIsLoading(false);
-// } 
-// // else if (signinres.status === 401) {
-// //   setIsLoading(false);
-// //   setError("Invalid username or password.");
-// }
-      // } 
+    } else{
+      setError (res.data.message)
     }
     } catch (e) {
       console.log(e);
       setError(e.message)
-      
-
-      // console.log(e);
-      // if (e.response && e.response.status === 401) {
-      //   setError(`${e.response.data.error}`);
-      // } else if (e.response && e.response.status === 400) {
-      //   setError(`${e.response.data.error}`);
-      // } else if (e.message === "Network Error" && e.code === "ERR_NETWORK") {
-      //   setError("Network error, lost connection!");
-      // } else {
-      //   setError("An error occurred. Please try again later.");
-      // }
     } finally {
       setIsLoading(false);
     }
@@ -194,16 +139,16 @@ showsVerticalScrollIndicator={false}
         <Text
           style={{
             fontFamily: 'Poppins2',
-            fontSize: 28,
+            fontSize: 25,
             fontWeight: '500',
 			paddingTop:30,
 			color:COLORS.lightblue
           }}>
-          Verify Password
+          Change Password
         </Text>
 
 
-		<View style={{paddingTop:30}}>
+		<View style={{paddingTop: error? 40: 30}}>
 <Formik
  initialValues={userInfos}
  validationSchema={validationSchema}
@@ -233,6 +178,19 @@ return(
                     </Text>
                   )}
 
+{feedback && (
+                    <Text
+                      style={{
+                        color:COLORS.lightgreen,
+                        fontFamily: "Poppins",
+                        fontSize: 13,
+						bottom:20
+                      }}
+                    >
+                      {feedback}
+                    </Text>
+                  )}
+
 
 {errors.password && touched.password && (
                     <Text
@@ -240,7 +198,7 @@ return(
 						[
 							styles.error,
 							{
-							  top: -10,
+							  top: error? 10: -10,
 							  alignContent: "center",
 							  right: width / 25,
 							},
@@ -277,7 +235,7 @@ return(
 						[
 							styles.error,
 							{
-							  top: 45,
+							  top: error? 70: 45,
 							  alignContent: "center",
 							  right: width / 25,
 							},
@@ -308,7 +266,8 @@ return(
   cursorColor={COLORS.lightblue}
 />
 
-{isLoading ? (
+{
+isLoading ? (
                     <View>
                       <ActivityIndicator
                         size="large"
@@ -325,6 +284,8 @@ return(
 
 )
 	}}
+
+  
 </Formik>
 		</View>
       </View>

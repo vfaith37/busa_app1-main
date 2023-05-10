@@ -13,7 +13,7 @@ import {
 	Platform,
 	SafeAreaView
 } from "react-native";
-import { useState, useEffect} from "react";
+import { useState, useEffect, useRef} from "react";
 import {Location, Time } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
@@ -80,7 +80,9 @@ const Title = title
 console.log(Title)
 
 				const config = {
-				  headers: { Authorization: `Bearer ${token}` },
+				  headers: { Authorization: `Bearer ${token}`,
+				  "content-type": "multipart/form-data",
+				},
 				};
 			  
 				const formData = new FormData();
@@ -139,7 +141,7 @@ function numberWithCommas(x) {
 
   const formattedTicketPrice = numberWithCommas(ticketPrice);
 
-	const scrollX = React.useRef(new Animated.Value(0)).current;
+	const scrollX = useRef(new Animated.Value(0)).current;
 
 	const Indicator = ({ scrollx }) => {
 		return (

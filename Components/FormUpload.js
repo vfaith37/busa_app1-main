@@ -104,12 +104,13 @@ export const Form = ({ component }) => {
         const config = {
           headers: {
             Authorization: `Bearer ${newToken}`,
+            "content-type": "multipart/form-data",
           },
         };
 
-        console.log(values);
-
+        
         if (component === "Event") {
+          console.log(values);
           setLoading(true);
           await client
             .post(`/event/uploadEvent`, formData, config)
@@ -128,19 +129,22 @@ export const Form = ({ component }) => {
                 navigation.goBack();
 
                 setError(true);
-      setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
+      setErrorMessage("Oops! Something went wrong. Please try again later.");
                 // res is succesful, dispatch the user to event screen to see what he posted
               }
               setLoading(false);
             })
             .catch((e) => {
-              console.log(`${e}`);
+      console.log(`${e}`);
               setError(true);
       setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
            
             });
           setLoading(false);
-        } else if (component === "Post") {
+        }
+        
+        
+        else if (component === "Post") {
           setLoading(true);
           await client
             .post(`/news/addNews`, formData, config)
@@ -441,9 +445,9 @@ export const Form = ({ component }) => {
                           setDate(currentDate);
                           setFieldValue(
                             "date",
-                            new Intl.DateTimeFormat("en-GB").format(date)
+                            new Intl.DateTimeFormat("en-GB").format(currentDate)
                           );
-                          const formattedTime = date
+                          const formattedTime = currentDate
                             .toLocaleTimeString("en-US", {
                               hour: "numeric",
                               minute: "numeric",
@@ -553,9 +557,9 @@ export const Form = ({ component }) => {
 
                             setFieldValue(
                               "endDate",
-                              new Intl.DateTimeFormat("en-GB").format(endDate)
+                              new Intl.DateTimeFormat("en-GB").format(currentDate)
                             );
-                            const formattedTime = date
+                            const formattedTime = currentDate
                               .toLocaleTimeString("en-US", {
                                 hour: "numeric",
                                 minute: "numeric",

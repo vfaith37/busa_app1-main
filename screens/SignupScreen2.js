@@ -118,6 +118,8 @@ const course = values.course.value
 const token = userToken;
 const config = {
   headers: { Authorization: `Bearer ${token}` },
+  "content-type": "multipart/form-data",
+
 };
 
 setIsLoading(true)
