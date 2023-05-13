@@ -152,7 +152,16 @@ export const Form = ({ component }) => {
               console.log(res);
 
               if (res.status === 200) {
-                navigation.dispatch(StackActions.replace("Tab"));
+                // navigation.dispatch(StackActions.replace("Home"));
+                navigation.dispatch(
+                  CommonActions.navigate({
+                    name: "Home",
+                    params: {
+                      screen: "HomeScreen",
+                    },
+                  })
+                );
+                navigation.goBack()
                 console.log("successful");
               }
               setLoading(false);
@@ -440,7 +449,7 @@ export const Form = ({ component }) => {
                         display="default"
                         onChange={(event, selectedDate) => {
                           setShow(false);
-                          console.log("onChange called"); // add this line
+                          // console.log("onChange called"); // add this line
                           const currentDate = selectedDate || date;
                           setDate(currentDate);
                           setFieldValue(

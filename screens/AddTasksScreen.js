@@ -193,7 +193,7 @@ return (
                         display="default"
                         onChange={(event, selectedDate) => {
                           setShow(false);
-                          console.log("onChange called"); // add this line
+                          // console.log("onChange called"); // add this line
                           const currentDate = selectedDate || date;
                           setDate(currentDate);
                           setFieldValue(
