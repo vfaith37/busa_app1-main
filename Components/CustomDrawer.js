@@ -37,7 +37,7 @@ const CustomDrawer = props => {
         source={require('../assets/image1.png')}
             style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
           />
-          <Exit style={{paddingTop:20, paddingRight:25}} size={30} color={COLORS.black} onPress={()=>navigation.goBack("Feed")}/>
+          <Exit style={{paddingTop:20, paddingRight:25}} size={30} color={COLORS.black} onPress={()=>navigation.goBack()}/>
             </View>
 {/* <DrawerItemList {...props} /> */}
               {props.state.routes.map((route, index)=>{
