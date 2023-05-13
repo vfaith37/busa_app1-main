@@ -287,7 +287,6 @@ const TasksScreen =()=>{
       height: 50,
       width: 50,
       backgroundColor: COLORS.todoBackground,
-      elevation: 40,
       borderRadius: 25,
       justifyContent: 'center',
       alignItems: 'center',
