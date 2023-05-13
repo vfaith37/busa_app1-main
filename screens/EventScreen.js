@@ -23,6 +23,8 @@ const EventScreen = () => {
   const [cacheExpiry, setCacheExpiry] = useState(null);
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [noMorePosts, setNoMorePosts] = useState(false);
+ 
  
 
  const getEventData = useCallback(async (currentPage) => {
@@ -80,7 +82,16 @@ const EventScreen = () => {
           //     // return;
           //   }
 
-            setEvents(prevEvents => [...prevEvents, ...responseData]);
+
+          if (responseData.length > 0) {
+            console.log(res)
+          setEvents(prevEvents => [...prevEvents, ...responseData]);
+          setCurrentPage(currentPage + 1);
+          }else{
+          setNoMorePosts(true);
+          }
+
+          
 
             //   setCacheExpiry(Date.now());
             //   await AsyncStorage.setItem(cacheKeyEvent, JSON.stringify(responseData));
@@ -101,9 +112,9 @@ const EventScreen = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(false)
-    getEventData(currentPage);
-  }, [currentPage, getEventData]);
+    // setIsLoading(false)
+    getEventData();
+  }, []);
 
 
   // const loadMoreEvents = useCallback(async () => {

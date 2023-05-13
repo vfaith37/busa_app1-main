@@ -3,18 +3,23 @@ import React, {useState, useEffect} from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { COLORS } from '../constants/theme';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import {
+  StackActions,
+  useNavigation,
+  CommonActions,
+} from "@react-navigation/native";
+import { Icon } from '../constants/icons';
 
 
 const Tasks = () => {
+  const navigation = useNavigation()
     // get the added tasks from async storage then splice it to show first 5 and then if user clicks on it can navugate
     const [todos, setTodos] = useState([]);
 
 
     useEffect(() => {
         getTodosFromUserDevice();
-      }, []);
+      }, [todos]);
 
 
       const getTodosFromUserDevice = async () => {
@@ -33,25 +38,48 @@ const Tasks = () => {
         return (
             <View>
           <View style={styles.listItem}>
-            <View style={{flex: 1,}}>
+
+            <View style={{flexDirection:"row", justifyContent:"space-evenly", paddingTop:12, alignItems:"center"}}>
+
+              <View style={{height:50, width:44, backgroundColor:"#0E23F0", borderRadius:11, top:10, left:40, }}>
+                {/* here conditionally render the icon based on whether its an assignment or class or anyother */}
+              <Icon name={"people-outline"} size={30} color={COLORS.white} style={{paddingTop:6, alignContent:"center", right:-6}}/>
+              </View>
+
+            <View>
               <Text
                 style={{
                   fontWeight: '400',
-                  fontSize: 15,
-                  color: "#07081E",
+                  fontSize: 18,
+                  color: COLORS.todo,
                   textDecorationLine: todo?.completed ? 'line-through' : 'none',
-                  fontFamily:"Poppins3"
+                  fontFamily:"Poppins3",
+                  textAlign:"center",
+                  paddingTop:15
                 }}>
-                {todo?.task}
+                {/* {todo?.task} */} Thank you Jesus
               </Text>
+
+              <View style={{flexDirection:"row", justifyContent:"space-between", marginHorizontal:85}}>
+              <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo }}>
+                Law Lecture Theatre {"."}
+                  </Text>
+                  <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo}}>
+                    {/* {todo?.time} */}
+                   {""} 11:00AM
+                  </Text>
+              </View>
             </View>
-            {!todo?.completed && (
+            </View>
+
+
+            {/* {!todo?.completed && (
               <TouchableOpacity onPress={() => markTodoComplete(todo.id)}>
                 <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
                   <Icon name="done" size={20} color="white" />
                 </View>
               </TouchableOpacity>
-            )}
+            )} */}
             {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
               <View style={styles.actionIcon}>
                 <Icon name="delete" size={20} color="white" />
@@ -77,8 +105,19 @@ const Tasks = () => {
         />
         :
         <View>
-            <TouchableOpacity activeOpacity={0.6} onPress={()=>{}}>
-            <Text>no tasks set, click to set tasks</Text>
+            <TouchableOpacity activeOpacity={0.6} onPress={()=>{
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: "Task",
+                params: {
+                  screen: "TasksScreen",
+                },
+              })
+            );
+              }
+            }
+                >
+            <Text style={{fontFamily:"Poppins", fontSize:13, paddingTop:3}}>no tasks set, click to set tasks</Text>
             </TouchableOpacity>
             </View>
     
@@ -89,40 +128,13 @@ const Tasks = () => {
 
 
 const styles = StyleSheet.create({
-    footer: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      backgroundColor: COLORS.white,
-    },
     listItem: {
-    //   padding: 20,
-    height:60,
+    height:96,
     width:300,
       backgroundColor: COLORS.tasks,
-      flexDirection: 'row',
       elevation: 12,
-      borderRadius: 7,
-      marginVertical: 10,
-    },
-    actionIcon: {
-      height: 25,
-      width: 25,
-      backgroundColor: COLORS.white,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'red',
-      marginLeft: 5,
-      borderRadius: 3,
-    },
-    header: {
-      padding: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      borderRadius: 10,
+      marginHorizontal:-18
     },
   });
 

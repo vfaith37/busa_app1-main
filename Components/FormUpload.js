@@ -484,7 +484,7 @@ export const Form = ({ component }) => {
                             {errors.date}
                           </Text>
                         )}
-                        <Text style={[styles.textContainer, { marginTop: 10 }]}>
+                        <Text style={[styles.textContainer, { marginTop: 13, fontFamily:"Poppins" }]}>
                           {new Intl.DateTimeFormat("en-GB").format(date)}
                         </Text>
                         <TouchableOpacity
@@ -516,7 +516,7 @@ export const Form = ({ component }) => {
                             {errors.time}
                           </Text>
                         )}
-                        <Text style={[styles.textContainer, { marginTop: 10 }]}>
+                        <Text style={[styles.textContainer, { marginTop: 13, fontFamily:"Poppins" }]}>
                           {date.toLocaleTimeString()}
                         </Text>
                         <TouchableOpacity
@@ -600,7 +600,7 @@ export const Form = ({ component }) => {
                             </Text>
                           )}
                           <Text
-                            style={[styles.textContainer, { marginTop: 10 }]}
+                            style={[styles.textContainer, { marginTop: 13, fontFamily:"Poppins" }]}
                           >
                             {new Intl.DateTimeFormat("en-GB").format(endDate)}
                           </Text>
@@ -636,7 +636,7 @@ export const Form = ({ component }) => {
                             </Text>
                           )}
                           <Text
-                            style={[styles.textContainer, { marginTop: 10 }]}
+                            style={[styles.textContainer, { marginTop: 13, fontFamily:"Poppins" }]}
                           >
                             {endDate.toLocaleTimeString()}
                           </Text>

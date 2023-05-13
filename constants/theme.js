@@ -32,5 +32,11 @@ export const COLORS = {
     green:"green",
     mwhite:"#ececec",
     onboarding:"#4484e4",
-    tasks: "#E5F2FF"
+    tasks: "#E5F2FF",
+    todo: "#07081E",
+    todoBackground:"#0E23F0",
+    todoInactive:"#E6F2FF",
+    todoInput:"#F4F5FF",
+    todoText:"#070E50"
+   
 };

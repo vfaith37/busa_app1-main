@@ -1,16 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Home from './Home'
 
-const AllPosts = ({route}) => {
-  const {post} =  route.params
+const AssignmentScreen = () => {
   return (
     <View>
-<Home component={"HomeScreen"} post={post}/>
+      <Text>AssignmentScreen</Text>
     </View>
   )
 }
 
-export default AllPosts
+export default AssignmentScreen
 
 const styles = StyleSheet.create({})

@@ -11,8 +11,9 @@ const {width, height} = Dimensions.get("screen")
 
 const PAGE_SIZE = 10;
 
-const Home = ({component}) => {
-  const navigation = useNavigation();
+const Home = ({component, post}) => {
+ const navigation = useNavigation();
+
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +47,7 @@ const token = userToken
         );
               
         console.log (res.data.data)
+        console.log(res)
         
 
         const responseData = res.data.data;
@@ -114,27 +116,27 @@ const token = userToken
   );
 
 
-   const handleRefresh = useCallback(async () => {
-    try {
-      setPosts([]);
-      setCurrentPage(1); // Reset currentPage to 1 when refreshing
-      setIsLoading(true);
+//    const handleRefresh = useCallback(async () => {
+//     try {
+//       setPosts([]);
+//       setCurrentPage(1); // Reset currentPage to 1 when refreshing
+//       setIsLoading(true);
 
-      await getPostData();
-      setIsLoading(false);
-    } catch (e) {
-      console.log(e);
-      setError(true)
-      setErrorMessage("An error occured")
-    }
-  }, [getPostData]);
+//       await getPostData();
+//       setIsLoading(false);
+//     } catch (e) {
+//       console.log(e);
+//       setError(true)
+//       setErrorMessage("An error occured")
+//     }
+//   }, [getPostData]);
 
   return (
     <View>
       {component === "HomeScreen" ? 
     <View style ={{paddingTop:50}}>
       <View>
-       {posts.length === 0 && !isLoading && (
+       {post.length === 0 && !isLoading && (
          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
       </View>
@@ -142,25 +144,25 @@ const token = userToken
       <FlatList
       onEndReachedThreshold={0.1}
       onEndReached={getPostData}
-      showsHorizontalScrollIndicator={false}
-      data={posts}
+      showsVerticalScrollIndicator={false}
+      data={post}
       vertical
       bounces={false}
       decelerationRate={'fast'}
       ListFooterComponent={renderFooter}
       renderItem={renderItem}
       keyExtractor={(item) => item._id}
-      refreshing={isLoading && posts.length === 0}
+      // refreshing={isLoading && posts.length === 0}
     //   onRefresh={handleRefresh}
       />
-      {error && <ErrorButton onPress={() =>{ setError(false); getPostData();}}message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
+     {error && <ErrorButton onPress={() =>{ setError(false); getPostData()}}message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
       </View>
     </View>
      :
 <View>
 <FlatList
       showsHorizontalScrollIndicator={false}
-      data={posts.slice(0,5)}
+      data={post.slice(0,5)}
       horizontal
       bounces={false}
       decelerationRate={'fast'}

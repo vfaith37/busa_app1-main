@@ -1,29 +1,28 @@
 
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "../screens/HomeScreen";
-import { createDrawerNavigator } from '@react-navigation/drawer';
-const Drawer = createDrawerNavigator();
+// import { createStackNavigator } from "@react-navigation/stack";
 
-import PostDetails from "../screens/PostDetails";
-import { NavigationContainer } from "@react-navigation/native";
-import AllPosts from "../screens/AllPosts";
-import MapsScreen from "../screens/MapsScreen";
-import LearnScreen from "../screens/LearnScreen";
-import HandBookScreen from "../screens/HandBookScreen";
-import ComplaintsScreen from "../screens/ComplaintsScreen";
-import CustomDrawer from "../Components/CustomDrawer";
-import { Profile } from "../screens/setting";
+// import { createDrawerNavigator } from '@react-navigation/drawer';
+// const Drawer = createDrawerNavigator();
 
-import Ionicons from "react-native-vector-icons/Ionicons";
-import TasksScreen from "../screens/TasksScreen";
-import { TabNavigator } from "./TabStack";
+// import { NavigationContainer } from "@react-navigation/native";
 
-const Stack = createStackNavigator();
+// import MapsScreen from "../screens/MapsScreen";
+// import LearnScreen from "../screens/LearnScreen";
+// import HandBookScreen from "../screens/HandBookScreen";
+// import ComplaintsScreen from "../screens/ComplaintsScreen";
+// import CustomDrawer from "../Components/CustomDrawer";
+// import { Profile } from "../screens/setting";
+
+
+
+// import Ionicons from "react-native-vector-icons/Ionicons";
+// import { HomeStack } from "./HomeStack";
+// import HomeScreen from "../screens/HomeScreen";
 
 
 // export default function DrawerStack() {
 // 	return (
-// 	  <NavigationContainer independent={true}>
+// 	//   <NavigationContainer independent={true}>
 // 		<Drawer.Navigator 
 // 		screenOptions={({ route,}) => ({
 // 			headerShown: false,
@@ -81,21 +80,6 @@ const Stack = createStackNavigator();
 // 		  <Drawer.Screen name="Complaints" component={ComplaintsScreen} />
 // 		  <Drawer.Screen name="Settings" component={Profile} />
 // 		</Drawer.Navigator>
-// 	   </NavigationContainer>
+// 	//   </NavigationContainer>
 // 	);
 //   }
-
-
-export function HomeStack() {
-	return (
-		<Stack.Navigator
-			screenOptions={{ headerShown: false }}
-		>	
-	  <Stack.Screen component={HomeScreen} name="HomeScreen"  />
-	<Stack.Screen component={PostDetails} name ="PostDetails"/> 
-	<Stack.Screen component={AllPosts} name ="AllPosts"/> 
-	<Stack.Screen component={TasksScreen} name ="TasksScreen"/> 
-		</Stack.Navigator>
-	);
-}
-
