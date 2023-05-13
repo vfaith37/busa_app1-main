@@ -35,7 +35,8 @@ const VerifyAccountScreen =({route})=>{
 
 
 const VerifyLogic = (props) => {
-	const {email, password} = props.route.params
+	 const {email, password} = props.route.params
+
 	const navigation= useNavigation()
 	const [isLoading, setIsLoading] = useState(false);
 	const [userInfo, setUserInfo] = useState(null)
@@ -104,9 +105,6 @@ const VerifyLogic = (props) => {
 	}
 	  };
 	  
-	  const resendCode = async()=>{
-    // logic to still be added
-	  }
 
 	return (
 		<View style={styles.container}>

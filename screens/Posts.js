@@ -21,24 +21,43 @@ const { width, height } = Dimensions.get("screen");
 
 const imageH = height * 0.37;
 const imageW = width * 0.9;
+const imageHfeed = height*0.2
+const imageWfeed = height*0.3
 
-const Posts = ({ post }) => {
+
+
+
+
+const Posts = ({ post, component}) => {
 	const navigation = useNavigation();
 	 const time = post.addedAt;
    const date = moment(time).format("MMM D, YYYY");;
 	return (
-		<ScrollView
+    <>
+
+    {component === "Feeds" ?
+  <View style={{height:270, width:300, flex:1}}>
+    <View style={{height:264, width:280, backgroundColor:"white", borderRadius:10}}>
+    <PostImage post={post} navigation={navigation} date={date} component ={component}/>
+      <PostFooter post={post} date={date} component={component} />
+      </View>
+    </View>
+  
+  : 
+    <ScrollView
     contentContainerStyle={{ height: height / 1.94 }}
     showsVerticalScrollIndicator={false}
     bounces={false}
     >
-			<PostImage post={post} navigation={navigation} date={date} />
-			<PostFooter post={post} date={date} />
-			</ScrollView>
+      <PostImage post={post} navigation={navigation} date={date} component ={component}/>
+      <PostFooter post={post} date={date} />
+      </ScrollView>
+  }
+  </>
 	);
 };
 
-const PostImage = memo( ({ post, navigation, date}) => {
+const PostImage = memo( ({ post, navigation, date, component}) => {
 
   const [isRecent, setIsRecent] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex]= useState(0)
@@ -88,9 +107,9 @@ const handleScroll = (event) => {
 					          backgroundColor: COLORS.transparent,
 					          alignSelf: "center",
 					          top: 20,
-					          height: imageH,
-					          width: imageW,
-					          borderRadius: 20,
+					          height: component === "Feeds" ? imageHfeed: imageH,
+					          width: component === "Feeds" ? imageWfeed:  imageW,
+					          borderRadius: component==="Feeds" ? null : 20,
 					          alignItems: "center",
 					        }}
 			>
@@ -119,8 +138,8 @@ const handleScroll = (event) => {
 							>
 								<Image
 									style={{
-										height: imageH,
-										width: imageW,
+                    height: component === "Feeds" ? imageHfeed: imageH,
+					          width: component === "Feeds" ? imageWfeed:  imageW,
 										borderRadius: 20,
 										resizeMode: Platform.OS === "android" ? "contain" : "cover",
 										alignSelf: "center",
@@ -133,8 +152,6 @@ const handleScroll = (event) => {
 					)}
 				/>
 			</View>
-
-      
       {post.images.length> 1 ? 
              (
     
@@ -189,7 +206,7 @@ const handleScroll = (event) => {
             borderRadius: 2,
             left: 30,
             position: "absolute",
-            top: imageH * 0.13,
+            top: component === "Feeds" ? imageHfeed*0.13:  imageH * 0.13,
           }}
         >
           <Text
@@ -212,11 +229,11 @@ const handleScroll = (event) => {
 
 
 
-const PostFooter = ({ post, date }) => {
+const PostFooter = ({ post, date, component}) => {
   return (
     <View>
         <View 
-        style={{ paddingTop: imageH/10, position:"absolute", paddingLeft:20, marginVertical:5 }}
+        style={{ paddingTop: component === "Feeds" ? imageHfeed/10: imageH/10, position:"absolute", paddingLeft:20, marginVertical:5 }}
         >
           <Text
             style={{
@@ -225,7 +242,7 @@ const PostFooter = ({ post, date }) => {
               fontSize: 16,
               fontWeight: "600",
               fontFamily: "Poppins3",
-              width:imageW,
+              width: component === "Feeds" ? imageWfeed: imageW,
             }}
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -250,7 +267,7 @@ const PostFooter = ({ post, date }) => {
               fontWeight: "400",
               fontSize: 11,
               color: COLORS.mgray,
-              width:imageW,
+              width: component === "Feeds" ? imageWfeed: imageW,
               paddingTop: 7,
               fontFamily: "Poppins",
             }}

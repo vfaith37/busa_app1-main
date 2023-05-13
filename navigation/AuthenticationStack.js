@@ -43,7 +43,7 @@ useEffect(()=>{
 		<Stack.Navigator
 			screenOptions={{ headerShown: false }}
 		>
-		 {isAppFirstLaunched && (<Stack.Screen component={OnBoardingScreen} name="OnBoarding"/>)} 
+			{isAppFirstLaunched && (<Stack.Screen component={OnBoardingScreen} name="OnBoarding"/>)}
 			 <Stack.Screen component={LoginScreen} name="Log-in" /> 
 			   <Stack.Screen component={SignUp} name="Sign-up" />
 			   <Stack.Screen component={VerifyAccountScreen} name="verify" /> 

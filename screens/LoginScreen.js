@@ -290,7 +290,7 @@ showsVerticalScrollIndicator={false}
         </Text>
 
 
-		<View style={{paddingTop:30}}>
+		<View style={{paddingTop: error? 40: 30}}>
 <Formik
  initialValues={userInfos}
  validationSchema={validationSchema}
@@ -314,7 +314,7 @@ return(
                         color: "red",
                         fontFamily: "Poppins",
                         fontSize: 13,
-						bottom:20
+						bottom:27
                       }}
                     >
                       {error}
@@ -328,7 +328,7 @@ return(
 						[
 					styles.error,
 					{
-						top:-20
+						top: error? 4:-20
 					}
 							
 						]
@@ -363,9 +363,10 @@ return(
 						[
 							styles.error,
 							{
-							  top: 45,
+							  top: error? 65 : 45,
 							  alignContent: "center",
 							  right: width / 25,
+                position:"absolute"
 							},
 						  ]}
                     >

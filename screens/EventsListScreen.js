@@ -68,12 +68,13 @@ const getListofEVents = async () => {
 		const config = {
 		  headers: {
 			Authorization: `Bearer ${newToken}`,
+            "content-type": "multipart/form-data",
 		  },
 		};
 
   
 		const res = await client
-		  .post('event/getEventByDate', formData,config)
+		  .post('/event/getEventByDate', formData,config)
 
 			console.log(res.data.data)
 			if (res.status === 200) {
@@ -101,12 +102,13 @@ const getListofEVents = async () => {
 					endTime: event.endTime,
 				  }));
 				  setEvents(eventsList);
+				  
 				}
 			  }
 			}
 	  }
 	} catch (e) {
-	  console.log(e);
+	  console.log(`${e}`);
 	  setError(true);
 	  setErrorMessage(e.message ? e.message : "Oops! something went wrong, pls try again");
 	}finally{

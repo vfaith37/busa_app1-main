@@ -180,7 +180,9 @@ export const Profile = () => {
 		 console.log(token)
 
 		const config = {
-			headers: { Authorization: `Bearer ${token}` }
+			headers: { Authorization: `Bearer ${token}` },
+			"content-type": "multipart/form-data",
+
 		};
 		const body={
 			email:email,
@@ -193,14 +195,16 @@ export const Profile = () => {
 		).then((res)=> {
 			console.log(res);
 			if (res.status === 200) {
-				setVisible(false);
-				setIsLoading(false);
+				
 				navigation.navigate("TicketScreen");
 			}
 		}).catch((e)=>{
 			console.log(`${e}`)
 			setFeedback(true);
 			setMessage("Something went wrong, Please try again!");
+		}).finally(()=>{
+			setVisible(false);
+			setIsLoading(false);
 		})
 
 

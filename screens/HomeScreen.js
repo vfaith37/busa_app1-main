@@ -1,37 +1,30 @@
-import React, { useState, useEffect, useCallback} from 'react';
-import { SafeAreaView, FlatList,StatusBar, ScrollView, Dimensions, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
-import { useNavigation} from '@react-navigation/native';
-import LottieView from 'lottie-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Posts from './Posts';
- import client from '../api/client'
-import { COLORS } from '../constants/theme';
-import DailyTips from "../Components/DailyTips"
-import ErrorButton from '../Components/ErrorButton';
-const {width, height} = Dimensions.get("screen")
+import { StyleSheet, Text, View , SafeAreaView, ScrollView, Dimensions} from 'react-native'
+import React, {useCallback, useEffect, useState} from 'react'
+import Navbar from '../Components/Navbar'
+import PostsDisplay from './PostsDisplay'
+import Tasks from '../Components/Tasks'
+import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Posts from './Posts'
+import client from '../api/client'
+import AnimatedLottieView from 'lottie-react-native'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import {LinearGradient} from 'expo-linear-gradient';
 
 const PAGE_SIZE = 10;
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-  
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
    const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
-  const [hasMoreData, setHasMoreData] = useState(true);
   const [error,setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
-  const [cacheExpiry, setCacheExpiry] = useState(null);
-  const [shouldLoadMorePosts, setShouldLoadMorePosts] = useState(false);
-
-
-  const getPostData = useCallback(async (currentPage) => {
-  // const CACHE_EXPIRY_TIME = 1* 60 * 1000; // 1 minute in milliseconds
-
+  const [noMorePosts, setNoMorePosts] = useState(false);
+  
+  const getPostData = useCallback ( async () => {
     setIsLoading(true);
-
     try {
       const userToken = await AsyncStorage.getItem("userToken");
           const value = await AsyncStorage.getItem("userInfo")
@@ -40,23 +33,11 @@ const HomeScreen = () => {
         setUserToken(userToken);
         setUserInfo(userInfo);
 
-        // const cacheKey = `${userInfo.lastname}-${currentPage}-${PAGE_SIZE}`;
-        // const cachedData = await AsyncStorage.getItem(cacheKey);
-        // const cacheExpiry = await AsyncStorage.getItem(`${cacheKey}-expiry`);
-
-        // if (
-        //   cachedData !== null &&
-        //   cacheExpiry !== null &&
-        //   Date.now() - parseInt(cacheExpiry) < CACHE_EXPIRY_TIME
-        // ) {
-        //   setPosts(JSON.parse(cachedData));
-        //   setCacheExpiry(parseInt(cacheExpiry));
-        // }else{
-        
-const token = userToken
+        const token = userToken
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
+					 "content-type": "multipart/form-data",
           },
         };
 
@@ -64,34 +45,19 @@ const token = userToken
           `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
           config
         );
-
+              
         console.log (res.data.data)
+        
 
         const responseData = res.data.data;
 
-        if (responseData.length === 0) {
-          // setHasMoreData(false);
-          setIsLoading(false)
-          return;
-        // setPosts(prevPosts => [...prevPosts, ...responseData]);
-
-        }
+        if (responseData.length > 0) {
+          console.log(res)
         setPosts(prevPosts => [...prevPosts, ...responseData]);
-
-        // if(currentPage>1){
-        // }
-        // else{
-        //   setPosts([...posts, ...responseData])
-        // }
-        
-      //   setCacheExpiry(Date.now());
-      //   await AsyncStorage.setItem(cacheKey, JSON.stringify(responseData));
-      //   await AsyncStorage.setItem(
-      //     `${cacheKey}-expiry`,
-      //     JSON.stringify(Date.now())
-      //   );
-      //  console.log(cacheKey)
-      // }
+        setCurrentPage(currentPage + 1);
+        }else{
+        setNoMorePosts(true);
+        }
     }
     } catch (e) {
       console.log(`${e}`);
@@ -104,78 +70,12 @@ const token = userToken
     }  
   }, []);
 
-  useEffect(() => {
-    setIsLoading(false)
-    getPostData(currentPage);
-  }, [currentPage, getPostData]);
 
-  // useEffect(() => {
-  //   if (shouldLoadMorePosts) {
-  //     setCurrentPage(prevPage => prevPage + 1);
-  //     setShouldLoadMorePosts(false);
-  //   }
-  // }, [shouldLoadMorePosts]);
+  useEffect(()=>{
+    getPostData()
+  },[])
 
-  // const loadMorePosts = useCallback(() => {
-  //   if (isLoading || !hasMoreData) {
-  //     return;
-  //   }
-  //   setShouldLoadMorePosts(true);
-  // }, [isLoading, hasMoreData]);
-
-
-  const loadMorePosts = useCallback(async () => {
-    // if (isLoading || !hasMoreData) {
-    //  console.log("no more")
-    //    return;
-    // }
-    // console.log("load more")
-    
-    setCurrentPage(prevPage => prevPage + 1);
-    // setCurrentPage(currentPage+1)
-  }, [isLoading]);
-
-
-
-
-  const renderLoader =()=>{
-    return(
-    isLoading ?
-    <View style={{marginVertical:60, alignItems:"center"}}>
-       <LottieView
-          source={require('../assets/animations/loader.json')}
-          style={{
-            width: 50,
-            height: 50,
-            alignSelf: 'center',
-          }}
-          loop
-          speed={0.7}
-          autoPlay
-        />
-    </View>
-    : null
-    )
-  }
-
-  const renderItem = useCallback(
-    ({ item }) => (
-      // <ScrollView 
-      // contentContainerStyle={{ 
-      //    height: height / 1.94
-      //    }}
-      //    showsVerticalScrollIndicator={false}
-      //    bounces={false}
-      //    >
-        <Posts post={item} key={item.id} navigation={navigation}/>
-      //  </ScrollView>
-    ),
-    [navigation]
-  );
-
-
-
-
+  
 
    const handleRefresh = useCallback(async () => {
     try {
@@ -183,8 +83,7 @@ const token = userToken
       setCurrentPage(1); // Reset currentPage to 1 when refreshing
       setIsLoading(true);
 
-      await getPostData(1);
-      // setCacheExpiry(null); 
+      await getPostData();
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -193,45 +92,21 @@ const token = userToken
     }
   }, [getPostData]);
 
-const renderHeader =()=>{
-  return(
-    <View>
-      <DailyTips/>
-    </View>
+
+
+  return (
+   <SafeAreaView style={{flex:1}}>
+    <View style={{paddingLeft:20, paddingTop:30}}>
+        
+  {userInfo!==null && <Navbar userInfo ={userInfo}/>}
+  <PostsDisplay getPostData={getPostData} post={posts} />
+ <Tasks/>
+  </View>
+   </SafeAreaView>
+   
   )
 }
 
-  return (
-    <SafeAreaView style={{ flex: 1, paddingTop:50}}>
-      <StatusBar backgroundColor={COLORS.darkgray}/>
-       {posts.length === 0 && !isLoading && (
-         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
-      </View>
-    )}
-      <FlatList
-      //  removeClippedSubviews
-      ListHeaderComponent={renderHeader}
-      onEndReachedThreshold={0.1}
-      onEndReached={loadMorePosts}
-      showsVerticalScrollIndicator={false}
-      data={posts}
-      bounces={false}
-      decelerationRate={'fast'}
-      ListFooterComponent={renderLoader}
-      renderItem={renderItem}
-      keyExtractor={(item) => item._id}
-      refreshing={isLoading && posts.length === 0}
-      onRefresh={handleRefresh}
-      />
-      {error && <ErrorButton onPress={() =>{ setError(false); getPostData();}}message={errorMessage} style={{paddingTop:height*0.48}} color= {COLORS.red} borderRadius={10}/>}
-    </SafeAreaView>
-  );
-};
-
-export default HomeScreen;
-
-  
 
 
 
@@ -240,4 +115,20 @@ export default HomeScreen;
 
 
 
+// {posts.length>=1 ?
+// <>
+// <PostsDisplay getPostData={getPostData} post={posts} />
+// <Tasks/>
+// </>
+// :
+// <View>
+// {posts.length === 0 && !isLoading && (
+// <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+// <Text style={{fontFamily:"Poppins"}}>No posts present</Text>
+// </View>
+// )}
+// </View>
+// }
+export default HomeScreen
 
+const styles = StyleSheet.create({})

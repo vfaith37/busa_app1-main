@@ -21,7 +21,6 @@
     ],
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "enabled": true,
       "url": "https://u.expo.dev/4afe2469-846a-4407-b4da-e48b9505efcf"
     },
     "assetBundlePatterns": [
@@ -33,11 +32,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#FFFFFF"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.st33v3.busa_app"
+      "package": "com.st33v3.busa_app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -23,6 +23,8 @@ const EventScreen = () => {
   const [cacheExpiry, setCacheExpiry] = useState(null);
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [noMorePosts, setNoMorePosts] = useState(false);
+ 
  
 
  const getEventData = useCallback(async (currentPage) => {
@@ -59,6 +61,7 @@ const EventScreen = () => {
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
+					// "content-type": "multipart/form-data",
           },
         };
 
@@ -72,20 +75,24 @@ const EventScreen = () => {
 
           const responseData = res.data.data;
 
-            if (responseData.length === 0) {
-              setHasMoreData(false);
-          setIsLoading(false)
+          //   if (responseData.length === 0) {
+          //     // setHasMoreData(false);
+          // setIsLoading(false)
 
-              // return;
-            }
+          //     // return;
+          //   }
 
-            if(currentPage>1){
-              setEvents(prevEvents => [...prevEvents, ...responseData]);
-              }
-              else{
-                setEvents([...events, ...responseData])
-              }
-  
+
+          if (responseData.length > 0) {
+            console.log(res)
+          setEvents(prevEvents => [...prevEvents, ...responseData]);
+          setCurrentPage(currentPage + 1);
+          }else{
+          setNoMorePosts(true);
+          }
+
+          
+
             //   setCacheExpiry(Date.now());
             //   await AsyncStorage.setItem(cacheKeyEvent, JSON.stringify(responseData));
             //   await AsyncStorage.setItem(
@@ -105,20 +112,27 @@ const EventScreen = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(false)
-    getEventData(currentPage);
-  }, [currentPage, getEventData]);
+    // setIsLoading(false)
+    getEventData();
+  }, []);
+
+
+  // const loadMoreEvents = useCallback(async () => {
+  //   if (isLoading || !hasMoreData) {
+  //    console.log("no more")
+  //      return;
+  //   }
+  //   console.log("load more")
+    
+  //   setCurrentPage(prevPage => prevPage + 1);
+  // }, [isLoading, hasMoreData]);
+
 
 
   const loadMoreEvents = useCallback(async () => {
-    if (isLoading || !hasMoreData) {
-     console.log("no more")
-       return;
-    }
-    console.log("load more")
-    
+
     setCurrentPage(prevPage => prevPage + 1);
-  }, [isLoading, hasMoreData]);
+  }, [isLoading]);
 
   const renderLoader =()=>{
     return(

@@ -63,12 +63,12 @@ const ScanLogic = (props) => {
             try {
             await AsyncStorage.removeItem('eventTime');
             await AsyncStorage.removeItem('eventTitle');
-            alert("sorry Admin, your time as a scanner for this event is elapsed")
-            } catch (e) {
-            // console.log(e);
+		} catch (e) {
+			// console.log(e);
 			alert(`${e}`)
-            }
-            navigation.navigate('ProfileScreen');
+		}
+		navigation.navigate('ProfileScreen');
+		alert("sorry Admin, your time as a scanner for this event is elapsed")
             return;
           }
 
@@ -89,6 +89,8 @@ const ScanLogic = (props) => {
 	    getData()
 	    },[])
 
+		
+
 		let scanning = false;
 
 		  const handleBarCodeScanned = async ({ type, data }) => {
@@ -98,7 +100,7 @@ const ScanLogic = (props) => {
 			}
 		  
 			scanning = true; // Set flag to indicate function is running
-		  
+		  setScanned(true)
 			const token = userToken;
 			const title = eventTitle;
 		  
@@ -108,6 +110,8 @@ const ScanLogic = (props) => {
 		  
 			const config = {
 			  headers: { Authorization: `Bearer ${token}` },
+			  "content-type": "multipart/form-data",
+
 			};
 		  
 			const formData = new FormData();
@@ -115,10 +119,6 @@ const ScanLogic = (props) => {
 			formData.append("eventTitle", title);
 		  
 			try {
-			//   await new Promise(resolve => {
-			// 	alert(`QR code scanned. Press OK to continue.`); // show alert and wait for user to click OK
-			// 	resolve();
-			//   });
 			  const res = await client.post(`/tickets/scan`, formData, config);
 			  console.log(res.status);
 			  console.log(res.data);
@@ -140,22 +140,24 @@ const ScanLogic = (props) => {
 			} finally {
 			  scanning = false; // Set flag to indicate function is no longer running
 			  setScanned(false);
-			}
+			} 
+
+			// add a timeout of 3 seconds before every scan
+			setTimeout(() => {
+			  handleBarCodeScanned()
+			}, 3000);
 		  };
 		  
 		  
 
 
 		  
-	  if (hasPermission === null) {
-	    return <Text>Requesting for camera permission</Text>;
-	  }
-	  if (hasPermission === false) {
-	    return <Text>No access to camera</Text>;
-	  }
-
-
-
+	//   if (hasPermission === null) {
+	//     return <Text>Requesting for camera permission</Text>;
+	//   }
+	//   if (hasPermission === false) {
+	//     return <Text>No access to camera</Text>;
+	//   }
 
 
 	  return (
@@ -173,6 +175,7 @@ const ScanLogic = (props) => {
 	    </View>
 	    } */}
 	    </View>
+		
 	    <View style={{height:347, width:300, backgroundColor:COLORS.transparent, position:"absolute", alignSelf:"center", bottom:height/6, borderColor:COLORS.white, borderRadius:20, borderWidth:3, alignContent:"center"}}/>
 
 	<View style={styles.animation}>
