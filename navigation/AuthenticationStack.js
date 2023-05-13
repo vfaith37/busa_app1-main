@@ -11,6 +11,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ForgotPassword from "../screens/ForgotPassword";
 import VerifyPasswordToken from "../screens/VerifyPasswordToken";
 import PasswordInput from "../screens/PasswordInput";
+import { MainStack } from "./MainStack";
 
 
 const Stack = createStackNavigator()
@@ -51,7 +52,7 @@ useEffect(()=>{
 			   <Stack.Screen component={ForgotPassword} name="password" /> 
 			   <Stack.Screen component={VerifyPasswordToken} name="verifyPasswordToken"/> 
 			   <Stack.Screen component={PasswordInput} name="PasswordInput"/> 
-			 <Stack.Screen component={TabNavigator} name="Tab" /> 
+			 <Stack.Screen component={MainStack} name="Tab" /> 
 
 		</Stack.Navigator>
 	 )

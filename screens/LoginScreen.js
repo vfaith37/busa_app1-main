@@ -157,7 +157,7 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {InputField} from '../Components/InputField';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, StackActions, useNavigation } from '@react-navigation/native';
 import { FormSubmitBtn } from '../Components/FormSubmitBtn';
 import { COLORS } from '../constants/theme';
 import * as Yup from "yup";
@@ -197,6 +197,7 @@ const LoginScreen = () => {
 
   const signIn = async (values) => {
     console.log("button works");
+    setError(false)
     try {
       setIsLoading(true);
       const res = await client.post("/signin", {
@@ -224,7 +225,15 @@ const LoginScreen = () => {
         } catch (e) {
           console.log(`Async Storage error: ${e}`);
         }
-        navigation.dispatch(StackActions.replace("Tab"));
+        // navigation.dispatch(
+        //   CommonActions.navigate({
+        //     name: "Home",
+        //     params: {
+        //       screen: "HomeScreen",
+        //     },
+        //   })
+        // );
+         navigation.dispatch(StackActions.replace("Tab"));
         setIsLoading(false);
       } else if (res.status === 401) {
         setIsLoading(false);

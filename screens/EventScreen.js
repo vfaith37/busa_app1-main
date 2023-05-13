@@ -194,7 +194,7 @@ const EventScreen = () => {
     <SafeAreaView style={{ flex: 1,
      paddingTop: 45
       }}>
-      <StatusBar backgroundColor={COLORS.darkgray}/>
+      {/* <StatusBar backgroundColor={COLORS.darkgray}/> */}
  {events.length === 0 && !isLoading && (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{fontFamily:"Poppins"}}>No events present</Text>
