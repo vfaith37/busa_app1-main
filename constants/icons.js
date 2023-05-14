@@ -19,3 +19,4 @@ export const Close = ({style, color})=><Ionicons name="close-circle" size={25} c
 export const Exit = ({style, color, size, onPress})=><Ionicons name="close-outline" size={size} color={color} style={style} onPress={onPress}/>
 export const Location = <Ionicons name="location-outline" size={16} color="#000" light />
 export const FilterOutline =({style, color, size, onPress})=><Ionicons name="filter-outline" size={size} color={color} style={style} onPress={onPress}/>
+export const Eye= ({confirmPasswordVisible}) => <Ionicons name={confirmPasswordVisible ? "eye-off" : "eye"} size={25} color="#717171"/>
