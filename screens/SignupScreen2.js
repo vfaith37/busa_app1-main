@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
 	},
 	error: {
 		fontFamily: "Poppins",
-		fontSize: 13,
+		fontSize: 15,
 		color: COLORS.red,
 		right: 25,
 		position: "absolute",
