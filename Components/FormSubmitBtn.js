@@ -2,11 +2,12 @@ import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity } from "react
 import React from "react";
 import { COLORS } from "../constants/theme";
 const { width } = Dimensions.get("window");
-export const FormSubmitBtn = ({ title, onPress, submitting }) => {
+export const FormSubmitBtn = ({ title, onPress, submitting, disabled }) => {
 	const backgroundColor = submitting ? "#FFF" : COLORS.lightblue;
 	return (
 		<Pressable
 			activeOpacity={0.7}
+			disabled={disabled}
 			onPress={submitting ? null : onPress}
 			style={[styles.container, { backgroundColor }]}
 		>
