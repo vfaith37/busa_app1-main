@@ -1,12 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, TextInput, Dimensions, StyleSheet, KeyboardAvoidingView } from "react-native";
-import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+	View,
+	TextInput,
+	Dimensions,
+	StyleSheet,
+	KeyboardAvoidingView,
+	Text,
+	TouchableOpacity,
+} from "react-native";
+import {
+	ScrollView,
+	TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { COLORS } from "../constants/theme";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const initCodes = [];
+
 export default function OTP({
 	containerStyle,
 	otpStyles,
@@ -17,6 +29,8 @@ export default function OTP({
 }) {
 	const inputCodeRef = useRef(new Array());
 	const [codes, setCodes] = useState(initCodes);
+	const [isCodeComplete, setIsCodeComplete] = useState(false);
+
 	useEffect(() => {
 		const codes = [];
 		for (let i = 0; i < codeCount; i++) {
@@ -30,9 +44,7 @@ export default function OTP({
 		const isTypeFinish = codes.every(function (i) {
 			return i !== "";
 		});
-		if (isTypeFinish) {
-			onFinish && onFinish(getCodes());
-		}
+		setIsCodeComplete(isTypeFinish);
 	}, [codes]);
 
 	const getCodes = () => {
@@ -40,7 +52,7 @@ export default function OTP({
 		codes.forEach((code) => {
 			codeString += code;
 		});
-		return {"token" : codeString};
+		return { token: codeString };
 	};
 
 	const onChangeCode = (code, index) => {
@@ -49,6 +61,7 @@ export default function OTP({
 		currentCodes[index] = typedCode;
 		setCodes(currentCodes);
 	};
+
 	const onKeyPress = (event, index) => {
 		const key = event.nativeEvent.key;
 		let destIndex = index;
@@ -59,46 +72,97 @@ export default function OTP({
 		}
 		inputCodeRef.current[destIndex].focus();
 	};
+
+	const handleSubmit = () => {
+		if (isCodeComplete) {
+			onFinish && onFinish(getCodes());
+		}
+	};
+
 	return (
-		<View style={[styles.form, containerStyle]}>
-			{codes.map((code, index) => {
-				return (
+		<View style={[styles.container, containerStyle]}>
+			{/* <ScrollView
+				contentContainerStyle={styles.scrollViewContent}
+				keyboardShouldPersistTaps="handled"
+			> */}
+			<View style={styles.codeContainer}>
+				{codes.map((code, index) => (
 					<TextInput
-						maxLength={1}
-						// cursorColor="blue"
-						selectionColor={"blue"}
-						key={`${index}`}
-						ref={(element) => inputCodeRef.current.push(element)}
-						style={[
-							styles.input,
-							otpStyles,
-							{ width: width / (codeCount + 3), height: height / 14 },
-						]}
+						cursorColor={COLORS.lightblue}
+						key={index}
+						ref={(ref) => (inputCodeRef.current[index] = ref)}
+						style={[styles.codeInput, otpStyles]}
 						onChangeText={(text) => onChangeCode(text, index)}
 						onKeyPress={(event) => onKeyPress(event, index)}
 						value={code}
-						{...props}
+						maxLength={1}
+						keyboardType="numeric"
+						autoFocus={index === 0}
+						selectTextOnFocus={true}
+						blurOnSubmit={false}
 					/>
-				);
-			})}
+				))}
+			</View>
+			{/* </ScrollView> */}
+			{isCodeComplete && (
+				<TouchableOpacity
+					style={styles.submitButton}
+					onPress={handleSubmit}
+				>
+					<Text style={styles.submitButtonText}>Submit</Text>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	form: {
+	container: {
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	// scrollViewContent: {
+	// 	// flexGrow: 1,
+	// 	alignItems: "center",
+	// 	justifyContent: "center",
+	// },
+	codeContainer: {
 		flexDirection: "row",
 		justifyContent: "center",
-		alignItems: "flex-start",
 	},
-	input: {
-		marginHorizontal: 4,
-		fontSize: 32,
+	codeInput: {
+		width: width / 8,
+		height: 50,
+		marginHorizontal: 5,
+		fontSize: 24,
+		backgroundColor: COLORS.white,
+		borderRadius: 5,
+		borderWidth: 2,
+		borderColor: COLORS.primary,
 		textAlign: "center",
-		backgroundColor: "#fff",
-		borderBottomWidth: 1.5,
-		borderBottomColor: COLORS.onboarding,
-		fontFamily:"Poppins",
-		color:COLORS.onboarding
+		fontFamily: "Poppins",
+		color: COLORS.onboarding,
+		marginBottom: 10,
+	},
+	submitButton: {
+		width: width * 0.4,
+		height: width * 0.15,
+		marginTop: 15,
+		borderRadius: 7.5,
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: COLORS.primary,
+		borderRadius: 5,
+	},
+	submitButtonText: {
+		width: 54,
+		fontSize: 14,
+		fontWeight: "600",
+		color: "white",
+		color: COLORS.white,
+		fontSize: 18,
+		fontFamily: "Poppins",
 	},
 });

@@ -10,24 +10,29 @@ const { width, height } = Dimensions.get("window");
 
 const AppForm = () => {
 	const [errorMessage, setErrorMessage] = useState("");
-	const [error, setError] = useState(false)
+	const [error, setError] = useState(false);
 
 	const handleError = (errorMessage) => {
-		setError(true)
+		setError(true);
 		setErrorMessage(errorMessage);
-	  };
+	};
 
 	return (
-		<View
-			style={{
-				flex: 1,
-				justifyContent: "center",
-				alignContent: "center",
-			}}
-		>
-        <SignUpForm onError={handleError} />
-		{error && <ErrorButton onPress={() =>{setError(false)}} message={"An error occured, pls try again 😁"} style={{paddingBottom:height/40}} color= {COLORS.red} borderRadius={10}/>}
-		</View>
+		
+		<>
+			<SignUpForm onError={handleError} />
+			{error && (
+				<ErrorButton
+					onPress={() => {
+						setError(false);
+					}}
+					message={"An error occured, pls try again 😁"}
+					style={{ paddingBottom: height / 40 }}
+					color={COLORS.red}
+					borderRadius={10}
+				/>
+			)}
+		</>
 	);
 };
 
