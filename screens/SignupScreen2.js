@@ -297,7 +297,7 @@ const DropdownComponent = () => {
 								maxHeight={300}
 								labelField="label"
 								valueField="value"
-								placeholder="  Level"
+								placeholder="Level"
 								value={formik.values.level}
 								onChange={(value) => handleDropdownValueChange2(value)}
 								onChangeText={formik.handleChange("level")}
@@ -347,7 +347,7 @@ const DropdownComponent = () => {
 							maxHeight={300}
 							labelField="label"
 							valueField="value"
-							placeholder=" Campus"
+							placeholder="Campus"
 							value={formik.values.campus}
 							onChange={(value) => handleDropdownValueChange3(value)}
 							onChangeText={formik.handleChange("campus")}
@@ -372,7 +372,7 @@ const DropdownComponent = () => {
 							searchPlaceholder="Search..."
 							labelField="label"
 							valueField="value"
-							placeholder=" Hall"
+							placeholder="Hall"
 							value={formik.values.hall}
 							onChange={(value) => handleDropdownValueChange5(value)}
 							onChangeText={formik.handleChange("hall")}
@@ -444,6 +444,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: "Poppins",
 		color: "#ccc",
+    marginLeft: 10
 	},
 	selectedTextStyle: {
 		fontSize: 16,
