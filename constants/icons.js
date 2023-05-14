@@ -22,5 +22,5 @@ export const Location = <Ionicons name="location-outline" size={16} color="#000"
 export const FilterOutline =({style, color, size, onPress})=><Ionicons name="filter-outline" size={size} color={color} style={style} onPress={onPress}/>
 export const Eye= ({confirmPasswordVisible}) => <Ionicons name={confirmPasswordVisible ? "eye-off" : "eye"} size={25} color="#717171"/>
 export const Man = <Ionicons name="man-outline" size={20} color={COLORS.gray} />
-export const School = <Ionicons name="school-outline" size={18} color={COLORS.gray} />
-export const Home = <Ionicons name="home-outline" size={18} color={COLORS.gray} />
+export const School = <Ionicons name="school-outline" size={20} color={COLORS.gray} />
+export const Home = <Ionicons name="home-outline" size={20} color={COLORS.gray} />
