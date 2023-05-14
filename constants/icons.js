@@ -1,4 +1,5 @@
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { COLORS } from "./theme";
 
 export const Back = ({style, color, size}) => <Ionicons name="arrow-back-outline" size={size} color={color} style={style}/>;
 export const Person = <Ionicons name="person-outline" size={20} color="#717171" light />;
@@ -20,3 +21,6 @@ export const Exit = ({style, color, size, onPress})=><Ionicons name="close-outli
 export const Location = <Ionicons name="location-outline" size={16} color="#000" light />
 export const FilterOutline =({style, color, size, onPress})=><Ionicons name="filter-outline" size={size} color={color} style={style} onPress={onPress}/>
 export const Eye= ({confirmPasswordVisible}) => <Ionicons name={confirmPasswordVisible ? "eye-off" : "eye"} size={25} color="#717171"/>
+export const Man = <Ionicons name="man-outline" size={20} color={COLORS.gray} />
+export const School = <Ionicons name="school-outline" size={18} color={COLORS.gray} />
+export const Home = <Ionicons name="home-outline" size={18} color={COLORS.gray} />
