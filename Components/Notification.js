@@ -8,143 +8,106 @@ import {
 	Dimensions,
 	Platform,
 } from "react-native";
-// import * as Notifications from "expo-notifications";
+import * as Notifications from "expo-notifications";
 import { COLORS } from "../constants/theme";
 import { Back } from "../constants/icons";
 import { useNavigation } from "@react-navigation/native";
 // import client from "../api/client";
 // import * as Device from "expo-device";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const { width } = Dimensions.get("screen");
 
 export const Notification = () => {
+	const [notificationEnabled, setNotificationEnabled] = useState(false);
+	const [userInfo, setUserInfo] = useState(null);
+	const [userToken, setUserToken] = useState(null);
+	// const notificationListener = useRef();
+	// const responseListener = useRef();
 	const navigation = useNavigation()
-	const [isEnabled, setIsEnabled] = useState(true);
-	// const [expoPushToken, setExpoPushToken] = useState(null);
-	// const [notification, setNotification] = useState(false);
+	useEffect(() => {
+		const handleNotification = (notification) => {
+			// Handle incoming notification
+			console.log("Notification received:", notification);
+		};
 
+		const registerForPushNotifications = async () => {
+			const { status: existingStatus } =
+				await Notifications.getPermissionsAsync();
+			let finalStatus = existingStatus;
 
-	// async function registerForPushNotificationsAsync() {
-	// 	let token;
-	// 	if (Device.isDevice) {
-	// 	  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-	// 	  let finalStatus = existingStatus;
-	// 	  if (existingStatus !== 'granted') {
-	// 		const { status } = await Notifications.requestPermissionsAsync();
-	// 		finalStatus = status;
-	// 	  }
-	// 	  if (finalStatus !== 'granted') {
-	// 		alert('Failed to get push token for push notification!');
-	// 		return;
-	// 	  }
-	// 	  token = (await Notifications.getExpoPushTokenAsync()).data;
-	// 	  console.log("token", token);
-	// 	} else {
-	// 	  alert('Must use physical device for Push Notifications');
-	// 	}
-	  
-	// 	if (Platform.OS === 'android') {
-	// 	  Notifications.setNotificationChannelAsync('default', {
-	// 		name: 'default',
-	// 		importance: Notifications.AndroidImportance.MAX,
-	// 		vibrationPattern: [0, 250, 250, 250],
-	// 		lightColor: '#FF231F7C',
-	// 	  });
-	// 	}
-	  
-	// 	return token;
-	//   }
+			if (existingStatus !== "granted") {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
 
-    //           const listener = useRef()
-	// 		  const responseListener = useRef()
-	// useEffect(() => {
-	// 	// Get the current permission status
-	// 	Notifications.getPermissionsAsync().then((statusObj) => {
-	// 		setIsEnabled(statusObj.granted);
-	// 	});
+			if (finalStatus !== "granted") {
+				console.log("Permission to receive notifications was denied.");
+				return;
+			}
 
-	// 	// Listen for incoming notifications
-	// 	listener.current = Notifications.addNotificationReceivedListener((notification) => {
-	// 		setNotification(notification);
-	// 	  });
+			const { data: token } = await Notifications.getExpoPushTokenAsync();
+			const platform = Platform.OS;
+			console.log("Expo Push Token:", token);
+			console.log(platform);
+			const data = [
+				{
+					deviceId: token,
+					platform: platform,
+				},
+			];
+			console.log(data);
+			try {
+				const userToken = await AsyncStorage.getItem("userToken");
+				const value = await AsyncStorage.getItem("userInfo");
+				if (userToken !== null && value !== null) {
+					const userInfo = JSON.parse(value);
+					setUserToken(userToken);
+					setUserInfo(userInfo);
 
-	// 	  responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-	// 		console.log(response);
-	// 	  });
+					const token = userToken;
+					const config = {
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"content-type": "multipart/form-data",
+						},
+					};
+					console.log(config);
+				
+					await axios
+						.post(
+							"https://finalissima.onrender.com/api/notification/registerDevice", data, config)
+						.then((res) => {
+							console.log(res.data);
+						});
+					console.log("Token sent to the server successfully.");
+				}
+			} catch (error) {
+				console.log("Failed to send token to the server:", error);
+			}
 
-	// 	// Get the Expo push token
+			if (notificationEnabled) {
+				Notifications.addNotificationReceivedListener(handleNotification);
+			} else {
+				Notifications.removeNotificationSubscription(handleNotification);
+			}
+		};
 
-	// 	// registerForPushNotificationsAsync().then((pushToken) => {
-	// 	// 	console.log(pushToken);
-	// 	// 	setExpoPushToken(pushToken.data);
-	// 	// 	// Send the Expo push token to the backend
-	// 	// 	sendPushTokenToBackend(pushToken.data);
-	// 	// });
+		registerForPushNotifications();
 
-	// 	Notifications.getExpoPushTokenAsync().then((pushToken) => {
-	// 		if (Platform.OS === 'android') {
-	// 			Notifications.setNotificationChannelAsync('default', {
-	// 			  name: 'default',
-	// 			  importance: Notifications.AndroidImportance.MAX,
-	// 			  vibrationPattern: [0, 250, 250, 250],
-	// 			  lightColor: '#FF231F7C',
-	// 			});
-	// 		  }
-	// 		console.log(pushToken);
-	// 		setExpoPushToken(pushToken.data);
-	// 		// Send the Expo push token to the backend
-	// 		sendPushTokenToBackend(pushToken.data);
-	// 	});
+		return () => {
+			// Notifications.removeNotificationSubscription(
+			// 	notificationListener.current
+			// );
+			// Notifications.removeNotificationSubscription(responseListener.current);
+		};
+	}, [notificationEnabled]);
 
-	// 	// Remove the listener when the component is unmounted
-	// 	return () => {
-	// 		Notifications.removeNotificationSubscription(listener.current);
-	// 		Notifications.removeNotificationSubscription(responseListener.current);
-	// 	};
-	// }, []);
-
-	const toggleSwitch = () => {
-		setIsEnabled((previousState) => !previousState);
-	// 	if (!isEnabled) {
-	// 		// Request permission to display notifications
-	// 		Notifications.requestPermissionsAsync().then((statusObj) => {
-	// 			console.log("Permission:", statusObj);
-	// 			console.log(expoPushToken);
-	// 		});
-	// 	} else {
-	// 		// Revoke permission to display notifications
-	// 		Notifications.setNotificationHandler({
-	// 			handleNotification: async () => ({
-	// 				shouldShowAlert: true,
-	// 				shouldPlaySound: false,
-	// 				shouldSetBadge: false,
-	// 			}),
-	// 		});
-	// 	}
+	const toggleNotification = () => {
+		setNotificationEnabled((prevValue) => !prevValue);
 	};
-
-// 	const sendPushTokenToBackend= async(pushToken)=>{
-// 		const body = {
-// 			deviceID:pushToken,
-// 			platform:Platform.OS
-// 		}
-
-//       console.log(pushToken)
-// 	console.log(body)
-
-// try{
-// const res = await client.post(`/registerDevice`,body
-// )
-// console.log(res)
-// if(res.status === 200){
-// 	console.log("Push token sent:", res.data.data)
-// }
-// }catch (e){
-// console.log(e)
-// }
-// 	}
-
 
 	return (
 		<View style={{ marginLeft: 30, marginRight: 30, top: 40 }}>
@@ -235,157 +198,15 @@ export const Notification = () => {
 				</Text>
 				<Switch
 					trackColor={{ false: "#767577", true: "#81b0ff" }}
-					thumbColor={isEnabled ? COLORS.primary : "#f4f3f4"}
+					thumbColor={notificationEnabled ? COLORS.primary : "#f4f3f4"}
 					ios_backgroundColor="#3e3e3e"
-					onValueChange={toggleSwitch}
-					value={isEnabled}
+					value={notificationEnabled}
+					onValueChange={toggleNotification}
 				/>
 			</View>
 		</View>
 	);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Notifications.setNotificationHandler({
-// 	handleNotification: async () => ({
-// 	  shouldShowAlert: true,
-// 	  shouldPlaySound: false,
-// 	  shouldSetBadge: false,
-// 	}),
-//   });
-  
-//   // Can use this function below OR use Expo's Push Notification Tool from: https://expo.dev/notifications
-//   async function sendPushNotification(expoPushToken) {
-// 	const message = {
-// 	  to: expoPushToken,
-// 	  sound: 'default',
-// 	  title: 'Original Title',
-// 	  body: 'And here is the body!',
-// 	  data: { someData: 'goes here' },
-// 	};
-  
-// 	await fetch('https://exp.host/--/api/v2/push/send', {
-// 	  method: 'POST',
-// 	  headers: {
-// 		Accept: 'application/json',
-// 		'Accept-encoding': 'gzip, deflate',
-// 		'Content-Type': 'application/json',
-// 	  },
-// 	  body: JSON.stringify(message),
-// 	});
-//   }
-  
-//   async function registerForPushNotificationsAsync() {
-// 	let token;
-// 	if (Device.isDevice) {
-// 	  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-// 	  let finalStatus = existingStatus;
-// 	  if (existingStatus !== 'granted') {
-// 		const { status } = await Notifications.requestPermissionsAsync();
-// 		finalStatus = status;
-// 	  }
-// 	  if (finalStatus !== 'granted') {
-// 		alert('Failed to get push token for push notification!');
-// 		return;
-// 	  }
-// 	  token = (await Notifications.getExpoPushTokenAsync()).data;
-// 	  console.log(token);
-// 	} else {
-// 	  alert('Must use physical device for Push Notifications');
-// 	}
-  
-// 	if (Platform.OS === 'android') {
-// 	  Notifications.setNotificationChannelAsync('default', {
-// 		name: 'default',
-// 		importance: Notifications.AndroidImportance.MAX,
-// 		vibrationPattern: [0, 250, 250, 250],
-// 		lightColor: '#FF231F7C',
-// 	  });
-// 	}
-  
-// 	return token;
-//   }
-  
-//   export default function Notification (){
-// 	const [expoPushToken, setExpoPushToken] = useState('');
-// 	const [notification, setNotification] = useState(false);
-// 	const notificationListener = useRef();
-// 	const responseListener = useRef();
-  
-// 	useEffect(() => {
-// 	  registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-  
-// 	  notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-// 		setNotification(notification);
-// 	  });
-  
-// 	  responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-// 		console.log(response);
-// 	  });
-  
-// 	  return () => {
-// 		Notifications.removeNotificationSubscription(notificationListener.current);
-// 		Notifications.removeNotificationSubscription(responseListener.current);
-// 	  };
-// 	}, []);
-  
-// 	return (
-// 	  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
-// 		<Text>Your expo push token: {expoPushToken}</Text>
-// 		<View style={{ alignItems: 'center', justifyContent: 'center' }}>
-// 		  <Text>Title: {notification && notification.request.content.title} </Text>
-// 		  <Text>Body: {notification && notification.request.content.body}</Text>
-// 		  <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-// 		</View>
-// 		<Button
-// 		  title="Press to Send Notification"
-// 		  onPress={async () => {
-// 			await sendPushNotification(expoPushToken);
-// 		  }}
-// 		/>
-// 	  </View>
-// 	);
-//   }
 
 const styles = StyleSheet.create({
 	container: {
