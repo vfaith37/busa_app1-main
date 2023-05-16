@@ -252,37 +252,21 @@ export const SignUpForm = ({ onError }) => {
 										);
 									}}
 								</Formik>
-								<View style={{ alignSelf: "center" }}>
+								<View style={{ flexDirection: "row", alignSelf: "center", marginTop: 10 }}>
+									<Text style={{ textAlign: "center", fontFamily: "Poppins" }}>
+										Have an account?
+									</Text>
 									<Text
 										style={{
-											fontWeight: "400",
-											fontSize: 15,
-											color: "#717171",
-											textAlign: "center",
-											alignSelf: "center",
-											fontFamily: "Poppins",
+											color: COLORS.primaryblue,
+											fontWeight: "500",
+											marginLeft: 5,
+											fontFamily: "Poppins3",
 										}}
+										onPress={() => navigation.navigate("Log-in")}
 									>
-										or
+										Log in
 									</Text>
-									<View style={{ flexDirection: "row" }}>
-										<Text
-											style={{ textAlign: "center", fontFamily: "Poppins" }}
-										>
-											Have an account?
-										</Text>
-										<Text
-											style={{
-												color: COLORS.primaryblue,
-												fontWeight: "500",
-												marginLeft: 5,
-												fontFamily: "Poppins3",
-											}}
-											onPress={() => navigation.navigate("Log-in")}
-										>
-											Log in
-										</Text>
-									</View>
 								</View>
 							</View>
 						</View>
@@ -299,8 +283,8 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		borderBottomWidth: 3,
-		borderBottomColor: "#0E23F0",
-		backgroundColor: "#C9D9F2",
+		borderBottomColor: COLORS.primary,
+		backgroundColor: COLORS.lightGray3,
 		borderRadius: 5,
 		height: 45,
 		marginBottom: 2,
