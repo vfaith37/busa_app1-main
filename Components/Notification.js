@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 // import * as Device from "expo-device";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import client from "../api/client";
 
 
 const { width } = Dimensions.get("screen");
@@ -52,13 +53,18 @@ export const Notification = () => {
 			const platform = Platform.OS;
 			console.log("Expo Push Token:", token);
 			console.log(platform);
-			const data = [
-				{
-					deviceId: token,
-					platform: platform,
-				},
-			];
-			console.log(data);
+			// const data = [
+			// 	{
+			// 		deviceId: token,
+			// 		platform: platform,
+			// 	},
+			// ];
+			// console.log(data);
+
+			const formData = new FormData()
+			formData.append("deviceId", token)
+			formData.append("platform", platform)
+
 			try {
 				const userToken = await AsyncStorage.getItem("userToken");
 				const value = await AsyncStorage.getItem("userInfo");
@@ -76,9 +82,9 @@ export const Notification = () => {
 					};
 					console.log(config);
 				
-					await axios
+					await client
 						.post(
-							"https://finalissima.onrender.com/api/notification/registerDevice", data, config)
+							`/api/notification/registerDevice`, formData, config)
 						.then((res) => {
 							console.log(res.data);
 						});

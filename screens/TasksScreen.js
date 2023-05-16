@@ -16,6 +16,7 @@ import { Icon } from "../constants/icons";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import client from "../api/client";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -34,72 +35,107 @@ const List = [
   },
 ];
 
-export const data = [
-  {
-    content: "Cafeteria ",
-    title: "New  ",
-    category: "Classes",
-    date: "26/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Boy",
-    category: "Assignments",
-    date: "26/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Girl",
-    category: "Personal",
-    date: "26/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Love",
-    category: "Classes",
-    date: "26/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Heads",
-    category: "Personal",
-    date: "28/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Heads",
-    category: "Personal",
-    date: "27/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Heads",
-    category: "Personal",
-    date: "28/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-  {
-    content: "Cafeteria ",
-    title: "Heads",
-    category: "Personal",
-    date: "27/05/2023",
-    time: "6:00PM",
-    venue: "caf",
-  },
-];
+// export const data = [
+//   {
+//     content: "Cafeteria ",
+//     title: "New  ",
+//     category: "Classes",
+//     date: "26/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Boy",
+//     category: "Assignments",
+//     date: "26/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Girl",
+//     category: "Personal",
+//     date: "26/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Love",
+//     category: "Classes",
+//     date: "26/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Heads",
+//     category: "Personal",
+//     date: "28/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Heads",
+//     category: "Personal",
+//     date: "27/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Heads",
+//     category: "Personal",
+//     date: "28/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafeteria ",
+//     title: "Heads",
+//     category: "Personal",
+//     date: "27/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+// ];
+
+// export const today =[
+//   {
+//     content: "Caf ",
+//     title: "Head",
+//     category: "Personal",
+//     date: "16/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafe",
+//     title: "Head",
+//     category: "Personal",
+//     date: "16/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafe",
+//     title: "Head",
+//     category: "Personal",
+//     date: "16/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+//   {
+//     content: "Cafe",
+//     title: "Head",
+//     category: "Personal",
+//     date: "16/05/2023",
+//     time: "6:00PM",
+//     venue: "caf",
+//   },
+// ]
 
 const TasksScreen = () => {
   const navigation = useNavigation();
@@ -111,8 +147,12 @@ const TasksScreen = () => {
 
   useEffect(() => {
     getAllTasks();
-  }, []);
+  }, [getAllTasks]);
 
+
+  // useEffect(()=>{
+  //   getTasksByDate()
+  // },[])
   const Date = moment();
   const todaysDate = Date.format("Do MMMM YYYY");
 
@@ -193,66 +233,70 @@ const TasksScreen = () => {
         setUserToken(userToken);
         setUserInfo(userInfo);
 
-        console.log(userInfo);
-        console.log(userToken);
         const token = userToken;
 
-        //   const formData = new FormData()
-        // formData.append("userId", userInfo._id)
+          const formData = new FormData()
+        formData.append("userId", userInfo._id)
 
-        //             const config = {
-        //               headers: {
-        //                 Authorization: `Bearer ${token}`,
-        //               //  "content-type": "multipart/form-data",
-        //               },
-        //              };
+                    const config = {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                       "content-type": "multipart/form-data",
+                      },
+                     };
 
-        //              const body = JSON.stringify({
-        //               "userId": userInfo._id
-        //              })
 
-        //             const res = await client.get(`/task/getMyTasks`, config, body)
+                    const res = await client.post(`/task/getMyTasks`, formData, config)
+                    console.log(res)
+                  
+                    const myTasks = res.data.data
 
-        //             console.log(res)
-        //             const myTasks = res.data.data
-
-        //             setTodos([...todos, ...myTasks])
-        //             console.log(todos)
-
-        
-
-        setTodos([...todos, ...data]);
+                    setTodos([...todos, ...myTasks])
+  
       }
     } catch (e) {
       console.log(`${e.message}`);
     }
   };
 
-  const groupTaskByDate = (tasks) => {
-    let result = {};
-    tasks.forEach(task => {
-      let dateIndex = task.date;
-      if(!result[dateIndex]){
-        result[dateIndex] = [];
-      }
-      result[dateIndex].push(task);
-      
-    });
-    console.log(result)
-    // setTodos()
-    return result;
+
+  const getTasksByDate = async ()=>{
+// here get atsks by current date
   }
+
+  const filterTaskByDate =()=>{
+
+  }
+
+  // const groupTaskByDate = (tasks) => {
+  //   let result = {};
+  //   tasks.forEach(task => {
+  //     let dateIndex = task.date;
+  //     if(!result[dateIndex]){
+  //       result[dateIndex] = [];
+  //     }
+  //     result[dateIndex].push(task);
+      
+  //   });
+  //   console.log(result)
+  //   // setTodos(result)
+  //   console.log(todos)
+  //   return result;
+  // }
 
   const filterTasks = (arr, type, date) => {
     let filteredTasks = [];
     arr.map((task) => {
       if (task.category === type) {
         filteredTasks.push(task);
-        //  setTodos([...todos, filteredTasks])
         setTodos(filteredTasks); 
+      }
+      if(type === "All"){
+        setTodos([...todos, filteredTasks])
       }
 
       // if there's date, so as to show it the next day
+      console.log(filteredTasks)
       return filteredTasks;
     });
   };
@@ -267,16 +311,9 @@ const TasksScreen = () => {
             setClicked(!clicked);
             setName(item.name);
 
-              // let groupedTask = groupTaskByDate(data)
-              // setTodos(groupedTask)
+              filterTasks(todos, item.name);
+              setClicked(clicked);
 
-            // if (item.name === "All") {
-            //   setTodos([...data]);
-            //   // setClicked(clicked)
-            // } else {
-            //   // filterTasks(data, item.name);
-            //   setClicked(clicked);
-            // }
             // if the name is ALl there's no filter else filterTasks(item, item.name)
           }}
         >
@@ -455,13 +492,20 @@ const TasksScreen = () => {
           />
         </View>
 
+        {/* where the filtering should start */}
+
+        {/* <ScrollView
+         contentContainerStyle={{height:height*1.3}}
+        > */}
+        
+        <View>
         <View
           style={{
             flexDirection: "row",
-            paddingTop: 40,
+             paddingTop: 40,
             justifyContent: "space-between",
           }}
-        >
+          >
           <Text
             style={{
               fontFamily: "Poppins3",
@@ -488,18 +532,19 @@ const TasksScreen = () => {
 
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+          // contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
           data={todos}
           renderItem={({ item }) => <ListItem todo={item} />}
         />
 
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
-            bottom: 90,
+            // bottom: 90,
+            paddingTop:10,
             justifyContent: "space-between",
           }}
-        >
+          >
           <Text
             style={{
               fontFamily: "Poppins3",
@@ -519,23 +564,34 @@ const TasksScreen = () => {
               paddingRight: 20,
               paddingTop: 12,
             }}
-          >
+            >
             {todaysDate}
           </Text>
         </View>
 
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          // contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+          data={todos}
+          renderItem={({ item }) => <ListItem todo={item} />}
+          /> */}
+
+
+          </View>
+          {/* </ScrollView> */}
+
         <View style={styles.footer}>
           {/* <View style={styles.inputContainer}>
             <TextInput
-              value={textInput}
-              placeholder="Add Todo"
-              onChangeText={text => setTextInput(text)}
+            value={textInput}
+            placeholder="Add Todo"
+            onChangeText={text => setTextInput(text)}
             />
           </View> */}
 
           <TouchableOpacity
             onPress={() => navigation.navigate("AddTasksScreen")}
-          >
+            >
             <View style={styles.iconContainer}>
               <Icon name="add" color="white" size={30} />
             </View>
@@ -549,12 +605,6 @@ const TasksScreen = () => {
 const styles = StyleSheet.create({
   footer: {
     position: "absolute",
-    // bottom: 0,
-    // width: '100%',
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // paddingHorizontal: 20,
-    // backgroundColor: COLORS.white,
     paddingTop: height / 1.4,
     right: 30,
   },
@@ -578,10 +628,10 @@ const styles = StyleSheet.create({
 
   listItem: {
     height: 65,
-    width: 300,
+    width: 320,
     backgroundColor: COLORS.tasks,
     borderRadius: 10,
-    marginHorizontal: -18,
+    // marginHorizontal: -18,
   },
 
   actionIcon: {

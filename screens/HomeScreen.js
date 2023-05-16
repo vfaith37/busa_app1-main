@@ -48,13 +48,13 @@ const HomeScreen = () => {
           config
         );
               
-        console.log (res.data.data)
+        // console.log (res.data.data)
         
 
         const responseData = res.data.data;
 
         if (responseData.length > 0) {
-          console.log(res)
+          // console.log(res)
         setPosts(prevPosts => [...prevPosts, ...responseData]);
         setCurrentPage(currentPage + 1);
         }else{

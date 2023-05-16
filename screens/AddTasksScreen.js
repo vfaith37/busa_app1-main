@@ -103,6 +103,7 @@ const res =  await client.post(
 
 if(res.status === 200){
   console.log("successful")
+  navigation.goBack()
 }
 
 }
