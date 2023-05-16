@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/theme';
 import {
   StackActions,
@@ -9,6 +8,9 @@ import {
   CommonActions,
 } from "@react-navigation/native";
 import { Icon } from '../constants/icons';
+
+
+const {width, height} = Dimensions.get("screen")
 
 
 const Tasks = () => {
@@ -34,35 +36,75 @@ const Tasks = () => {
       };
     
 
+      const List =[
+        {
+          id:1,
+          icon:"clipboard-outline",
+          name:"All"
+        },
+        {
+          id:2,
+          icon:"calendar-outline",
+          name:"Classes"
+        },
+      {
+        id:3,
+        icon:"book-outline",
+        name:"Assignments"
+      },
+      {
+        id:4,
+        icon:"book-outline",
+        name:"Assignments"
+      },
+      {
+        id:5,
+        icon:"book-outline",
+        name:"Assignments"
+      },
+      {
+        id:6,
+        icon:"book-outline",
+        name:"Assignments"
+      },
+      {
+        id:7,
+        icon:"book-outline",
+        name:"Assignments"
+      }
+      ]
+
       const DisplayTasks = ({todo}) => {
         return (
-            <View>
+
+          <View>
+            <View style={{paddingTop:4, paddingLeft:15}}>
           <View style={styles.listItem}>
+            <View style={{flexDirection:"row", justifyContent:"space-evenly", paddingTop:3, alignItems:"center"}}>
 
-            <View style={{flexDirection:"row", justifyContent:"space-evenly", paddingTop:12, alignItems:"center"}}>
-
-              <View style={{height:50, width:44, backgroundColor:"#0E23F0", borderRadius:11, top:10, left:40, }}>
+              <View style={{height:44, width:44, backgroundColor:COLORS.todoBackground, borderRadius:5, top:3, left:40, }}>
                 {/* here conditionally render the icon based on whether its an assignment or class or anyother */}
-              <Icon name={"people-outline"} size={30} color={COLORS.white} style={{paddingTop:6, alignContent:"center", right:-6}}/>
+              <Icon name={"people-outline"} size={30} color={COLORS.white} style={{paddingTop:5, alignContent:"center", right:-6}}/>
               </View>
 
-            <View>
+            <View style={{paddingTop:-4,}}>
               <Text
                 style={{
-                  fontWeight: '400',
-                  fontSize: 18,
+                  fontWeight: '600',
+                  fontSize: 16,
                   color: COLORS.todo,
                   textDecorationLine: todo?.completed ? 'line-through' : 'none',
                   fontFamily:"Poppins3",
                   textAlign:"center",
-                  paddingTop:15
+                  paddingTop:15,
+                  lineHeight:24
                 }}>
-                {/* {todo?.task} */} Thank you Jesus
+                {/* {todo?.task}  */}
+                Operations Research
               </Text>
 
-              <View style={{flexDirection:"row", justifyContent:"space-between", marginHorizontal:85}}>
-              <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo }}>
-                Law Lecture Theatre {"."}
+              <View style={{flexDirection:"row", justifyContent:"space-between", marginHorizontal:85,}}>
+              <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo,}}> Law Lecture Theatre {"."}
                   </Text>
                   <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo}}>
                     {/* {todo?.time} */}
@@ -87,22 +129,26 @@ const Tasks = () => {
             </TouchableOpacity> */}
           </View>
             </View>
+
+          </View>
         );
       };
 
   return (
     <View style={{paddingTop:20}}>
-      <Text style={{fontFamily:"Poppins3", fontSize:24, fontWeight:"600", lineHeight:36, color:"#07081E" }}>Tasks</Text>
+      <Text style={{fontFamily:"Poppins3", fontSize:22, fontWeight:"600", lineHeight:36, color:COLORS.feedcolor }}>Tasks</Text>
       {/* if todo from async storage is empty display no tasks set, else display tasks */}
 
-      {todos.length>=1 ?
-      
-      <FlatList
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{padding: 20, paddingBottom: 100}}
-          data={todos.slice(0,5)}
-          renderItem={({item}) => <DisplayTasks todo={item} />}
-        />
+       {todos.length>=1 ?
+       // to avoid issues i have to  map throught he array to display the contents. only display first five
+       <View>
+   {todos.slice(0,5).map((todo)=>{
+         return(
+          <DisplayTasks todo ={todo} key={todo.id}/>
+         )
+        })}
+        </View>
+
         :
         <View>
             <TouchableOpacity activeOpacity={0.6} onPress={()=>{
@@ -121,7 +167,7 @@ const Tasks = () => {
             </TouchableOpacity>
             </View>
     
-    }
+    } 
     </View>
   )
 }
@@ -129,12 +175,13 @@ const Tasks = () => {
 
 const styles = StyleSheet.create({
     listItem: {
-    height:96,
-    width:300,
+    height:height/13,
+    width:width*0.85,
       backgroundColor: COLORS.tasks,
-      elevation: 12,
       borderRadius: 10,
-      marginHorizontal:-18
+      marginHorizontal:-10,
+      alignItems:"center",
+      marginVertical:10
     },
   });
 

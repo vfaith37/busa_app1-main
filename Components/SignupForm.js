@@ -105,8 +105,9 @@ export const SignUpForm = ({ onError }) => {
 					showsVerticalScrollIndicator={false}
 					bounces={false}
 					contentContainerStyle={{
-						flexGrow: 1,
-						paddingBottom: 30,
+						// flexGrow: 1,
+						// paddingBottom: 30,
+						height:height
 					}}
 				>
 					<TouchableWithoutFeedback onPress={Keyboard.dismiss}>

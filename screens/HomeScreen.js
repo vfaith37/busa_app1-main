@@ -10,6 +10,8 @@ import client from '../api/client'
 import AnimatedLottieView from 'lottie-react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {LinearGradient} from 'expo-linear-gradient';
+import { COLORS } from '../constants/theme'
+const {width, height} = Dimensions.get("screen")
 
 const PAGE_SIZE = 10;
 
@@ -95,12 +97,17 @@ const HomeScreen = () => {
 
 
   return (
-   <SafeAreaView style={{flex:1}}>
+   <SafeAreaView style={{flex:1, backgroundColor:COLORS.white}}>
     <View style={{paddingLeft:20, paddingTop:30}}>
-        
+      <ScrollView
+      // if tasks is empty, give normal height else increase it
+      contentContainerStyle={{height:height*1.2}}
+      showsVerticalScrollIndicator ={false}
+      >
   {userInfo!==null && <Navbar userInfo ={userInfo}/>}
   <PostsDisplay getPostData={getPostData} post={posts} />
  <Tasks/>
+      </ScrollView>
   </View>
    </SafeAreaView>
    

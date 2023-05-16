@@ -62,18 +62,17 @@ const TabNavigator = () => {
 					iconName = focused ? "add-circle" : "add-circle-outline";
 				}
 
-				return <Ionicons name={iconName} size={25} color={color} style={{position:"absolute", flex:1}}/>;
+				return <Ionicons name={iconName} size={23} color={color} style={{paddingTop:6}}/>;
 			},
 			tabBarActiveTintColor: COLORS.primary,
 			tabBarInactiveTintColor: COLORS.darkgray,
-			tabBarLabelStyle: {fontFamily:"Poppins", fontSize:12, lineHeight:21, textTransform:"none"},
-			
+			tabBarLabelStyle: {fontFamily:"Poppins", fontSize:13, lineHeight:19.5, textTransform:"none"},
 		})}
 	
 	>
 		<Tab.Screen name="Home" component={HomeStack} headerShown={false}/>
-		<Tab.Screen name="Task" component={TasksStack}/>
 		<Tab.Screen name="Event" component={EventStack}/> 
+		<Tab.Screen name="Task" component={TasksStack}/>
 		<Tab.Screen name="Profile" component={ProfileStack} headerShown={true}/>
 	</Tab.Navigator>
 

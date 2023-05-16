@@ -21,7 +21,7 @@ const Navbar = ({userInfo}) => {
       <Image source={require("../assets/image1.png")} style={{width:73, height:73,}}/>
                 </View>
             </View>
-            <NameSection userInfo={userInfo}/>
+            {/* <NameSection userInfo={userInfo}/> */}
     </View>
   )
 }

@@ -37,6 +37,7 @@ export const COLORS = {
     todoBackground:"#0E23F0",
     todoInactive:"#E6F2FF",
     todoInput:"#F4F5FF",
-    todoText:"#070E50"
+    todoText:"#070E50",
+    feedcolor:"#07081E"
    
 };

@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ErrorButton from '../Components/ErrorButton';
 import { useEffect } from 'react';
+import client from '../api/client';
 
 
 const {width, height} = Dimensions.get("screen")
@@ -32,7 +33,7 @@ const [taskValues, setTaskValues] = useState("")
     const [mode, setMode] = useState("date");
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
-    const component ="Tasks"
+    const component ="Task"
     const Categories = [
         {
           label: "Personal",
@@ -45,7 +46,7 @@ const [taskValues, setTaskValues] = useState("")
 
       const validationSchemaTasks = Yup.object({
         title: Yup.string().required("Title is required!"),
-        content: Yup.string().required("Content is required!"),
+        description: Yup.string().required("Description is required!"),
         category: Yup.string().required("Category is required!"),
         date: Yup.string().required("select date!"),
         time: Yup.string().required("select time!"),
@@ -53,61 +54,110 @@ const [taskValues, setTaskValues] = useState("")
       });
     
 
- useEffect(() => {
-      saveTodoToUserDevice(todos);
-    }, [todos]);
+//  useEffect(() => {
+//       saveTodoToUserDevice(todos);
+//     }, [todos]);
 
 const addTasks = async(values)=>{
+  // setError(false)
 
-  setError(false)
+try{
+  const userToken = await AsyncStorage.getItem("userToken");
+  const value = await AsyncStorage.getItem("userInfo")
 
-    if(values.title === ''){
-     Alert.alert('Error', 'Please input todo');
-    }else{
-        const newTodo = {
-            id: Math.random(),
-            ...values,
-            completed:false,
-          };
-          console.log(newTodo)
-          //   setTodos(todos => [...todos, newTodo]);
-          setTodos([todos, newTodo]);
-          console.log({todos});
+  if (userToken !== null && value !== null) {
+    const userInfo = JSON.parse(value)
+setUserToken(userToken);
+setUserInfo(userInfo);
 
-          setError(true)
-          setErrorMessage("Tasks Added Successfully")
-          // navigation.replace("TasksScreen")
-    }
+const token = userToken
+const config = {
+ headers: {
+   Authorization: `Bearer ${token}`,
+  "content-type": "multipart/form-data",
+ },
+};
+
+const formData = new FormData()
+formData.append("title", values.title);
+formData.append("description", values.description);
+formData.append("venue", values.venue);
+formData.append("date", values.date);
+formData.append("time", values.time);
+formData.append("category", values.category)
+formData.append("userId", userInfo._id)
+
+
+
+console.log(formData)
+console.log(userInfo)
+console.log(userToken)
+console.log(values)
+
+const res =  await client.post(
+ `/task/addTask`,
+ formData,
+ config
+);
+      console.log(res)
+
+if(res.status === 200){
+  console.log("successful")
+}
+
+}
+
+}catch(e){
+ console.log(`${e.message}`)
+}
+
+    // if(values.title === ''){
+    //  Alert.alert('Error', 'Please input todo');
+    // }else{
+    //     const newTodo = {
+    //         id: Math.random(),
+    //         ...values,
+    //         completed:false,
+    //       };
+    //       console.log(newTodo)
+    //       //   setTodos(todos => [...todos, newTodo]);
+    //       setTodos([todos, newTodo]);
+    //       console.log({todos});
+
+    //       setError(true)
+    //       setErrorMessage("Tasks Added Successfully")
+    //       // navigation.replace("TasksScreen")
+    // }
 }
 
 
 
-const saveTodoToUserDevice = async todos => {
-    try {
-        const stringifyTodos = JSON.stringify(todos);
+// const saveTodoToUserDevice = async todos => {
+//     try {
+//         const stringifyTodos = JSON.stringify(todos);
 
 
-        // first check if emoty then set it, i
-        // if( stringifyTodos !== null ){
-        //   await AsyncStorage.setItem('todos', stringifyTodos);
-        //   console.log(stringifyTodos)
-        //   setError(true)
-        //   setErrorMessage("Tasks Added Successfully")
-        // }
+//         // first check if emoty then set it, i
+//         // if( stringifyTodos !== null ){
+//         //   await AsyncStorage.setItem('todos', stringifyTodos);
+//         //   console.log(stringifyTodos)
+//         //   setError(true)
+//         //   setErrorMessage("Tasks Added Successfully")
+//         // }
 
-       await AsyncStorage.setItem('todos', stringifyTodos);
-          console.log(stringifyTodos)
-      } catch (error) {
-        console.log(error);
-      }
-    };
+//        await AsyncStorage.setItem('todos', stringifyTodos);
+//           console.log(stringifyTodos)
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     };
 
 
 
 
 return (
     <SafeAreaView style={{flex:1, backgroundColor:COLORS.white}}>
-    <View style={{ alignSelf: "center", width: width - 40, paddingTop: 25, }}>
+    <View style={{ alignSelf: "center", width: width - 40, paddingTop: 70, }}>
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity activeOpacity={1} onPress={() => navigation.goBack()}>
           <Back color={"#707070"} size={30} />
@@ -126,7 +176,7 @@ return (
       </View>
       <Formik
         initialValues={{
-          content: "",
+          description: "",
           title: "",
           category: "",
           date: "",
@@ -145,7 +195,7 @@ return (
           handleSubmit,
           setFieldValue,
         }) => {
-          const { title, content, category, venue } = values;
+          const { title, description, category, venue } = values;
           return (
             <ScrollView
               showsVerticalScrollIndicator={false}
@@ -168,7 +218,7 @@ return (
                   TextInputStyle={styles.input}
                   />
 
-                {component === "Tasks" ? (
+                {component === "Task" ? (
                   <View style={{ top: 10, padding: 3 }}>
                     <View
                       style={{
@@ -329,7 +379,7 @@ return (
                   >
                     Description
                   </Text>
-                  {errors.content && touched.content && (
+                  {errors.description && touched.description && (
                     <Text
                       style={{
                         color: "red",
@@ -339,7 +389,7 @@ return (
                         alignSelf: "center",
                       }}
                     >
-                      {errors.content}
+                      {errors.description}
                     </Text>
                   )}
                   <TextInput
@@ -347,10 +397,10 @@ return (
                     style={styles.TextInput2}
                     placeholder="Type Something here..."
                       placeholderTextColor={"#B6B6B6"}
-                    onChangeText={handleChange("content")}
-                    onBlur={handleBlur("content")}
-                    // error={touched.content && errors.content}
-                    value={content}
+                    onChangeText={handleChange("description")}
+                    onBlur={handleBlur("description")}
+                    // error={touched.description && errors.description}
+                    value={description}
                   />
 
                   <View>

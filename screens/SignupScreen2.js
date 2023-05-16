@@ -227,6 +227,7 @@ const DropdownComponent = () => {
 							fontWeight: "700",
 							textAlign: "center",
 							color: COLORS.primary,
+							fontFamily:"Poppins"
 						}}
 					>
 						Details
