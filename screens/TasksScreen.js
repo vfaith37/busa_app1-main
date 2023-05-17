@@ -43,7 +43,7 @@ const TasksScreen = () => {
   const navigation = useNavigation();
   const [todos, setTodos] = useState([]);
   const [name, setName] = useState("");
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -52,18 +52,14 @@ const TasksScreen = () => {
 
   useEffect(() => {
     getAllTasks();
-  }, [getAllTasks]);
+  }, []);
 
-  // useEffect(()=>{
-  //   filterTasks(tasks, "All", "26/05/2023");
-  //   filterTomorrowsTasks(tasks, "All", "26/05/2023")
-  //   console.log(tasks)
-  // },[])
+  
 
   const todaysDate = moment().format("Do MMMM YYYY");
   const today = moment();
-  const tomorrow = today.add(1, 'days');
-const nextDate = tomorrow.format("Do MMMM YYYY");
+  const tomorrow = today.add(1, "days");
+  const nextDate = tomorrow.format("Do MMMM YYYY");
 
   // React.useEffect(() => {
   //   saveTodoToUserDevice(todos);
@@ -132,21 +128,27 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
   //   ]);
   // };
 
+
+  
+  
   const getAllTasks = async () => {
+    //     const today = moment();
+    // const currentDate = today.format("DD/MM/YYYY");
+    
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const value = await AsyncStorage.getItem("userInfo");
-
+      
       if (userToken !== null && value !== null) {
         const userInfo = JSON.parse(value);
         setUserToken(userToken);
         setUserInfo(userInfo);
-
+        
         const token = userToken;
 
         const formData = new FormData();
         formData.append("userId", userInfo._id);
-
+        
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -157,24 +159,26 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
         const res = await client.get(
           `/task/getMyTasks/${userInfo._id}`,
           config
-        );
-
-        const myTasks = res.data.data;
-        setTasks([...tasks, ...myTasks]);
-        setTaskData([...tasks, ...myTasks]);
+          );
+          
+          const myTasks = res.data.data;
+          setTasks([...tasks, ...myTasks]);
+          setTaskData([...taskData, ...myTasks]);
+        }
+      } catch (e) {
+        console.log(`${e.message}`);
       }
-    } catch (e) {
-      console.log(`${e.message}`);
-    }
   };
 
+
+  
   //   const getTasksByDate = async ()=>{
   // // here get atsks by current date
-
+  
   // try {
   //   const userToken = await AsyncStorage.getItem("userToken");
   //   const value = await AsyncStorage.getItem("userInfo");
-
+  
   //   if (userToken !== null && value !== null) {
   //     const userInfo = JSON.parse(value);
   //     setUserToken(userToken);
@@ -232,13 +236,12 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
         moment(task.date, "DD/MM/YYYY").isAfter(today)
       ) {
         filteredTomorrowsTasks.push(task);
-        // setTodos(filteredTomorrowsTasks);
+      
         setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
       if (type === "All" && moment(task.date, "DD/MM/YYYY").isAfter(today)) {
         filteredTomorrowsTasks.push(task);
-        // setTodos(filteredTomorrowsTasks);
         setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
@@ -264,7 +267,7 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
         setTodos(filteredTasks);
       }
 
-      return filteredTasks;
+       return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
     });
@@ -281,8 +284,7 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            // setClicked(!clicked);
-            setName(item.name);
+           setName(item.name);
 
             filterTasks(tasks, item.name, currentDate);
             filterTomorrowsTasks(tasks, item.name);
@@ -297,9 +299,7 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
                 backgroundColor: COLORS.todoInactive,
                 borderRadius: 20,
                 borderColor:
-                   name === item.name
-                    ? COLORS.todoBackground
-                    : "transparent",
+                name === item.name ? COLORS.todoBackground : "transparent",
                 borderWidth: name === item.name ? 2 : 0.5,
               }}
             >
@@ -339,100 +339,102 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
 
     return (
       <ScrollView>
-      <View style={{ marginVertical: 10 }}>
-        <View style={styles.listItem}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              paddingTop: -3,
-              alignItems: "center",
-            }}
-          >
+        <View style={{ marginVertical: 10 }}>
+          <View style={styles.listItem}>
             <View
               style={{
-                height: 50,
-                width: 44,
-                backgroundColor: "#0E23F0",
-                borderRadius: 11,
-                top: 3,
-                left: 40,
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                paddingTop: -3,
+                alignItems: "center",
               }}
             >
-              {/* here conditionally render the icon based on whether its an assignment or class or anyother */}
-              <Icon
-                name={
-                  todo.category === "Personal"
-                    ? "people-outline"
-                    : todo.category === "Classes"
-                    ? "calendar-outline"
-                    : "book-outline"
-                }
-                size={30}
-                color={COLORS.white}
-                style={{ paddingTop: 6, alignContent: "center", right: -6 }}
-              />
-            </View>
-
-            <View>
-              <Text
-                style={{
-                  fontWeight: "400",
-                  fontSize: 18,
-                  color: COLORS.todo,
-                  textDecorationLine: todo?.completed ? "line-through" : "none",
-                  fontFamily: "Poppins3",
-                  textAlign: "center",
-                  paddingTop: 15,
-                }}
-              >
-                {todo?.title}
-              </Text>
-
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginHorizontal: 85,
+                  height: 50,
+                  width: 44,
+                  backgroundColor: "#0E23F0",
+                  borderRadius: 11,
+                  top: 3,
+                  left: 40,
                 }}
               >
+                {/* here conditionally render the icon based on whether its an assignment or class or anyother */}
+                <Icon
+                  name={
+                    todo.category === "Personal"
+                      ? "people-outline"
+                      : todo.category === "Classes"
+                      ? "calendar-outline"
+                      : "book-outline"
+                  }
+                  size={30}
+                  color={COLORS.white}
+                  style={{ paddingTop: 6, alignContent: "center", right: -6 }}
+                />
+              </View>
+
+              <View>
                 <Text
                   style={{
-                    fontSize: 10,
-                    fontFamily: "Poppins",
+                    fontWeight: "400",
+                    fontSize: 18,
                     color: COLORS.todo,
+                    textDecorationLine: todo?.completed
+                      ? "line-through"
+                      : "none",
+                    fontFamily: "Poppins3",
+                    textAlign: "center",
+                    paddingTop: 15,
                   }}
                 >
-                  {todo?.venue} {"."}
+                  {todo?.title}
                 </Text>
-                <Text
+
+                <View
                   style={{
-                    fontSize: 10,
-                    fontFamily: "Poppins",
-                    color: COLORS.todo,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginHorizontal: 85,
                   }}
                 >
-                  {/* {todo?.time} */}
-                  {""} {todo?.time}
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontFamily: "Poppins",
+                      color: COLORS.todo,
+                    }}
+                  >
+                    {todo?.venue} {"."}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontFamily: "Poppins",
+                      color: COLORS.todo,
+                    }}
+                  >
+                    {/* {todo?.time} */}
+                    {""} {todo?.time}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
 
-          {/* {!todo?.completed && (
+            {/* {!todo?.completed && (
               <TouchableOpacity onPress={() => markTodoComplete(todo.id)}>
                 <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
                   <Icon name="done" size={20} color="white" />
                 </View>
               </TouchableOpacity>
             )} */}
-          {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
+            {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
               <View style={styles.actionIcon}>
                 <Icon name="delete" size={20} color="white" />
               </View>
             </TouchableOpacity> */}
+          </View>
         </View>
-      </View>
       </ScrollView>
     );
   };
@@ -470,7 +472,10 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
 
         {/* where the filtering should start */}
 
-        <ScrollView contentContainerStyle={{ height: height * 1.5 }} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={{ height: height * 1.5 }}
+          showsVerticalScrollIndicator={false}
+        >
           <View>
             <View
               style={{
@@ -531,7 +536,7 @@ const nextDate = tomorrow.format("Do MMMM YYYY");
                   lineHeight: 21,
                   color: COLORS.black,
                   paddingRight: 20,
-                  paddingTop: 8
+                  paddingTop: 8,
                 }}
               >
                 {nextDate}

@@ -30,7 +30,13 @@
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
-      "bundleIdentifier": "busa-app"
+      "bundleIdentifier": "busa-app",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
+     }
     },
     "android": {
       "adaptiveIcon": {

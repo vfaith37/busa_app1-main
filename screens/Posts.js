@@ -19,8 +19,8 @@ const { width, height } = Dimensions.get("screen");
 
 const imageH = height * 0.37;
 const imageW = width * 0.9;
-const imageHfeed = 175;
-const imageWfeed = 285;
+const imageHfeed = height*0.21;
+const imageWfeed = width*0.79;
 
 const Posts = ({ post, component }) => {
   const navigation = useNavigation();
@@ -30,8 +30,8 @@ const Posts = ({ post, component }) => {
   return (
     <>
       {component === "Feeds" ? (
-        <View style={{ height: 264, width: 300, flex: 1 }}>
-          <View style={{ height: 264, width: 280 }}>
+        <View style={{ height: height*0.32, width: width*0.84, flex: 1 }}>
+          <View style={{ height: height*0.32, width: width*0.8 }}>
             <PostFooter post={post} date={feedDate} component={component} />
             <PostImage
               post={post}
@@ -205,7 +205,7 @@ const PostImage = memo(({ post, navigation, date, component }) => {
         </View>
       ) : null}
 
-      {!isRecent && (
+      {isRecent && (
         <View
           style={{
             width: 55,

@@ -18,7 +18,7 @@ const Navbar = ({userInfo}) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{paddingTop:12}}>
-      <Image source={require("../assets/image1.png")} style={{width:73, height:73,}}/>
+      <Image source={require("../assets/busa.png")} style={{width:73, height:73,}}/>
                 </View>
             </View>
             {/* <NameSection userInfo={userInfo}/> */}

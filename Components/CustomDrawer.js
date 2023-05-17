@@ -2,6 +2,7 @@ import React from 'react';
 import {
   View,
   Image,
+  Text,
 } from 'react-native';
 import {
   DrawerContentScrollView,
@@ -28,40 +29,35 @@ const CustomDrawer = props => {
 
   return (
     <View style={{flex: 1}}>
+
+{props.state.routes.map((route)=>{
+  if(route.name === "Maps" || route.name==="Learn" || route.name==="Handbook" || route.name==="Complaints" || route.name==="Settings"){
+    // console.log(props)
+    return (
+     null
+    )
+  }
+  else{
+    return(
       <DrawerContentScrollView
+      key={route.key}
         {...props}
         contentContainerStyle={{backgroundColor: '#ffff'}}>
         <View style={{flex: 1, backgroundColor: '#f9f9f9', paddingTop: 20,}}>
             <View style={{flexDirection:"row", justifyContent:"space-between"}}>
         <Image
-        source={require('../assets/image1.png')}
+        source={require('../assets/busa.png')}
             style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
           />
           <Exit style={{paddingTop:20, paddingRight:25}} size={30} color={COLORS.black} onPress={()=>navigation.goBack()}/>
             </View>
-{/* <DrawerItemList {...props} /> */}
-              {props.state.routes.map((route, index)=>{
-if(route.name === "Maps" || route.name==="Learn" || route.name==="Handbook" || route.name==="Complaints" || route.name==="Settings"){
-  return null;
-} else{
-  return(
-    // <DrawerItem
-    // key={route.key}
-    // label={route.name}
-    // // onPress={()=>navigation.navigate(props.state.routes.name)}
-    // />
-  
-    <DrawerItemList {...props} key={route.key} />
-
-  )
-}
-
-// route.name === "Feed" && <DrawerItemList {...props} key={route.key} />
-
-
-              })}
+      <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
+    )
+  }
+})}
+
       {/* <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>
         <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

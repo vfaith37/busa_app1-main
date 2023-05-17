@@ -64,9 +64,9 @@ const TabNavigator = () => {
 
 				return <Ionicons name={iconName} size={23} color={color} style={{paddingTop:6}}/>;
 			},
-			tabBarActiveTintColor: COLORS.primary,
+			tabBarActiveTintColor: COLORS.todoBackground,
 			tabBarInactiveTintColor: COLORS.darkgray,
-			tabBarLabelStyle: {fontFamily:"Poppins", fontSize:13, lineHeight:19.5, textTransform:"none"},
+			tabBarLabelStyle: {fontFamily:"Poppins", fontSize:9, lineHeight:13.5, textTransform:"none"},
 		})}
 	
 	>
@@ -108,7 +108,7 @@ export  function MainStack() {
 					  iconName = focused ? "mail" : "mail-outline";
 				  }
 				  else if (route.name === "Settings"){
-					  iconName = focused ? "add-circle" : "add-circle-outline";
+					  iconName = focused ? "settings" : "settings-outline";
 				  }
   
 				  return <Ionicons name={iconName} size={25} color={ focused ? color : "#7B7B7B"}/>;
