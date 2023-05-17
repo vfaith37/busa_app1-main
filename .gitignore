@@ -1,6 +1,5 @@
 /node_modules
 /dist
 /.github/workflows
-screens/TasksScreen.js
-screens/HomeScreen.js
-screens/AddTasksScreen.js
+/.busa.json
+/.GoogleService-Info.plist

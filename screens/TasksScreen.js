@@ -33,109 +33,11 @@ const List = [
     icon: "book-outline",
     name: "Assignments",
   },
+  // {
+  //   icon:"book-outline",
+  //   name:"Incompleted"
+  // }
 ];
-
-// export const data = [
-//   {
-//     content: "Cafeteria ",
-//     title: "New  ",
-//     category: "Classes",
-//     date: "26/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Boy",
-//     category: "Assignments",
-//     date: "26/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Girl",
-//     category: "Personal",
-//     date: "26/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Love",
-//     category: "Classes",
-//     date: "26/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Heads",
-//     category: "Personal",
-//     date: "28/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Heads",
-//     category: "Personal",
-//     date: "27/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Heads",
-//     category: "Personal",
-//     date: "28/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafeteria ",
-//     title: "Heads",
-//     category: "Personal",
-//     date: "27/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-// ];
-
-// export const today =[
-//   {
-//     content: "Caf ",
-//     title: "Head",
-//     category: "Personal",
-//     date: "16/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafe",
-//     title: "Head",
-//     category: "Personal",
-//     date: "16/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafe",
-//     title: "Head",
-//     category: "Personal",
-//     date: "16/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-//   {
-//     content: "Cafe",
-//     title: "Head",
-//     category: "Personal",
-//     date: "16/05/2023",
-//     time: "6:00PM",
-//     venue: "caf",
-//   },
-// ]
 
 const TasksScreen = () => {
   const navigation = useNavigation();
@@ -144,17 +46,24 @@ const TasksScreen = () => {
   const [clicked, setClicked] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [tomorrowtasks, setTomorrowsTasks] = useState([]);
+  const [taskData, setTaskData] = useState([]);
 
   useEffect(() => {
     getAllTasks();
   }, [getAllTasks]);
 
-
   // useEffect(()=>{
-  //   getTasksByDate()
+  //   filterTasks(tasks, "All", "26/05/2023");
+  //   filterTomorrowsTasks(tasks, "All", "26/05/2023")
+  //   console.log(tasks)
   // },[])
-  const Date = moment();
-  const todaysDate = Date.format("Do MMMM YYYY");
+
+  const todaysDate = moment().format("Do MMMM YYYY");
+  const today = moment();
+  const tomorrow = today.add(1, 'days');
+const nextDate = tomorrow.format("Do MMMM YYYY");
 
   // React.useEffect(() => {
   //   saveTodoToUserDevice(todos);
@@ -235,38 +144,66 @@ const TasksScreen = () => {
 
         const token = userToken;
 
-          const formData = new FormData()
-        formData.append("userId", userInfo._id)
+        const formData = new FormData();
+        formData.append("userId", userInfo._id);
 
-                    const config = {
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                       "content-type": "multipart/form-data",
-                      },
-                     };
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "content-type": "multipart/form-data",
+          },
+        };
 
+        const res = await client.get(
+          `/task/getMyTasks/${userInfo._id}`,
+          config
+        );
 
-                    const res = await client.post(`/task/getMyTasks`, formData, config)
-                    console.log(res)
-                  
-                    const myTasks = res.data.data
-
-                    setTodos([...todos, ...myTasks])
-  
+        const myTasks = res.data.data;
+        setTasks([...tasks, ...myTasks]);
+        setTaskData([...tasks, ...myTasks]);
       }
     } catch (e) {
       console.log(`${e.message}`);
     }
   };
 
+  //   const getTasksByDate = async ()=>{
+  // // here get atsks by current date
 
-  const getTasksByDate = async ()=>{
-// here get atsks by current date
-  }
+  // try {
+  //   const userToken = await AsyncStorage.getItem("userToken");
+  //   const value = await AsyncStorage.getItem("userInfo");
 
-  const filterTaskByDate =()=>{
+  //   if (userToken !== null && value !== null) {
+  //     const userInfo = JSON.parse(value);
+  //     setUserToken(userToken);
+  //     setUserInfo(userInfo);
 
-  }
+  //     const token = userToken;
+
+  //       const formData = new FormData()
+  //     formData.append("date", "27/05/2023")
+
+  //                 const config = {
+  //                   headers: {
+  //                     Authorization: `Bearer ${token}`,
+  //                    "content-type": "multipart/form-data",
+  //                   },
+  //                  };
+
+  //                 const res = await client.get(`/task/getTasksByDate`, formData, config)
+  //                 console.log(res.data.data)
+
+  //                 const myTasks = res.data.data
+  //                 setTasks([...tasks, ...myTasks])
+
+  //   }
+  // } catch (e) {
+  //   console.log(`${e.message}`);
+  // }
+
+  //   }
 
   // const groupTaskByDate = (tasks) => {
   //   let result = {};
@@ -276,7 +213,7 @@ const TasksScreen = () => {
   //       result[dateIndex] = [];
   //     }
   //     result[dateIndex].push(task);
-      
+
   //   });
   //   console.log(result)
   //   // setTodos(result)
@@ -284,37 +221,72 @@ const TasksScreen = () => {
   //   return result;
   // }
 
-  const filterTasks = (arr, type, date) => {
-    let filteredTasks = [];
-    arr.map((task) => {
-      if (task.category === type) {
-        filteredTasks.push(task);
-        setTodos(filteredTasks); 
-      }
-      if(type === "All"){
-        setTodos([...todos, filteredTasks])
+  const filterTomorrowsTasks = (arr, type) => {
+    // here the function sif current date passed is not behind the task.date that means the date is tomorrow
+    let filteredTomorrowsTasks = [];
+    // Get the current date
+
+    arr.forEach((task) => {
+      if (
+        task.category === type &&
+        moment(task.date, "DD/MM/YYYY").isAfter(today)
+      ) {
+        filteredTomorrowsTasks.push(task);
+        // setTodos(filteredTomorrowsTasks);
+        setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
-      // if there's date, so as to show it the next day
-      console.log(filteredTasks)
-      return filteredTasks;
+      if (type === "All" && moment(task.date, "DD/MM/YYYY").isAfter(today)) {
+        filteredTomorrowsTasks.push(task);
+        // setTodos(filteredTomorrowsTasks);
+        setTomorrowsTasks(filteredTomorrowsTasks);
+      }
+
+      // console.log(filteredTomorrowsTasks)
+      return filteredTomorrowsTasks;
     });
   };
 
+  const filterTasks = (arr, type, date) => {
+    const dates = moment(date, "DD/MM/YYYY");
+    let filteredTasks = [];
+
+    arr.forEach((task) => {
+      const taskDate = moment(task.date, "DD/MM/YYYY");
+
+      if (task.category === type && taskDate.isSame(dates)) {
+        filteredTasks.push(task);
+        setTodos(filteredTasks);
+      }
+
+      if (type === "All" && taskDate.isSame(dates)) {
+        filteredTasks.push(task);
+        setTodos(filteredTasks);
+      }
+
+      return filteredTasks;
+      // if there's date, so as to show it the next day
+      // then filter this tasks by day
+    });
+  };
+
+  const IncompletedTasks = () => {};
+
   const Categories = ({ item }) => {
+    const today = moment();
+    const currentDate = today.format("DD/MM/YYYY");
+
     return (
       <>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            console.log(item);
-            setClicked(!clicked);
+            // setClicked(!clicked);
             setName(item.name);
 
-              filterTasks(todos, item.name);
-              setClicked(clicked);
-
-            // if the name is ALl there's no filter else filterTasks(item, item.name)
+            filterTasks(tasks, item.name, currentDate);
+            filterTomorrowsTasks(tasks, item.name);
+            //  setClicked(clicked);
           }}
         >
           <View style={{ paddingHorizontal: 5 }}>
@@ -325,10 +297,10 @@ const TasksScreen = () => {
                 backgroundColor: COLORS.todoInactive,
                 borderRadius: 20,
                 borderColor:
-                  clicked && name === item.name
+                   name === item.name
                     ? COLORS.todoBackground
                     : "transparent",
-                borderWidth: clicked && name === item.name ? 2 : 0.5,
+                borderWidth: name === item.name ? 2 : 0.5,
               }}
             >
               <View
@@ -363,7 +335,10 @@ const TasksScreen = () => {
   };
 
   const ListItem = ({ todo }) => {
+    // here, todo already contains filtered tasks by category and date
+
     return (
+      <ScrollView>
       <View style={{ marginVertical: 10 }}>
         <View style={styles.listItem}>
           <View
@@ -458,6 +433,7 @@ const TasksScreen = () => {
             </TouchableOpacity> */}
         </View>
       </View>
+      </ScrollView>
     );
   };
 
@@ -494,91 +470,79 @@ const TasksScreen = () => {
 
         {/* where the filtering should start */}
 
-        {/* <ScrollView
-         contentContainerStyle={{height:height*1.3}}
-        > */}
-        
-        <View>
-        <View
-          style={{
-            flexDirection: "row",
-             paddingTop: 40,
-            justifyContent: "space-between",
-          }}
-          >
-          <Text
-            style={{
-              fontFamily: "Poppins3",
-              fontSize: 24,
-              fontWeight: "400",
-              lineHeight: 36,
-            }}
-          >
-            Today
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Poppins",
-              fontSize: 14,
-              lineHeight: 21,
-              color: COLORS.black,
-              paddingRight: 20,
-              paddingTop: 12,
-            }}
-          >
-            {todaysDate}
-          </Text>
-        </View>
-
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          // contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
-          data={todos}
-          renderItem={({ item }) => <ListItem todo={item} />}
-        />
-
-        {/* <View
-          style={{
-            flexDirection: "row",
-            // bottom: 90,
-            paddingTop:10,
-            justifyContent: "space-between",
-          }}
-          >
-          <Text
-            style={{
-              fontFamily: "Poppins3",
-              fontSize: 24,
-              fontWeight: "400",
-              lineHeight: 36,
-            }}
-          >
-            Tommorow
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Poppins",
-              fontSize: 14,
-              lineHeight: 21,
-              color: COLORS.black,
-              paddingRight: 20,
-              paddingTop: 12,
-            }}
+        <ScrollView contentContainerStyle={{ height: height * 1.5 }} showsVerticalScrollIndicator={false}>
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingTop: 40,
+                justifyContent: "space-between",
+              }}
             >
-            {todaysDate}
-          </Text>
-        </View>
+              <Text
+                style={{
+                  fontFamily: "Poppins3",
+                  fontSize: 24,
+                  fontWeight: "400",
+                  lineHeight: 36,
+                }}
+              >
+                Today
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  lineHeight: 21,
+                  color: COLORS.black,
+                  paddingRight: 20,
+                  paddingTop: 8,
+                }}
+              >
+                {todaysDate}
+              </Text>
+            </View>
+            {todos.map((item) => {
+              return <ListItem todo={item} key={item._id} />;
+            })}
 
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          // contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
-          data={todos}
-          renderItem={({ item }) => <ListItem todo={item} />}
-          /> */}
+            <View
+              style={{
+                flexDirection: "row",
+                // bottom: 90,
+                paddingTop: 30,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins3",
+                  fontSize: 24,
+                  fontWeight: "400",
+                  lineHeight: 36,
+                }}
+              >
+                Tommorow
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  lineHeight: 21,
+                  color: COLORS.black,
+                  paddingRight: 20,
+                  paddingTop: 8
+                }}
+              >
+                {nextDate}
+              </Text>
+            </View>
 
-
+            {tomorrowtasks.map((item) => {
+              return <ListItem todo={item} key={item._id} />;
+            })}
           </View>
-          {/* </ScrollView> */}
+        </ScrollView>
 
         <View style={styles.footer}>
           {/* <View style={styles.inputContainer}>
@@ -591,7 +555,7 @@ const TasksScreen = () => {
 
           <TouchableOpacity
             onPress={() => navigation.navigate("AddTasksScreen")}
-            >
+          >
             <View style={styles.iconContainer}>
               <Icon name="add" color="white" size={30} />
             </View>
