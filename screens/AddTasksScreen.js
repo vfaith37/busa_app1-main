@@ -11,7 +11,7 @@ import { Calendars, Time, Back } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FormInput } from '../Components/FormInput';
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import ErrorButton from '../Components/ErrorButton';
 import { useEffect } from 'react';
 import client from '../api/client';
@@ -34,6 +34,11 @@ const [taskValues, setTaskValues] = useState("")
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
     const component ="Task"
+
+    const today = new Date();
+    const maxDate = new Date();
+maxDate.setDate(maxDate.getDate() + 3);
+
     const Categories = [
         {
           label: "Personal",
@@ -103,7 +108,15 @@ const res =  await client.post(
 
 if(res.status === 200){
   console.log("successful")
-  navigation.goBack()
+  // navigation.goBack()
+    navigation.dispatch(
+              CommonActions.navigate({
+                name: "Task",
+                params: {
+                  screen: "TasksScreen",
+                },
+              })
+            );
 }
 
 }
@@ -241,6 +254,8 @@ return (
                         value={date}
                         mode={mode}
                         is24Hour={false}
+                        minimumDate={today}
+                        maximumDate={maxDate}
                         display="default"
                         onChange={(event, selectedDate) => {
                           setShow(false);

@@ -209,9 +209,9 @@ export const Notification = () => {
   // 	};
   // }, [notificationEnabled]);
 
-  const toggleNotification = () => {
-    setNotificationEnabled((prevValue) => !prevValue);
-  };
+  // const toggleNotification = () => {
+  //   setNotificationEnabled((prevValue) => !prevValue);
+  // };
 
   return (
     <View style={{ marginLeft: 30, marginRight: 30, top: 40 }}>
@@ -304,8 +304,8 @@ export const Notification = () => {
           trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={notificationEnabled ? COLORS.primary : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
-          value={notificationEnabled}
-          onValueChange={toggleNotification}
+          // value={notificationEnabled}
+          // onValueChange={toggleNotification}
         />
       </View>
     </View>
@@ -325,3 +325,5 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
+
+

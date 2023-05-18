@@ -20,7 +20,7 @@ const { width, height } = Dimensions.get("screen");
 const imageH = height * 0.37;
 const imageW = width * 0.9;
 const imageHfeed = height*0.21;
-const imageWfeed = width*0.79;
+const imageWfeed = width*0.8;
 
 const Posts = ({ post, component }) => {
   const navigation = useNavigation();
@@ -142,7 +142,7 @@ const PostImage = memo(({ post, navigation, date, component }) => {
                     height: component === "Feeds" ? imageHfeed : imageH,
                     width: component === "Feeds" ? imageWfeed : imageW,
                     borderRadius: component === "Feeds" ? 5 : 20,
-                    resizeMode: Platform.OS === "android" ? "contain" : "cover",
+                    // resizeMode: Platform.OS === "android"? "contain":null ,
                     alignSelf: "center",
                   }}
                   key={id}

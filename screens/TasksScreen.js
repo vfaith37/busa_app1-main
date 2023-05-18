@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  YellowBox,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../constants/theme";
@@ -49,6 +50,7 @@ const TasksScreen = () => {
   const [tasks, setTasks] = useState([]);
   const [tomorrowtasks, setTomorrowsTasks] = useState([]);
   const [taskData, setTaskData] = useState([]);
+  const [otherdaysTasks, setOtherDaysTasks] = useState([])
 
   useEffect(() => {
     getAllTasks();
@@ -131,7 +133,7 @@ const TasksScreen = () => {
 
   
   
-  const getAllTasks = async () => {
+  const getAllTasks =  async() => {
     //     const today = moment();
     // const currentDate = today.format("DD/MM/YYYY");
     
@@ -162,13 +164,16 @@ const TasksScreen = () => {
           );
           
           const myTasks = res.data.data;
-          setTasks([...tasks, ...myTasks]);
-          setTaskData([...taskData, ...myTasks]);
+          // setTasks(tasks=>[...tasks, myTasks]);
+          console.log(myTasks)
+          setTasks(myTasks)
+          // setTasks([...tasks,  myTasks]);
         }
       } catch (e) {
         console.log(`${e.message}`);
       }
   };
+
 
 
   
@@ -228,29 +233,33 @@ const TasksScreen = () => {
   const filterTomorrowsTasks = (arr, type) => {
     // here the function sif current date passed is not behind the task.date that means the date is tomorrow
     let filteredTomorrowsTasks = [];
+    // const today = moment()
+    const tomorrow = moment().add(1, 'days').startOf('day');
+    // const today = date.format("DD/MMMM/YYYY")
     // Get the current date
 
     arr.forEach((task) => {
       if (
         task.category === type &&
-        moment(task.date, "DD/MM/YYYY").isAfter(today)
+        moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
       ) {
         filteredTomorrowsTasks.push(task);
       
         setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
-      if (type === "All" && moment(task.date, "DD/MM/YYYY").isAfter(today)) {
+      if (type === "All" && moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")) {
         filteredTomorrowsTasks.push(task);
         setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
-      // console.log(filteredTomorrowsTasks)
+       console.log(filteredTomorrowsTasks)
       return filteredTomorrowsTasks;
     });
   };
 
   const filterTasks = (arr, type, date) => {
+
     const dates = moment(date, "DD/MM/YYYY");
     let filteredTasks = [];
 
@@ -266,7 +275,8 @@ const TasksScreen = () => {
         filteredTasks.push(task);
         setTodos(filteredTasks);
       }
-
+         
+      console.log(filteredTasks)
        return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
@@ -274,6 +284,36 @@ const TasksScreen = () => {
   };
 
   const IncompletedTasks = () => {};
+
+
+  const filterOtherDaysTasks = (arr, type) => {
+    let filteredOtherDaysTasks = [];
+    const tomorrow = moment().add(1, 'days').startOf('day');
+  
+    arr.forEach((task) => {
+      if (
+        task.category === type &&
+        moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")
+      ) {
+        filteredOtherDaysTasks.push(task);
+      
+        setOtherDaysTasks(filteredOtherDaysTasks);
+      }
+
+      if (type === "All" && moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")) {
+        filteredOtherDaysTasks.push(task);
+        setOtherDaysTasks(filteredOtherDaysTasks);
+      }
+
+       console.log(filteredOtherDaysTasks)
+      return filteredOtherDaysTasks;
+    });
+  };
+
+
+
+
+  
 
   const Categories = ({ item }) => {
     const today = moment();
@@ -288,6 +328,7 @@ const TasksScreen = () => {
 
             filterTasks(tasks, item.name, currentDate);
             filterTomorrowsTasks(tasks, item.name);
+            filterOtherDaysTasks(tasks, item.name)
             //  setClicked(clicked);
           }}
         >
@@ -507,6 +548,7 @@ const TasksScreen = () => {
                 {todaysDate}
               </Text>
             </View>
+
             {todos.map((item) => {
               return <ListItem todo={item} key={item._id} />;
             })}
@@ -544,6 +586,40 @@ const TasksScreen = () => {
             </View>
 
             {tomorrowtasks.map((item) => {
+              return <ListItem todo={item} key={item._id} />;
+            })}
+
+
+              <View
+              style={{
+                flexDirection: "row",
+                paddingTop: 40,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins3",
+                  fontSize: 24,
+                  fontWeight: "400",
+                  lineHeight: 36,
+                }}
+              >
+              Other Days
+              </Text>
+              {/* <Text
+                style={{
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  lineHeight: 21,
+                  color: COLORS.black,
+                  paddingRight: 20,
+                  paddingTop: 8,
+                }}
+              >
+              </Text> */}
+            </View>
+            {otherdaysTasks.map((item) => {
               return <ListItem todo={item} key={item._id} />;
             })}
           </View>
