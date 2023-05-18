@@ -142,7 +142,7 @@ const PostImage = memo(({ post, navigation, date, component }) => {
                     height: component === "Feeds" ? imageHfeed : imageH,
                     width: component === "Feeds" ? imageWfeed : imageW,
                     borderRadius: component === "Feeds" ? 5 : 20,
-                    // resizeMode: Platform.OS === "android"? "contain":null ,
+                    resizeMode: Platform.OS === "android"? "contain":null,
                     alignSelf: "center",
                   }}
                   key={id}

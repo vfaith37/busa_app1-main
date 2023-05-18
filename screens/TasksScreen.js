@@ -60,20 +60,43 @@ const TasksScreen = ({ navigation }) => {
   const [otherdaysTasks, setOtherDaysTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [allTaskData, setAllTaskData] = useState([])
+  const [isFirstLoad, setIsFirstLoad] = useState(true)
+  const [currentItem, setCurrentItem] = useState([])
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     setTasks([]);
     getAllTasks();
+    if(name !==null){
+      handleASIfPressed()
+    }
     setRefresh(false);
+    setIsFirstLoad(false)
   }, [refresh, isFocused]);
+
+ 
+
+
+  const handleASIfPressed = ()=>{
+    const today = moment();
+    const currentDate = today.format("DD/MM/YYYY");
+
+    filterTasks(taskData, name, currentDate);
+            filterTomorrowsTasks(taskData, name);
+            filterOtherDaysTasks(taskData,  name);
+  }
+
+
+
+
 
   const todaysDate = moment().format("Do MMMM YYYY");
   const today = moment();
   const tomorrow = today.add(1, "days");
   const nextDate = tomorrow.format("Do MMMM YYYY");
 
+ 
  
 
 
@@ -147,6 +170,7 @@ const TasksScreen = ({ navigation }) => {
     });
   };
 
+
   const filterTasks = (arr, type, date) => {
     let filteredTasks = [];
     const dates = moment(date, "DD/MM/YYYY");
@@ -174,6 +198,8 @@ const TasksScreen = ({ navigation }) => {
     });
   };
 
+ 
+
   const IncompletedTasks = () => {};
 
   const filterOtherDaysTasks = (arr, type) => {
@@ -199,6 +225,7 @@ const TasksScreen = ({ navigation }) => {
       return filteredOtherDaysTasks;
     });
   };
+
 
   const Categories = ({ item }) => {
     const today = moment();
@@ -367,6 +394,35 @@ const TasksScreen = ({ navigation }) => {
   };
 
 
+  const InitialLanding =()=>{
+    return(
+      <>
+         <View
+                  style={{
+                    flexDirection: "row",
+                    paddingTop: 40,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins3",
+                      fontSize: 24,
+                      fontWeight: "400",
+                      lineHeight: 36,
+                    }}
+                  >
+                    Created Tasks
+                  </Text>
+                </View>
+                {allTaskData.map((item) => {
+                  return <ListItem todo={item} key={item._id} />;
+                })} 
+      </>
+    )
+  }
+
+
   const filteredIncompleteTasks =()=>{
 
   }
@@ -405,7 +461,7 @@ const TasksScreen = ({ navigation }) => {
         {/* where the filtering should start */}
 
         <ScrollView
-          contentContainerStyle={{ height: height * 1.5 }}
+          contentContainerStyle={{ height: height * 4 }}
           showsVerticalScrollIndicator={false}
         >
           <View>
@@ -428,7 +484,7 @@ const TasksScreen = ({ navigation }) => {
               todos.length<1
                    ?
                    <View>
-                 <View
+                 {/* <View
                   style={{
                     flexDirection: "row",
                     paddingTop: 40,
@@ -448,7 +504,10 @@ const TasksScreen = ({ navigation }) => {
                 </View>
                 {allTaskData.map((item) => {
                   return <ListItem todo={item} key={item._id} />;
-                })}
+                })} */}
+
+
+                <InitialLanding/>
                 </View>
                   :
                         <View>
