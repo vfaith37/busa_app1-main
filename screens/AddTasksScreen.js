@@ -59,13 +59,10 @@ maxDate.setDate(maxDate.getDate() + 3);
       });
     
 
-//  useEffect(() => {
-//       saveTodoToUserDevice(todos);
-//     }, [todos]);
+
 
 const addTasks = async(values)=>{
   // setError(false)
-
 try{
   const userToken = await AsyncStorage.getItem("userToken");
   const value = await AsyncStorage.getItem("userInfo")
@@ -108,15 +105,18 @@ const res =  await client.post(
 
 if(res.status === 200){
   console.log("successful")
-  // navigation.goBack()
-    navigation.dispatch(
-              CommonActions.navigate({
-                name: "Task",
-                params: {
-                  screen: "TasksScreen",
-                },
-              })
-            );
+  navigation.goBack();
+
+    // navigation.dispatch(
+    //           CommonActions.navigate({
+    //             name: "Task",
+    //             params: {
+    //               screen: "TasksScreen",
+    //             },
+    //           })
+    //         );
+
+
 }
 
 }

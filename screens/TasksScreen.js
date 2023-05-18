@@ -1,4 +1,9 @@
-import React, {  useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useLayOutEffect,
+} from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -14,10 +19,11 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../constants/theme";
 import { Icon } from "../constants/icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import client from "../api/client";
 import { ScrollView } from "react-native-gesture-handler";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -40,9 +46,10 @@ const List = [
   // }
 ];
 
-const TasksScreen = () => {
-  const navigation = useNavigation();
+const TasksScreen = ({ navigation }) => {
+  // const navigation = useNavigation();
   const [todos, setTodos] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const [name, setName] = useState("");
   const [clicked, setClicked] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
@@ -50,107 +57,44 @@ const TasksScreen = () => {
   const [tasks, setTasks] = useState([]);
   const [tomorrowtasks, setTomorrowsTasks] = useState([]);
   const [taskData, setTaskData] = useState([]);
-  const [otherdaysTasks, setOtherDaysTasks] = useState([])
+  const [otherdaysTasks, setOtherDaysTasks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [allTaskData, setAllTaskData] = useState([])
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    setTasks([]);
     getAllTasks();
-  }, []);
-
-  
+    setRefresh(false);
+  }, [refresh, isFocused]);
 
   const todaysDate = moment().format("Do MMMM YYYY");
   const today = moment();
   const tomorrow = today.add(1, "days");
   const nextDate = tomorrow.format("Do MMMM YYYY");
 
-  // React.useEffect(() => {
-  //   saveTodoToUserDevice(todos);
-  // }, [todos]);
-
-  // const addTodo = () => {
-  //   if (textInput == '') {
-  //     Alert.alert('Error', 'Please input todo');
-  //   } else {
-  //     const newTodo = {
-  //       id: Math.random(),
-  //       task: textInput,
-  //       completed: false,
-  //     };
-  //     setTodos([...todos, newTodo]);
-  //     setTextInput('');
-  //   }
-  // };
-
-  // const saveTodoToUserDevice = async todos => {
-  //   try {
-  //     const stringifyTodos = JSON.stringify(todos);
-  //     await AsyncStorage.setItem('todos', stringifyTodos);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const getTodosFromUserDevice = async () => {
-  //   try {
-  //     const todos = await AsyncStorage.getItem('todos');
-  //     if (todos !== null) {
-  //       setTodos(JSON.parse(todos));
-  //     }
-  //     console.log(todos)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const markTodoComplete = todoId => {
-  //   const newTodosItem = todos.map(item => {
-  //     if (item.id == todoId) {
-  //       return {...item, completed: true};
-  //     }
-  //     return item;
-  //   });
-
-  //   setTodos(newTodosItem);
-  // };
-
-  // const deleteTodo = todoId => {
-  //   const newTodosItem = todos.filter(item => item.id != todoId);
-  //   setTodos(newTodosItem);
-  // };
-
-  // const clearAllTodos = () => {
-  //   Alert.alert('Confirm', 'Clear todos?', [
-  //     {
-  //       text: 'Yes',
-  //       onPress: () => setTodos([]),
-  //     },
-  //     {
-  //       text: 'No',
-  //     },
-  //   ]);
-  // };
+ 
 
 
-  
-  
-  const getAllTasks =  async() => {
+  const getAllTasks = async () => {
     //     const today = moment();
     // const currentDate = today.format("DD/MM/YYYY");
-    
+
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const value = await AsyncStorage.getItem("userInfo");
-      
+
       if (userToken !== null && value !== null) {
         const userInfo = JSON.parse(value);
         setUserToken(userToken);
         setUserInfo(userInfo);
-        
+
         const token = userToken;
 
         const formData = new FormData();
         formData.append("userId", userInfo._id);
-        
+
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -161,80 +105,24 @@ const TasksScreen = () => {
         const res = await client.get(
           `/task/getMyTasks/${userInfo._id}`,
           config
-          );
-          
-          const myTasks = res.data.data;
-          // setTasks(tasks=>[...tasks, myTasks]);
-          console.log(myTasks)
-          setTasks(myTasks)
-          // setTasks([...tasks,  myTasks]);
-        }
-      } catch (e) {
-        console.log(`${e.message}`);
+        );
+
+        const myTasks = res.data.data;
+        console.log(myTasks);
+        setTasks(myTasks);
+        setTaskData(myTasks);
+        setAllTaskData(myTasks)
       }
+    } catch (e) {
+      console.log(`${e.message}`);
+    }
   };
-
-
-
-  
-  //   const getTasksByDate = async ()=>{
-  // // here get atsks by current date
-  
-  // try {
-  //   const userToken = await AsyncStorage.getItem("userToken");
-  //   const value = await AsyncStorage.getItem("userInfo");
-  
-  //   if (userToken !== null && value !== null) {
-  //     const userInfo = JSON.parse(value);
-  //     setUserToken(userToken);
-  //     setUserInfo(userInfo);
-
-  //     const token = userToken;
-
-  //       const formData = new FormData()
-  //     formData.append("date", "27/05/2023")
-
-  //                 const config = {
-  //                   headers: {
-  //                     Authorization: `Bearer ${token}`,
-  //                    "content-type": "multipart/form-data",
-  //                   },
-  //                  };
-
-  //                 const res = await client.get(`/task/getTasksByDate`, formData, config)
-  //                 console.log(res.data.data)
-
-  //                 const myTasks = res.data.data
-  //                 setTasks([...tasks, ...myTasks])
-
-  //   }
-  // } catch (e) {
-  //   console.log(`${e.message}`);
-  // }
-
-  //   }
-
-  // const groupTaskByDate = (tasks) => {
-  //   let result = {};
-  //   tasks.forEach(task => {
-  //     let dateIndex = task.date;
-  //     if(!result[dateIndex]){
-  //       result[dateIndex] = [];
-  //     }
-  //     result[dateIndex].push(task);
-
-  //   });
-  //   console.log(result)
-  //   // setTodos(result)
-  //   console.log(todos)
-  //   return result;
-  // }
 
   const filterTomorrowsTasks = (arr, type) => {
     // here the function sif current date passed is not behind the task.date that means the date is tomorrow
     let filteredTomorrowsTasks = [];
     // const today = moment()
-    const tomorrow = moment().add(1, 'days').startOf('day');
+    const tomorrow = moment().add(1, "days").startOf("day");
     // const today = date.format("DD/MMMM/YYYY")
     // Get the current date
 
@@ -244,40 +132,43 @@ const TasksScreen = () => {
         moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
       ) {
         filteredTomorrowsTasks.push(task);
-      
-        setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
-      if (type === "All" && moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")) {
+      if (
+        type === "All" &&
+        moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
+      ) {
         filteredTomorrowsTasks.push(task);
-        setTomorrowsTasks(filteredTomorrowsTasks);
       }
 
-       console.log(filteredTomorrowsTasks)
+      setTomorrowsTasks(filteredTomorrowsTasks);
+      //  console.log(filteredTomorrowsTasks)
       return filteredTomorrowsTasks;
     });
   };
 
   const filterTasks = (arr, type, date) => {
-
-    const dates = moment(date, "DD/MM/YYYY");
     let filteredTasks = [];
+    const dates = moment(date, "DD/MM/YYYY");
 
     arr.forEach((task) => {
       const taskDate = moment(task.date, "DD/MM/YYYY");
 
-      if (task.category === type && taskDate.isSame(dates)) {
+      if (
+        (task.category === type || type === "All") &&
+        taskDate.isSame(dates)
+      ) {
         filteredTasks.push(task);
-        setTodos(filteredTasks);
       }
 
-      if (type === "All" && taskDate.isSame(dates)) {
-        filteredTasks.push(task);
-        setTodos(filteredTasks);
-      }
-         
-      console.log(filteredTasks)
-       return filteredTasks;
+      // if (type === "All" && taskDate.isSame(dates)) {
+      //   filteredTasks.push(task);
+      //   setTodos(filteredTasks);
+      // }
+
+      setTodos(filteredTasks);
+      console.log(filteredTasks);
+      return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
     });
@@ -285,35 +176,29 @@ const TasksScreen = () => {
 
   const IncompletedTasks = () => {};
 
-
   const filterOtherDaysTasks = (arr, type) => {
     let filteredOtherDaysTasks = [];
-    const tomorrow = moment().add(1, 'days').startOf('day');
-  
+    const tomorrow = moment().add(1, "days").startOf("day");
+
     arr.forEach((task) => {
       if (
         task.category === type &&
         moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")
       ) {
         filteredOtherDaysTasks.push(task);
-      
-        setOtherDaysTasks(filteredOtherDaysTasks);
       }
 
-      if (type === "All" && moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")) {
+      if (
+        type === "All" &&
+        moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")
+      ) {
         filteredOtherDaysTasks.push(task);
-        setOtherDaysTasks(filteredOtherDaysTasks);
       }
 
-       console.log(filteredOtherDaysTasks)
+      setOtherDaysTasks(filteredOtherDaysTasks);
       return filteredOtherDaysTasks;
     });
   };
-
-
-
-
-  
 
   const Categories = ({ item }) => {
     const today = moment();
@@ -321,15 +206,15 @@ const TasksScreen = () => {
 
     return (
       <>
+      <View>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-           setName(item.name);
+            setName(item.name);
 
             filterTasks(tasks, item.name, currentDate);
             filterTomorrowsTasks(tasks, item.name);
-            filterOtherDaysTasks(tasks, item.name)
-            //  setClicked(clicked);
+            filterOtherDaysTasks(tasks, item.name);
           }}
         >
           <View style={{ paddingHorizontal: 5 }}>
@@ -340,7 +225,7 @@ const TasksScreen = () => {
                 backgroundColor: COLORS.todoInactive,
                 borderRadius: 20,
                 borderColor:
-                name === item.name ? COLORS.todoBackground : "transparent",
+                  name === item.name ? COLORS.todoBackground : "transparent",
                 borderWidth: name === item.name ? 2 : 0.5,
               }}
             >
@@ -371,6 +256,7 @@ const TasksScreen = () => {
             </View>
           </View>
         </TouchableOpacity>
+      </View>
       </>
     );
   };
@@ -480,6 +366,11 @@ const TasksScreen = () => {
     );
   };
 
+
+  const filteredIncompleteTasks =()=>{
+
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -518,96 +409,185 @@ const TasksScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingTop: 40,
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "Poppins3",
-                  fontSize: 24,
-                  fontWeight: "400",
-                  lineHeight: 36,
-                }}
-              >
-                Today
-              </Text>
-              <Text
-                style={{
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  lineHeight: 21,
-                  color: COLORS.black,
-                  paddingRight: 20,
-                  paddingTop: 8,
-                }}
-              >
-                {todaysDate}
-              </Text>
-            </View>
+            {taskData.length === 0 && !isLoading ? (
+              <View>
+                <TouchableOpacity activeOpacity={0.6}>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins",
+                      fontSize: 13,
+                      paddingTop: 10,
+                    }}
+                  >
+                    loading.....
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              // length of all the arrays = 0 show this else then show filtered data
+              todos.length<1
+                   ?
+                   <View>
+                 <View
+                  style={{
+                    flexDirection: "row",
+                    paddingTop: 40,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins3",
+                      fontSize: 24,
+                      fontWeight: "400",
+                      lineHeight: 36,
+                    }}
+                  >
+                    Created Tasks
+                  </Text>
+                </View>
+                {allTaskData.map((item) => {
+                  return <ListItem todo={item} key={item._id} />;
+                })}
+                </View>
+                  :
+                        <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingTop: 40,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins3",
+                      fontSize: 24,
+                      fontWeight: "400",
+                      lineHeight: 36,
+                    }}
+                  >
+                    Today
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      lineHeight: 21,
+                      color: COLORS.black,
+                      paddingRight: 20,
+                      paddingTop: 8,
+                    }}
+                  >
+                    {todaysDate}
+                  </Text>
+                </View>
 
-            {todos.map((item) => {
-              return <ListItem todo={item} key={item._id} />;
-            })}
+                {todos.map((item) => {
+                  return <ListItem todo={item} key={item._id} />;
+                })}
 
-            <View
-              style={{
-                flexDirection: "row",
-                // bottom: 90,
-                paddingTop: 30,
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "Poppins3",
-                  fontSize: 24,
-                  fontWeight: "400",
-                  lineHeight: 36,
-                }}
-              >
-                Tommorow
-              </Text>
-              <Text
-                style={{
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  lineHeight: 21,
-                  color: COLORS.black,
-                  paddingRight: 20,
-                  paddingTop: 8,
-                }}
-              >
-                {nextDate}
-              </Text>
-            </View>
+                {todos.length === 0 && !isLoading && (
+                  <View>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      // onPress={()=>{
+                      // navigation.dispatch(
+                      //   CommonActions.navigate({
+                      //     name: "Task",
+                      //     params: {
+                      //       screen: "TasksScreen",
+                      //     },
+                      //   })
+                      // );
+                      //   }
+                      // }
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Poppins",
+                          fontSize: 13,
+                          paddingTop: 3,
+                        }}
+                      >
+                        no tasks set, click to set tasks
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
 
-            {tomorrowtasks.map((item) => {
-              return <ListItem todo={item} key={item._id} />;
-            })}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    // bottom: 90,
+                    paddingTop: 30,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins3",
+                      fontSize: 24,
+                      fontWeight: "400",
+                      lineHeight: 36,
+                    }}
+                  >
+                    Tommorow
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      lineHeight: 21,
+                      color: COLORS.black,
+                      paddingRight: 20,
+                      paddingTop: 8,
+                    }}
+                  >
+                    {nextDate}
+                  </Text>
+                </View>
 
+                {tomorrowtasks.map((item) => {
+                  return <ListItem todo={item} key={item._id} />;
+                })}
 
-              <View
-              style={{
-                flexDirection: "row",
-                paddingTop: 40,
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "Poppins3",
-                  fontSize: 24,
-                  fontWeight: "400",
-                  lineHeight: 36,
-                }}
-              >
-              Other Days
-              </Text>
-              {/* <Text
+                {tomorrowtasks.length === 0 && !isLoading && (
+                  <View>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Poppins",
+                          fontSize: 13,
+                          paddingTop: 3,
+                        }}
+                      >
+                        no tasks for tomorrow, click to set tasks
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingTop: 40,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins3",
+                      fontSize: 24,
+                      fontWeight: "400",
+                      lineHeight: 36,
+                    }}
+                  >
+                    Coming Days
+                  </Text>
+                  {/* <Text
                 style={{
                   fontFamily: "Poppins",
                   fontSize: 14,
@@ -618,10 +598,41 @@ const TasksScreen = () => {
                 }}
               >
               </Text> */}
-            </View>
-            {otherdaysTasks.map((item) => {
-              return <ListItem todo={item} key={item._id} />;
-            })}
+                </View>
+                {otherdaysTasks.map((item) => {
+                  return <ListItem todo={item} key={item._id} />;
+                })}
+
+                {otherdaysTasks.length === 0 && !isLoading && (
+                  <View>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      // onPress={()=>{
+                      // navigation.dispatch(
+                      //   CommonActions.navigate({
+                      //     name: "Task",
+                      //     params: {
+                      //       screen: "TasksScreen",
+                      //     },
+                      //   })
+                      // );
+                      //   }
+                      // }
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Poppins",
+                          fontSize: 13,
+                          paddingTop: 3,
+                        }}
+                      >
+                        no tasks for coming days, click to set tasks
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                </View>
+            )}
           </View>
         </ScrollView>
 

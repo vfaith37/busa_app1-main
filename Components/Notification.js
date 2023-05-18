@@ -8,7 +8,6 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-// import * as Notifications from "expo-notifications";
 import messaging from "@react-native-firebase/messaging";
 import { COLORS } from "../constants/theme";
 import { Back } from "../constants/icons";
@@ -22,8 +21,6 @@ export const Notification = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
-  // const notificationListener = useRef();
-  // const responseListener = useRef();
   const navigation = useNavigation();
 
   const requestPermissions = async () => {
@@ -57,16 +54,19 @@ export const Notification = () => {
         };
         const platform = Platform.OS;
 
-        const formData = new FormData();
-        formData.append("deviceId", token);
-        formData.append("platform", platform);
+        // const formData = new FormData();
+        // formData.append("deviceId", token);
+        // formData.append("platform", platform);
 
+        console.log(platform)
+        console.log(userToken)
         console.log(token);
 
+
         await client
-          .post(`/api/notification/registerDevice`, formData, config)
+          .post(`/api/notification/registerDevice`, config)
           .then((res) => {
-            console.log(res.data);
+            console.log(res);
           });
         console.log("Token sent to the server successfully.");
       }
@@ -81,12 +81,13 @@ export const Notification = () => {
         .getToken()
         .then((token) => {
           console.log(token);
-          return saveTokenToDatabase(token);
+          //return saveTokenToDatabase(token);
         });
 
       // listen when token changes
       return messaging().onTokenRefresh((token) => {
-        saveTokenToDatabase(token);
+        // saveTokenToDatabase(token);
+        console.log(token)
       });
     } else {
       console.log("Failed Token status");
@@ -98,7 +99,7 @@ export const Notification = () => {
         if (remoteMessage) {
           console.log(
             "Notification caused app to open from quit state:",
-            remoteMessage.Notification
+            remoteMessage.notification
           );
         }
       });
@@ -106,7 +107,7 @@ export const Notification = () => {
     messaging().onNotificationOpenedApp()(async (remoteMessage) => {
       console.log(
         "Notification caused app to open from background state:",
-        remoteMessage.Notification
+        remoteMessage.notification
       );
     });
 
@@ -126,93 +127,7 @@ export const Notification = () => {
     // 	});
   }, []);
 
-  // useEffect(() => {
-  // 	const handleNotification = (notification) => {
-  // 		// Handle incoming notification
-  // 		console.log("Notification received:", notification);
-  // 	};
-
-  // 	const registerForPushNotifications = async () => {
-  // 		const { status: existingStatus } =
-  // 			await Notifications.getPermissionsAsync();
-  // 		let finalStatus = existingStatus;
-
-  // 		if (existingStatus !== "granted") {
-  // 			const { status } = await Notifications.requestPermissionsAsync();
-  // 			finalStatus = status;
-  // 		}
-
-  // 		if (finalStatus !== "granted") {
-  // 			console.log("Permission to receive notifications was denied.");
-  // 			return;
-  // 		}
-
-  // 		const { data: token } = await Notifications.getExpoPushTokenAsync();
-
-  // 		console.log("Expo Push Token:", token);
-  // 		console.log(platform);
-  // 		// const data = [
-  // 		// 	{
-  // 		// 		deviceId: token,
-  // 		// 		platform: platform,
-  // 		// 	},
-  // 		// ];
-  // 		// console.log(data);
-
-  // 		const formData = new FormData()
-  // 		formData.append("deviceId", token)
-  // 		formData.append("platform", platform)
-
-  // 		try {
-  // 			const userToken = await AsyncStorage.getItem("userToken");
-  // 			const value = await AsyncStorage.getItem("userInfo");
-  // 			if (userToken !== null && value !== null) {
-  // 				const userInfo = JSON.parse(value);
-  // 				setUserToken(userToken);
-  // 				setUserInfo(userInfo);
-
-  // 				const token = userToken;
-  // 				const config = {
-  // 					headers: {
-  // 						Authorization: `Bearer ${token}`,
-  // 						"content-type": "multipart/form-data",
-  // 					},
-  // 				};
-  // 				console.log(config);
-
-  // 				await client
-  // 					.post(
-  // 						`/api/notification/registerDevice`, formData, config)
-  // 					.then((res) => {
-  // 						console.log(res.data);
-  // 					});
-  // 				console.log("Token sent to the server successfully.");
-  // 			}
-  // 		} catch (error) {
-  // 			console.log("Failed to send token to the server:", error);
-  // 		}
-
-  // 		if (notificationEnabled) {
-  // 			Notifications.addNotificationReceivedListener(handleNotification);
-  // 		} else {
-  // 			Notifications.removeNotificationSubscription(handleNotification);
-  // 		}
-  // 	};
-
-  // 	registerForPushNotifications();
-
-  // 	return () => {
-  // 		// Notifications.removeNotificationSubscription(
-  // 		// 	notificationListener.current
-  // 		// );
-  // 		// Notifications.removeNotificationSubscription(responseListener.current);
-  // 	};
-  // }, [notificationEnabled]);
-
-  // const toggleNotification = () => {
-  //   setNotificationEnabled((prevValue) => !prevValue);
-  // };
-
+  
   return (
     <View style={{ marginLeft: 30, marginRight: 30, top: 40 }}>
       <View
