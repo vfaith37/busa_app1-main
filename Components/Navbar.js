@@ -34,7 +34,7 @@ const Navbar = ({ userInfo }) => {
           style={{ width: 73, height: 73 }}
         />
       </View>
-      <NameSection userInfo={userInfo} />
+      {/* <NameSection userInfo={userInfo} /> */}
     </View>
   );
 };
