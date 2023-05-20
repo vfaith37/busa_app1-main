@@ -30,7 +30,7 @@ const Navbar = ({ userInfo }) => {
         </TouchableOpacity>
 
         <Image
-          source={require("../assets/image1.png")}
+          source={require("../assets/busa.png")}
           style={{ width: 73, height: 73 }}
         />
       </View>
