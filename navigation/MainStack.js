@@ -52,8 +52,8 @@ const TabNavigator = () => {
 
 				if (route.name === "Home") {
 					iconName = focused
-						? "ios-newspaper"
-						: "ios-newspaper-outline";
+						? "home"
+						: "home-outline";
 				} else if (route.name === "Event") {
 					iconName = focused ? "ios-calendar" : "ios-calendar-outline";
 				} else if (route.name === "Profile") {
@@ -62,17 +62,18 @@ const TabNavigator = () => {
 					iconName = focused ? "add-circle" : "add-circle-outline";
 				}
 
-				return <Ionicons name={iconName} size={23} color={color} style={{paddingTop:6}}/>;
+				return <Ionicons name={iconName} size={25} color={color} style={{position:"absolute", flex:1}}/>;
 			},
-			tabBarActiveTintColor: COLORS.todoBackground,
+			tabBarActiveTintColor: COLORS.primary,
 			tabBarInactiveTintColor: COLORS.darkgray,
-			tabBarLabelStyle: {fontFamily:"Poppins", fontSize:9, lineHeight:13.5, textTransform:"none"},
+			tabBarLabelStyle: {fontFamily:"Poppins", fontSize:12, lineHeight:21, textTransform:"none"},
+			
 		})}
 	
 	>
 		<Tab.Screen name="Home" component={HomeStack} headerShown={false}/>
-		<Tab.Screen name="Event" component={EventStack}/> 
 		<Tab.Screen name="Task" component={TasksStack}/>
+		<Tab.Screen name="Event" component={EventStack}/> 
 		<Tab.Screen name="Profile" component={ProfileStack} headerShown={true}/>
 	</Tab.Navigator>
 
@@ -108,7 +109,7 @@ export  function MainStack() {
 					  iconName = focused ? "mail" : "mail-outline";
 				  }
 				  else if (route.name === "Settings"){
-					  iconName = focused ? "settings" : "settings-outline";
+					  iconName = focused ? "cog" : "cog-outline";
 				  }
   
 				  return <Ionicons name={iconName} size={25} color={ focused ? color : "#7B7B7B"}/>;
