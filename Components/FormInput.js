@@ -2,7 +2,7 @@ import { Text, TextInput, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../constants/theme";
 export const FormInput = (props) => {
-	const { label, error, style, TextInputStyle, rightIcon, onPress } = props;
+	const { label, error, style, TextInputStyle, rightIcon, onPress, multiline } = props;
 	return (
 		<>
 			<View
@@ -23,6 +23,7 @@ export const FormInput = (props) => {
 				<TextInput
 					{...props}
 					style={TextInputStyle}
+					multiline={multiline}
 					selectionColor={COLORS.primary}
 					cursorColor={COLORS.primary}
 				/>
