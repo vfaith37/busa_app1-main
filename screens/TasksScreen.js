@@ -92,20 +92,13 @@ const TasksScreen = () => {
   //   setIsFirstLoad(false)
   // }, [refresh, isFocused]);
 
+
  
   // only run this hook when the screen is ficused and not when navigating between tabs
 useFocusEffect(
   useCallback(()=>{
-    setTasks([])
+    // setTasks([])
       getAllTasks()
-      if(name!== ""){
-        const today = moment();
-        const currentDate = today.format("DD/MM/YYYY");
-        
-        filterTasks(tasks,  name, currentDate);
-              filterTomorrowsTasks(tasks, name);
-              filterOtherDaysTasks(tasks, name);
-      }
   },[])
 )
 
@@ -147,6 +140,19 @@ useFocusEffect(
         // setAllTaskData(myTasks)
 
         console.log(name)
+
+        const prevname = name
+
+        if(name !== ""){
+
+          setName(prevname)
+          const today = moment();
+          const currentDate = today.format("DD/MM/YYYY");
+
+          filterTasks(tasks,  prevname, currentDate);
+              filterTomorrowsTasks(tasks, prevname);
+              filterOtherDaysTasks(tasks, prevname);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -174,7 +180,7 @@ useFocusEffect(
  
       setTomorrowsTasks(filteredTomorrowsTasks);
       console.log(filteredTomorrowsTasks)
-      return filteredTomorrowsTasks;
+      // return filteredTomorrowsTasks;
     });
   };
 
@@ -195,7 +201,7 @@ useFocusEffect(
 
       setTodos(filteredTasks);
       console.log(filteredTasks)
-      return filteredTasks;
+      // return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
     });
@@ -216,7 +222,7 @@ useFocusEffect(
         
       setOtherDaysTasks(filteredOtherDaysTasks);
       console.log(filteredOtherDaysTasks)
-      return filteredOtherDaysTasks;
+      // return filteredOtherDaysTasks;
     });
   };
 
@@ -232,6 +238,7 @@ useFocusEffect(
           activeOpacity={0.7}
           onPress={() => {
             setName(item.name);
+            console.log(item.name)
 
             if (item.name === "AllTasks"){
                     setAllTaskData(tasks)
@@ -865,13 +872,13 @@ try{
         {/* where the filtering should start */}
 
         <ScrollView
-          contentContainerStyle={{ height: height * 4 }}
+          contentContainerStyle={{ height: height * 6 }}
           showsVerticalScrollIndicator={false}
         >
           <View>
            {
 
-       taskData.length ===0 && !isLoading? (
+       isLoading? (
           <View>
              <Text
           style={{
