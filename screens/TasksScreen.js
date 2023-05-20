@@ -8,13 +8,12 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  TextInput,
   Text,
   FlatList,
   TouchableOpacity,
-  Alert,
   Dimensions,
-  YellowBox,
+  Alert,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../constants/theme";
@@ -22,12 +21,17 @@ import { Icon } from "../constants/icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import client from "../api/client";
-import { ScrollView } from "react-native-gesture-handler";
 import { useIsFocused } from "@react-navigation/native";
+import { CheckBox } from "react-native-elements";
+
 
 const { width, height } = Dimensions.get("screen");
 
 const List = [
+  {
+    icon:"clipboard-outline",
+    name:"AllTasks"
+  },
   {
     icon: "clipboard-outline",
     name: "All",
@@ -40,14 +44,19 @@ const List = [
     icon: "book-outline",
     name: "Assignments",
   },
-  // {
-  //   icon:"book-outline",
-  //   name:"Incompleted"
-  // }
+  {
+    icon:"book-outline",
+    name:"Incompleted"
+  },
+  {
+    icon:"book-outline",
+    name:"Completed"
+  }
 ];
 
-const TasksScreen = ({ navigation }) => {
-  // const navigation = useNavigation();
+const TasksScreen = () => {
+  
+  const navigation = useNavigation();
   const [todos, setTodos] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [name, setName] = useState("");
@@ -60,49 +69,50 @@ const TasksScreen = ({ navigation }) => {
   const [otherdaysTasks, setOtherDaysTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [allTaskData, setAllTaskData] = useState([])
-  const [isFirstLoad, setIsFirstLoad] = useState(true)
-  const [currentItem, setCurrentItem] = useState([])
-
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    setTasks([]);
-    getAllTasks();
-    if(name !==null){
-      handleASIfPressed()
-    }
-    setRefresh(false);
-    setIsFirstLoad(false)
-  }, [refresh, isFocused]);
-
- 
+  const [selectedTasks, setSelectedTasks] = useState([]);
+  // const [isFirstLoad, setIsFirstLoad] = useState(true)
+  // const [initialLanding, setInitialLanding] = useState([])
+  // const [completedTasks, setCompletedTasks] = useState([])
 
 
-  const handleASIfPressed = ()=>{
-    const today = moment();
-    const currentDate = today.format("DD/MM/YYYY");
-
-    filterTasks(taskData, name, currentDate);
-            filterTomorrowsTasks(taskData, name);
-            filterOtherDaysTasks(taskData,  name);
-  }
-
-
-
-
+  // const isFocused = useIsFocused();
 
   const todaysDate = moment().format("Do MMMM YYYY");
   const today = moment();
   const tomorrow = today.add(1, "days");
   const nextDate = tomorrow.format("Do MMMM YYYY");
 
+  // for better code optimization and efficiency when the screen is focused, run filter function for the current name before the user was navigated back
+  
+  // useEffect(() => {
+  //   setTasks([]);
+  //   // setTodos([])
+  //   getAllTasks();
+  //   setRefresh(false);
+  //   setIsFirstLoad(false)
+  // }, [refresh, isFocused]);
+
  
- 
+  // only run this hook when the screen is ficused and not when navigating between tabs
+useFocusEffect(
+  useCallback(()=>{
+    setTasks([])
+      getAllTasks()
+      if(name!== ""){
+        const today = moment();
+        const currentDate = today.format("DD/MM/YYYY");
+        
+        filterTasks(tasks,  name, currentDate);
+              filterTomorrowsTasks(tasks, name);
+              filterOtherDaysTasks(tasks, name);
+      }
+  },[])
+)
+
 
 
   const getAllTasks = async () => {
-    //     const today = moment();
-    // const currentDate = today.format("DD/MM/YYYY");
+    setIsLoading(true)
 
     try {
       const userToken = await AsyncStorage.getItem("userToken");
@@ -131,13 +141,17 @@ const TasksScreen = ({ navigation }) => {
         );
 
         const myTasks = res.data.data;
-        console.log(myTasks);
+        console.log(myTasks)
         setTasks(myTasks);
         setTaskData(myTasks);
-        setAllTaskData(myTasks)
+        // setAllTaskData(myTasks)
+
+        console.log(name)
       }
     } catch (e) {
-      console.log(`${e.message}`);
+      console.log(e);
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -151,21 +165,15 @@ const TasksScreen = ({ navigation }) => {
 
     arr.forEach((task) => {
       if (
-        task.category === type &&
+        ((task.category === type || type === "All") || (task.completed === false && type === "Incompleted") || (task.completed === true && type === "Completed")) &&
         moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
       ) {
         filteredTomorrowsTasks.push(task);
       }
 
-      if (
-        type === "All" &&
-        moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
-      ) {
-        filteredTomorrowsTasks.push(task);
-      }
-
+ 
       setTomorrowsTasks(filteredTomorrowsTasks);
-      //  console.log(filteredTomorrowsTasks)
+      console.log(filteredTomorrowsTasks)
       return filteredTomorrowsTasks;
     });
   };
@@ -177,30 +185,22 @@ const TasksScreen = ({ navigation }) => {
 
     arr.forEach((task) => {
       const taskDate = moment(task.date, "DD/MM/YYYY");
-
+                                              
       if (
-        (task.category === type || type === "All") &&
+        ((task.category === type || type === "All") || (task.completed === false && type === "Incompleted") || (task.completed === true && type ==="Completed"))  &&
         taskDate.isSame(dates)
       ) {
         filteredTasks.push(task);
       }
 
-      // if (type === "All" && taskDate.isSame(dates)) {
-      //   filteredTasks.push(task);
-      //   setTodos(filteredTasks);
-      // }
-
       setTodos(filteredTasks);
-      console.log(filteredTasks);
+      console.log(filteredTasks)
       return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
     });
   };
 
- 
-
-  const IncompletedTasks = () => {};
 
   const filterOtherDaysTasks = (arr, type) => {
     let filteredOtherDaysTasks = [];
@@ -208,20 +208,14 @@ const TasksScreen = ({ navigation }) => {
 
     arr.forEach((task) => {
       if (
-        task.category === type &&
+        ((task.category === type || type === "All") || (task.completed === false && type === "Incompleted") || (task.completed === true && type ==="Completed")) &&
         moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")
       ) {
         filteredOtherDaysTasks.push(task);
       }
-
-      if (
-        type === "All" &&
-        moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")
-      ) {
-        filteredOtherDaysTasks.push(task);
-      }
-
+        
       setOtherDaysTasks(filteredOtherDaysTasks);
+      console.log(filteredOtherDaysTasks)
       return filteredOtherDaysTasks;
     });
   };
@@ -239,9 +233,13 @@ const TasksScreen = ({ navigation }) => {
           onPress={() => {
             setName(item.name);
 
-            filterTasks(tasks, item.name, currentDate);
-            filterTomorrowsTasks(tasks, item.name);
-            filterOtherDaysTasks(tasks, item.name);
+            if (item.name === "AllTasks"){
+                    setAllTaskData(tasks)
+            }else{
+              filterTasks(tasks, item.name, currentDate);
+              filterTomorrowsTasks(tasks, item.name);
+              filterOtherDaysTasks(tasks, item.name);
+            } 
           }}
         >
           <View style={{ paddingHorizontal: 5 }}>
@@ -288,12 +286,22 @@ const TasksScreen = ({ navigation }) => {
     );
   };
 
-  const ListItem = ({ todo }) => {
+  const ListItem = ({ todo, type}) => {
     // here, todo already contains filtered tasks by category and date
 
     return (
       <ScrollView>
         <View style={{ marginVertical: 10 }}>
+          {type === "AllTasks" && (
+            <>
+             <CheckBox
+        // value={selectedTasks.includes(todo._id)}
+        // onValueChange={() => toggleTaskSelection(todo._id)}
+        checked={selectedTasks.includes(todo._id)}
+        onPress={() => toggleTaskSelection(todo._id)}
+      />
+            </>
+          )}
           <View style={styles.listItem}>
             <View
               style={{
@@ -374,19 +382,6 @@ const TasksScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-
-            {/* {!todo?.completed && (
-              <TouchableOpacity onPress={() => markTodoComplete(todo.id)}>
-                <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
-                  <Icon name="done" size={20} color="white" />
-                </View>
-              </TouchableOpacity>
-            )} */}
-            {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
-              <View style={styles.actionIcon}>
-                <Icon name="delete" size={20} color="white" />
-              </View>
-            </TouchableOpacity> */}
           </View>
         </View>
       </ScrollView>
@@ -399,9 +394,7 @@ const TasksScreen = ({ navigation }) => {
       <>
          <View
                   style={{
-                    flexDirection: "row",
                     paddingTop: 40,
-                    justifyContent: "space-between",
                   }}
                 >
                   <Text
@@ -412,20 +405,431 @@ const TasksScreen = ({ navigation }) => {
                       lineHeight: 36,
                     }}
                   >
-                    Created Tasks
+                    Completed Tasks
                   </Text>
+       <FilteredDatas type={"Completed"}/>
                 </View>
-                {allTaskData.map((item) => {
-                  return <ListItem todo={item} key={item._id} />;
-                })} 
       </>
     )
   }
 
 
-  const filteredIncompleteTasks =()=>{
-
+  const AllTasks =()=>{
+    return(
+      <FilteredDatas type={"AllTasks"}/>
+    )
   }
+
+  const toggleTaskSelection = (taskId) => {
+
+    setSelectedTasks((prevSelectedTasks) => {
+      if (prevSelectedTasks.includes(taskId)) {
+        return prevSelectedTasks.filter((_id) => _id !== taskId);
+      }
+      console.log([prevSelectedTasks, taskId])
+      return [...prevSelectedTasks, taskId];
+    });
+  };
+
+
+  const handleDeleteTasks = async () => {
+    if (selectedTasks.length === 0) {
+      Alert.alert('No tasks selected', 'Please select tasks to delete');
+      return;
+    }
+
+    setIsLoading(true)
+
+
+    // Alert.alert('Confirm Deletion', 'Are you sure you want to delete the selected tasks?', [
+    //   {
+    //     text: 'Cancel',
+    //     style: 'cancel',
+    //   },
+    //   {
+    //     text: 'Delete',
+    //     onPress: async () => {
+    //       setIsLoading(true);
+    //       try {
+    //         // Make the API call to delete tasks
+    //         const response = await fetch('/api/tasks/delete', {
+    //           method: 'POST',
+    //           headers: {
+    //             'Content-Type': 'application/json',
+    //           },
+    //           body: JSON.stringify({ taskIds: selectedTasks }),
+    //         });
+
+    //         if (response.ok) {
+    //           // Delete tasks from the UI optimistically
+    //           setTasks((prevTasks) => prevTasks.filter((task) => !selectedTasks.includes(task._id)));
+    //           setSelectedTasks([]);
+    //         } else {
+    //           // Revert the UI to the previous state and show an error message
+    //           Alert.alert('Error', 'Failed to delete tasks. Please try again later.');
+    //         }
+    //       } catch (error) {
+    //         // Handle the error and show appropriate message to the user
+    //         Alert.alert('Error', 'Failed to delete tasks. Please try again later.');
+    //       }
+    //       setIsLoading(false);
+    //     },
+    //   },
+    // ]);
+
+// Store the previous state
+const prevTasks = tasks;
+const prevSelectedTasks = selectedTasks;
+
+
+setTasks((prevTasks) => prevTasks.filter((task) => !selectedTasks.includes(task._id)));
+setSelectedTasks([]);
+
+
+// Make the API call to delete tasks
+// make sure to use axios
+await fetch('/api/tasks/delete', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ taskIds: selectedTasks }),
+})
+  .then((response) => {
+    if (!response.ok) {
+      // Revert the UI to the previous state and show an error message
+      setTasks(prevTasks);
+      setSelectedTasks(prevSelectedTasks);
+      Alert.alert('Error', 'Failed to delete tasks. Please try again later.');
+    }
+  })
+  .catch((error) => {
+    // Handle the error and show appropriate message to the user
+    console.log(error)
+    setTasks(prevTasks);
+    setSelectedTasks(prevSelectedTasks);
+    Alert.alert('Error', 'Failed to delete tasks. Please try again later.');
+  }).finally(()=>{
+    setIsLoading(false)
+  });
+  };
+
+
+
+  const handleCompleteTasks = async () => {
+    if (selectedTasks.length === 0) {
+      Alert.alert('No tasks selected', 'Please select tasks to mark as completed');
+      return;
+    }
+
+    setIsLoading(true);
+
+//     try {
+//       // Make the API call to update tasks as completed
+//       const response = await fetch('/api/tasks/complete', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ taskIds: selectedTasks }),
+//       });
+
+//       if (response.ok) {
+//         // Update tasks as completed in the UI optimistically
+//         setTasks((prevTasks) =>
+//           prevTasks.map((task) =>
+//             selectedTasks.includes(task._id) ? { ...task, completed: true } : task
+//           )
+//         );
+//         setSelectedTasks([]);
+//       } else {
+//   // Revert the UI to the previous state and show an error message
+//   Alert.alert('Error', 'Failed to mark tasks as completed. Please try again later.');
+// }
+// }
+// catch (error) {
+//   // Handle the error and show appropriate message to the user
+//   Alert.alert('Error', 'Failed to mark tasks as completed. Please try again later.');
+// }
+// finally{
+//   setIsLoading(false);
+// }
+
+const prevTasks = tasks;
+const prevSelectedTasks = selectedTasks;
+
+// perform optimization code before deleting for best user experience
+try{
+  // Store the previous state
+
+
+  setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+              selectedTasks.includes(task._id) ? { ...task, completed: true } : task
+            )
+          );
+          setSelectedTasks([]);
+  
+              const response = await fetch('/api/tasks/complete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ taskIds: selectedTasks }),
+        });
+  
+  
+        if (!response.ok) {
+        // Revert the UI to the previous state and show an error message
+        setTasks(prevTasks);
+        setSelectedTasks(prevSelectedTasks);
+        Alert.alert('Error', 'Failed to mark tasks. Please try again later.');   
+               
+                }
+
+}catch (error){
+  // Handle the error and show appropriate message to the user
+  setTasks(prevTasks);
+  setSelectedTasks(prevSelectedTasks);
+  Alert.alert('Error', 'Failed to delete tasks. Please try again later.');
+
+}
+  }
+
+
+  const FilteredDatas = ({type})=>{
+    return(
+      <>
+      <View>
+        {type === "AllTasks" ? 
+        <View style={{paddingTop:20}}>
+               {/* map through the task data and display it. */}
+
+               <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+               <TouchableOpacity 
+              onPress={handleCompleteTasks}
+               >
+                <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
+                  <Icon name="checkbox-outline" size={20} color="white" />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+              onPress={handleDeleteTasks}
+              >
+              <View style={[styles.actionIcon, {right:30, position:"absolute"}]}>
+                <Icon name="trash-outline" size={20} color="red" />
+              </View>
+            </TouchableOpacity>
+            </View>
+
+            {tasks.map((item) => {
+                 return <ListItem todo={item} key={item._id}
+                 type={"AllTasks"}
+            />;
+               })}
+
+
+
+
+
+          {/* {!todo?.completed && (
+              <TouchableOpacity onPress={() => markTodoComplete(todo.id)}>
+                <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
+                  <Icon name="book-outline" size={20} color="white" />
+                </View>
+              </TouchableOpacity>
+            )}
+            {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
+              <View style={styles.actionIcon}>
+                <Icon name="delete" size={20} color="white" />
+              </View>
+            </TouchableOpacity> */}
+
+          </View>
+          :
+          <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingTop: 40,
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins3",
+                    fontSize: 24,
+                    fontWeight: "400",
+                    lineHeight: 36,
+                  }}
+                >
+                  Today
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    lineHeight: 21,
+                    color: COLORS.black,
+                    paddingRight: 20,
+                    paddingTop: 8,
+                  }}
+                >
+                  {todaysDate}
+                </Text>
+              </View>
+              {todos.map((item) => {
+                return <ListItem todo={item} key={item._id} />;
+              })}
+                  {todos.length === 0 && !isLoading && (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+            onPress={()=>{
+              // {type === "Completed" ? null : navigation.navigate("AddTasksScreen")}
+              {(type === name && name === "Completed") ? null : navigation.navigate("AddTasksScreen")}
+            }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 13,
+                        paddingTop: 3,
+                      }}
+                    >
+                      {/* {type === "Completed" ? "no completed tasks":"no tasks set, click to set tasks"} */}
+
+                      { (type === name && name === "Completed") ? `You have ${todos.length} completed tasks`:"no tasks for tommorrow, click to set tasks"}
+
+                       
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+        
+              <View
+                style={{
+                  flexDirection: "row",
+                  // bottom: 90,
+                  paddingTop: 30,
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins3",
+                    fontSize: 24,
+                    fontWeight: "400",
+                    lineHeight: 36,
+                  }}
+                >
+                  Tommorow
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    lineHeight: 21,
+                    color: COLORS.black,
+                    paddingRight: 20,
+                    paddingTop: 8,
+                  }}
+                >
+                  {nextDate}
+                </Text>
+              </View>
+        
+              {tomorrowtasks.map((item) => {
+                return <ListItem todo={item} key={item._id} />;
+              })}
+        
+              {tomorrowtasks.length === 0 && !isLoading && (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+             onPress={()=>{
+              // {type === "Completed" ? null : navigation.navigate("AddTasksScreen")}
+
+              {(type === name && name === "Completed") ? null : navigation.navigate("AddTasksScreen")}
+             }} 
+
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 13,
+                        paddingTop: 3,
+                      }}
+                    >
+                      {/* {type === "Completed" ? `You have ${tomorrowtasks.length} completed tasks`:"no tasks for tommorrow, click to set tasks"} */}
+
+                      { (type === name && name === "Completed") ? `You have ${tomorrowtasks.length} completed tasks`:"no tasks for tommorrow, click to set tasks"}
+
+                  
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+        
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingTop: 40,
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins3",
+                    fontSize: 24,
+                    fontWeight: "400",
+                    lineHeight: 36,
+                  }}
+                >
+                  Coming Days
+                </Text>
+              </View>
+              {otherdaysTasks.map((item) => {
+                return <ListItem todo={item} key={item._id} />;
+              })}
+        
+              {otherdaysTasks.length === 0 && !isLoading && (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={()=>{
+                      // {type === "Completed" ? null : navigation.navigate("AddTasksScreen")}
+                      {(type === name && name === "Completed") ? null : navigation.navigate("AddTasksScreen")}
+
+                     
+
+                     }} 
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 13,
+                        paddingTop: 3,
+                      }}
+                    >
+                      {/* {type === "Completed" ? "no completed tasks" : "no tasks for coming days, click to set tasks"}
+                       */}
+
+                      { (type === name && name === "Completed") ? `You have ${otherdaysTasks.length} completed tasks`:"no tasks for tommorrow, click to set tasks"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              </View>
+      }
+      </View>
+         
+      </>
+    )
+  }
+
+
 
   return (
     <SafeAreaView
@@ -465,233 +869,54 @@ const TasksScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           <View>
-            {taskData.length === 0 && !isLoading ? (
+           {
+
+       taskData.length ===0 && !isLoading? (
+          <View>
+             <Text
+          style={{
+            fontFamily: "Poppins",
+            fontSize: 13,
+            paddingTop: 10,
+          }}
+        >
+          loading.....
+        </Text>
+            </View>
+           ):
+           ((todos.length > 0 || tomorrowtasks.length > 0 || otherdaysTasks.length > 0)  && (name !=="" && name !== "AllTasks"))
+           ?
+            <FilteredDatas type={"Filters"}/>
+              :
+              ((todos.length ===0 && tomorrowtasks.length ===0 && otherdaysTasks.length ===0) && tasks.length ===0)
+              ?
               <View>
-                <TouchableOpacity activeOpacity={0.6}>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins",
-                      fontSize: 13,
-                      paddingTop: 10,
-                    }}
-                  >
-                    loading.....
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              // length of all the arrays = 0 show this else then show filtered data
-              todos.length<1
-                   ?
-                   <View>
-                 {/* <View
-                  style={{
-                    flexDirection: "row",
-                    paddingTop: 40,
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins3",
-                      fontSize: 24,
-                      fontWeight: "400",
-                      lineHeight: 36,
-                    }}
-                  >
-                    Created Tasks
-                  </Text>
+                {/* <InitialLanding/>
+                 */}
+                 <Text>Landed initially</Text>
                 </View>
-                {allTaskData.map((item) => {
-                  return <ListItem todo={item} key={item._id} />;
-                })} */}
+                :
+                ((todos.length ===0 && tomorrowtasks.length ===0 && otherdaysTasks.length ===0) && tasks.length >=1 && (name !=="" && name !== "AllTasks"))
+              ?
+              // here type can be name so that if the user selects on completed he can see all the completed tasks
+              //pass name into the FilteredDatas and if name === "Completed" show a different message
+              // also it should show all other names apart from the AllTasks
 
-
-                <InitialLanding/>
+            <FilteredDatas type={name}/>
+               :
+               ((todos.length ===0 && tomorrowtasks.length ===0 && otherdaysTasks.length ===0) && tasks.length >=1 && name === "")
+               ?
+               <View>
+                <Text>Landed initially</Text>
                 </View>
-                  :
-                        <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingTop: 40,
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins3",
-                      fontSize: 24,
-                      fontWeight: "400",
-                      lineHeight: 36,
-                    }}
-                  >
-                    Today
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      lineHeight: 21,
-                      color: COLORS.black,
-                      paddingRight: 20,
-                      paddingTop: 8,
-                    }}
-                  >
-                    {todaysDate}
-                  </Text>
-                </View>
-
-                {todos.map((item) => {
-                  return <ListItem todo={item} key={item._id} />;
-                })}
-
-                {todos.length === 0 && !isLoading && (
-                  <View>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      // onPress={()=>{
-                      // navigation.dispatch(
-                      //   CommonActions.navigate({
-                      //     name: "Task",
-                      //     params: {
-                      //       screen: "TasksScreen",
-                      //     },
-                      //   })
-                      // );
-                      //   }
-                      // }
-                    >
-                      <Text
-                        style={{
-                          fontFamily: "Poppins",
-                          fontSize: 13,
-                          paddingTop: 3,
-                        }}
-                      >
-                        no tasks set, click to set tasks
-                      </Text>
-                    </TouchableOpacity>
+                :
+                name === "AllTasks" &&
+                (
+                <View>
+                  <AllTasks/>
                   </View>
-                )}
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    // bottom: 90,
-                    paddingTop: 30,
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins3",
-                      fontSize: 24,
-                      fontWeight: "400",
-                      lineHeight: 36,
-                    }}
-                  >
-                    Tommorow
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      lineHeight: 21,
-                      color: COLORS.black,
-                      paddingRight: 20,
-                      paddingTop: 8,
-                    }}
-                  >
-                    {nextDate}
-                  </Text>
-                </View>
-
-                {tomorrowtasks.map((item) => {
-                  return <ListItem todo={item} key={item._id} />;
-                })}
-
-                {tomorrowtasks.length === 0 && !isLoading && (
-                  <View>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: "Poppins",
-                          fontSize: 13,
-                          paddingTop: 3,
-                        }}
-                      >
-                        no tasks for tomorrow, click to set tasks
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingTop: 40,
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins3",
-                      fontSize: 24,
-                      fontWeight: "400",
-                      lineHeight: 36,
-                    }}
-                  >
-                    Coming Days
-                  </Text>
-                  {/* <Text
-                style={{
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  lineHeight: 21,
-                  color: COLORS.black,
-                  paddingRight: 20,
-                  paddingTop: 8,
-                }}
-              >
-              </Text> */}
-                </View>
-                {otherdaysTasks.map((item) => {
-                  return <ListItem todo={item} key={item._id} />;
-                })}
-
-                {otherdaysTasks.length === 0 && !isLoading && (
-                  <View>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      // onPress={()=>{
-                      // navigation.dispatch(
-                      //   CommonActions.navigate({
-                      //     name: "Task",
-                      //     params: {
-                      //       screen: "TasksScreen",
-                      //     },
-                      //   })
-                      // );
-                      //   }
-                      // }
-                    >
-                      <Text
-                        style={{
-                          fontFamily: "Poppins",
-                          fontSize: 13,
-                          paddingTop: 3,
-                        }}
-                      >
-                        no tasks for coming days, click to set tasks
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-                </View>
-            )}
+                )
+          }
           </View>
         </ScrollView>
 
@@ -753,9 +978,9 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     backgroundColor: COLORS.white,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red",
+    // backgroundColor: "red",
     marginLeft: 5,
     borderRadius: 3,
   },

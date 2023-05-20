@@ -62,7 +62,7 @@ maxDate.setDate(maxDate.getDate() + 3);
 
 
 const addTasks = async(values)=>{
-  // setError(false)
+  setError(false)
 try{
   const userToken = await AsyncStorage.getItem("userToken");
   const value = await AsyncStorage.getItem("userInfo")
@@ -104,44 +104,16 @@ const res =  await client.post(
       console.log(res)
 
 if(res.status === 200){
-  console.log("successful")
   navigation.goBack();
-
-    // navigation.dispatch(
-    //           CommonActions.navigate({
-    //             name: "Task",
-    //             params: {
-    //               screen: "TasksScreen",
-    //             },
-    //           })
-    //         );
-
-
 }
 
 }
 
 }catch(e){
- console.log(`${e.message}`)
+ setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
+  
 }
 
-    // if(values.title === ''){
-    //  Alert.alert('Error', 'Please input todo');
-    // }else{
-    //     const newTodo = {
-    //         id: Math.random(),
-    //         ...values,
-    //         completed:false,
-    //       };
-    //       console.log(newTodo)
-    //       //   setTodos(todos => [...todos, newTodo]);
-    //       setTodos([todos, newTodo]);
-    //       console.log({todos});
-
-    //       setError(true)
-    //       setErrorMessage("Tasks Added Successfully")
-    //       // navigation.replace("TasksScreen")
-    // }
 }
 
 

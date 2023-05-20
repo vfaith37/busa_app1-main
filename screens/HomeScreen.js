@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View , SafeAreaView, ScrollView, Dimensions} from 'react-native'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import Navbar from '../Components/Navbar'
 import PostsDisplay from './PostsDisplay'
 import Tasks from '../Components/Tasks'
@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import client from '../api/client'
 import { COLORS } from '../constants/theme'
 const {width, height} = Dimensions.get("screen")
+import { useScrollToTop } from '@react-navigation/native';
 
 const PAGE_SIZE = 10;
 
@@ -21,7 +22,16 @@ const HomeScreen = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const [noMorePosts, setNoMorePosts] = useState(false);
   
+  const ref =  useRef(null);
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => ref.current?.scrollTo({ y: 50 }),
+    })
+  );
+
   const getPostData = useCallback ( async () => {
+
+
     setIsLoading(true);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
@@ -99,6 +109,7 @@ const HomeScreen = () => {
       // if tasks is empty, give normal height else increase it
       contentContainerStyle={{height:height*1.2}}
       showsVerticalScrollIndicator ={false}
+      ref={ref}
       >
   {userInfo!==null && <Navbar userInfo ={userInfo}/>}
   <PostsDisplay post={posts} />

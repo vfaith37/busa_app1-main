@@ -70,8 +70,8 @@ const TabNavigator = () => {
 		})}
 	
 	>
-		<Tab.Screen name="Home" component={HomeStack} headerShown={false}/>
-		<Tab.Screen name="Event" component={EventStack}/> 
+		<Tab.Screen name="Home" component={HomeStack} headerShown={false}/> 
+		 <Tab.Screen name="Event" component={EventStack}/> 
 		<Tab.Screen name="Task" component={TasksStack}/>
 		<Tab.Screen name="Profile" component={ProfileStack} headerShown={true}/>
 	</Tab.Navigator>
