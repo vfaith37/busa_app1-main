@@ -11,7 +11,7 @@ import { Calendars, Time, Back } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FormInput } from '../Components/FormInput';
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import ErrorButton from '../Components/ErrorButton';
 import { useEffect } from 'react';
 import client from '../api/client';
@@ -34,6 +34,11 @@ const [taskValues, setTaskValues] = useState("")
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
     const component ="Task"
+
+    const today = new Date();
+    const maxDate = new Date();
+maxDate.setDate(maxDate.getDate() + 3);
+
     const Categories = [
         {
           label: "Personal",
@@ -54,13 +59,10 @@ const [taskValues, setTaskValues] = useState("")
       });
     
 
-//  useEffect(() => {
-//       saveTodoToUserDevice(todos);
-//     }, [todos]);
+
 
 const addTasks = async(values)=>{
-  // setError(false)
-
+  setError(false)
 try{
   const userToken = await AsyncStorage.getItem("userToken");
   const value = await AsyncStorage.getItem("userInfo")
@@ -102,33 +104,16 @@ const res =  await client.post(
       console.log(res)
 
 if(res.status === 200){
-  console.log("successful")
-  navigation.goBack()
+  navigation.navigate("TasksScreen");
 }
 
 }
 
 }catch(e){
- console.log(`${e.message}`)
+ setErrorMessage( e.message ? e.message : "Oops! Something went wrong. Please try again later.");
+  
 }
 
-    // if(values.title === ''){
-    //  Alert.alert('Error', 'Please input todo');
-    // }else{
-    //     const newTodo = {
-    //         id: Math.random(),
-    //         ...values,
-    //         completed:false,
-    //       };
-    //       console.log(newTodo)
-    //       //   setTodos(todos => [...todos, newTodo]);
-    //       setTodos([todos, newTodo]);
-    //       console.log({todos});
-
-    //       setError(true)
-    //       setErrorMessage("Tasks Added Successfully")
-    //       // navigation.replace("TasksScreen")
-    // }
 }
 
 
@@ -241,6 +226,8 @@ return (
                         value={date}
                         mode={mode}
                         is24Hour={false}
+                        minimumDate={today}
+                        maximumDate={maxDate}
                         display="default"
                         onChange={(event, selectedDate) => {
                           setShow(false);

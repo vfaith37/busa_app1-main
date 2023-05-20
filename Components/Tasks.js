@@ -21,11 +21,37 @@ const Tasks = () => {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+ // const markTodoComplete = todoId => {
+  //   const newTodosItem = todos.map(item => {
+  //     if (item.id == todoId) {
+  //       return {...item, completed: true};
+  //     }
+  //     return item;
+  //   });
 
+  //   setTodos(newTodosItem);
+  // };
+
+  // const deleteTodo = todoId => {
+  //   const newTodosItem = todos.filter(item => item.id != todoId);
+  //   setTodos(newTodosItem);
+  // };
+
+  // const clearAllTodos = () => {
+  //   Alert.alert('Confirm', 'Clear todos?', [
+  //     {
+  //       text: 'Yes',
+  //       onPress: () => setTodos([]),
+  //     },
+  //     {
+  //       text: 'No',
+  //     },
+  //   ]);
+  // };
 
     useEffect(() => {
         getAllTasks();
-      }, [todos]);
+      }, []);
 
 
       const getAllTasks = async () => {
@@ -57,7 +83,7 @@ const Tasks = () => {
               config
             );
     
-            const myTasks = res.data.data;
+            const myTasks = res.data.data.slice(0,5);
             setTodos([...todos, ...myTasks]);
           }
         } catch (e) {
@@ -147,7 +173,7 @@ const Tasks = () => {
       {/* if todo from async storage is empty display no tasks set, else display tasks */}
 
        <View>
-   {todos.slice(0,5).map((todo)=>{
+   {todos.map((todo)=>{
          return(
           <DisplayTasks todo ={todo} key={todo._id}/>
          )
@@ -170,7 +196,7 @@ const Tasks = () => {
               }
             }
                 >
-            <Text style={{fontFamily:"Poppins", fontSize:13, paddingTop:3}}>no tasks set, click to set tasks</Text>
+            <Text style={{fontFamily:"Poppins", fontSize:13, paddingTop:3}}>no tasks yet, click to set tasks</Text>
             </TouchableOpacity>
             </View>
         )}

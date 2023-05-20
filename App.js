@@ -1,12 +1,13 @@
 
 import "react-native-gesture-handler"
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import AppNavigation from "./navigation/AppNavigation";
 
 import useCustomFonts from "./useCustomFonts";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "./constants/theme";
+import { useNavigation } from "@react-navigation/native";
 
 function App() {
 	let fontsLoaded = useCustomFonts()
@@ -20,7 +21,6 @@ function App() {
 	if(!fontsLoaded){
 		return null
 	}
-	
 
 	return (
 		<AuthProvider>

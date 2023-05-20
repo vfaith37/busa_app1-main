@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, Text, View, StatusBar } from "react-native";
 import { SignUpForm } from "../Components/SignupForm";
 import { COLORS } from "../constants/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ErrorButton from "../Components/ErrorButton";
 
 const { width } = Dimensions.get("screen");
 
