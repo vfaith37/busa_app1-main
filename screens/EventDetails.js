@@ -33,8 +33,7 @@ const imageH = height/2.36
 
 
 const EventDetails = ({ route }) => {
-
-
+	
 	return (
 		<View style={{flex:1}}>
 			<EventAbout route={route} />

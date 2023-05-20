@@ -104,7 +104,7 @@ const res =  await client.post(
       console.log(res)
 
 if(res.status === 200){
-  navigation.goBack();
+  navigation.navigate("TasksScreen");
 }
 
 }

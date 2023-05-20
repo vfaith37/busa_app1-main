@@ -70,6 +70,7 @@ const TasksScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [allTaskData, setAllTaskData] = useState([])
   const [selectedTasks, setSelectedTasks] = useState([]);
+  const [filterName, setFilterName] = useState("")
   // const [isFirstLoad, setIsFirstLoad] = useState(true)
   // const [initialLanding, setInitialLanding] = useState([])
   // const [completedTasks, setCompletedTasks] = useState([])
@@ -97,12 +98,11 @@ const TasksScreen = () => {
   // only run this hook when the screen is ficused and not when navigating between tabs
 useFocusEffect(
   useCallback(()=>{
-    // setTasks([])
       getAllTasks()
   },[])
 )
 
-
+// don't forget to add the logic for initial landing from async storage. 
 
   const getAllTasks = async () => {
     setIsLoading(true)
@@ -110,6 +110,8 @@ useFocusEffect(
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const value = await AsyncStorage.getItem("userInfo");
+      // const filtername = await AsyncStorage.getItem("filtername");
+      
 
       if (userToken !== null && value !== null) {
         const userInfo = JSON.parse(value);
@@ -134,25 +136,36 @@ useFocusEffect(
         );
 
         const myTasks = res.data.data;
-        console.log(myTasks)
+        // console.log(myTasks)
         setTasks(myTasks);
+        // setTasks(prevTasks => [...prevTasks, ...myTasks]);
+
         setTaskData(myTasks);
-        // setAllTaskData(myTasks)
+        setAllTaskData(myTasks)
 
         console.log(name)
+        console.log(tasks)
+        console.log(allTaskData)
 
-        const prevname = name
+        // when user is navigated back, the name is now emoty so the filter function doesn't work
 
-        if(name !== ""){
+        if(name === "" || name !==""){
+      const filtername = await AsyncStorage.getItem("filtername");
+                 if(filtername !==""){
+                   setFilterName(filtername)
+        console.log(filtername)
 
-          setName(prevname)
-          const today = moment();
-          const currentDate = today.format("DD/MM/YYYY");
+        const value = res.data.data
 
-          filterTasks(tasks,  prevname, currentDate);
-              filterTomorrowsTasks(tasks, prevname);
-              filterOtherDaysTasks(tasks, prevname);
-        }
+                   const today = moment();
+                   const currentDate = today.format("DD/MM/YYYY");
+                   
+                   filterTasks(tasks,  filtername, currentDate);
+                   filterTomorrowsTasks(tasks, filterName);
+                   filterOtherDaysTasks(tasks, filtername);
+                 }   
+
+                 }
       }
     } catch (e) {
       console.log(e);
@@ -179,8 +192,7 @@ useFocusEffect(
 
  
       setTomorrowsTasks(filteredTomorrowsTasks);
-      console.log(filteredTomorrowsTasks)
-      // return filteredTomorrowsTasks;
+      return filteredTomorrowsTasks;
     });
   };
 
@@ -200,8 +212,8 @@ useFocusEffect(
       }
 
       setTodos(filteredTasks);
-      console.log(filteredTasks)
-      // return filteredTasks;
+      // console.log(filteredTasks)
+      return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
     });
@@ -221,8 +233,8 @@ useFocusEffect(
       }
         
       setOtherDaysTasks(filteredOtherDaysTasks);
-      console.log(filteredOtherDaysTasks)
-      // return filteredOtherDaysTasks;
+      // console.log(filteredOtherDaysTasks)
+       return filteredOtherDaysTasks;
     });
   };
 
@@ -230,24 +242,51 @@ useFocusEffect(
   const Categories = ({ item }) => {
     const today = moment();
     const currentDate = today.format("DD/MM/YYYY");
+     
+    const names = item.name
+    const handlePress = async ()=>{
+      setName(names);
+            console.log(names)
+
+            // then save to async storage
+            await AsyncStorage.setItem("filtername", names)
+
+            if (names === "AllTasks"){
+                    setAllTaskData(tasks)
+            }else{
+              filterTasks(tasks, names, currentDate);
+              filterTomorrowsTasks(tasks, names);
+              filterOtherDaysTasks(tasks, names);
+            } 
+    }
 
     return (
       <>
       <View>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => {
-            setName(item.name);
-            console.log(item.name)
+          // onPress={async() => {
+          //   setName(item.name);
+          //   console.log(item.name)
 
-            if (item.name === "AllTasks"){
-                    setAllTaskData(tasks)
-            }else{
-              filterTasks(tasks, item.name, currentDate);
-              filterTomorrowsTasks(tasks, item.name);
-              filterOtherDaysTasks(tasks, item.name);
-            } 
-          }}
+            
+          //   if (item.name === "AllTasks"){
+          //     setAllTaskData(tasks)
+          //     await AsyncStorage.setItem("filtername", "AllTasks")
+          //     const res = await AsyncStorage.getItem("filtername"); 
+             
+          //   }else{
+          //     filterTasks(tasks, item.name, currentDate);
+          //     filterTomorrowsTasks(tasks, item.name);
+          //     filterOtherDaysTasks(tasks, item.name);
+          //     await AsyncStorage.setItem("filtername", item.name)
+          //   } 
+
+          //   // await AsyncStorage.setItem("filtername", item.name)
+
+          // }}
+
+          onPress={handlePress}
         >
           <View style={{ paddingHorizontal: 5 }}>
             <View
@@ -257,8 +296,8 @@ useFocusEffect(
                 backgroundColor: COLORS.todoInactive,
                 borderRadius: 20,
                 borderColor:
-                  name === item.name ? COLORS.todoBackground : "transparent",
-                borderWidth: name === item.name ? 2 : 0.5,
+                  name ===  names ? COLORS.todoBackground : "transparent",
+                borderWidth: name === names ? 2 : 0.5,
               }}
             >
               <View
@@ -404,7 +443,7 @@ useFocusEffect(
                     paddingTop: 40,
                   }}
                 >
-                  <Text
+                  {/* <Text
                     style={{
                       fontFamily: "Poppins3",
                       fontSize: 24,
@@ -413,8 +452,10 @@ useFocusEffect(
                     }}
                   >
                     Completed Tasks
-                  </Text>
-       <FilteredDatas type={"Completed"}/>
+                  </Text> */}
+       {/* <FilteredDatas type={"Completed"}/> */}
+
+       <Text>Pls i'm to tell bro praise or bro taiwo to pls give a ui for this</Text>
                 </View>
       </>
     )
@@ -445,7 +486,7 @@ useFocusEffect(
       return;
     }
 
-    setIsLoading(true)
+     setIsLoading(true)
 
 
     // Alert.alert('Confirm Deletion', 'Are you sure you want to delete the selected tasks?', [
@@ -598,8 +639,10 @@ try{
   // Handle the error and show appropriate message to the user
   setTasks(prevTasks);
   setSelectedTasks(prevSelectedTasks);
-  Alert.alert('Error', 'Failed to delete tasks. Please try again later.');
+  Alert.alert('Error', 'Failed to mark tasks as complete. Please try again later.');
 
+} finally{
+setIsLoading(false)
 }
   }
 
@@ -707,7 +750,7 @@ try{
                     >
                       {/* {type === "Completed" ? "no completed tasks":"no tasks set, click to set tasks"} */}
 
-                      { (type === name && name === "Completed") ? `You have ${todos.length} completed tasks`:"no tasks for tommorrow, click to set tasks"}
+                      { (type === name && name === "Completed") ? `You have ${todos.length} completed tasks`:"no tasks set, click to set tasks"}
 
                        
                     </Text>
@@ -891,6 +934,13 @@ try{
         </Text>
             </View>
            ):
+           // write another loop for if the task length >=1 there's no name and there's data from the async storage. i.e the user reopened the app again
+           (tasks.length >=1 && name === "" && filterName !== "")
+           ?
+           <View>
+            <InitialLanding/>
+            </View>
+            :
            ((todos.length > 0 || tomorrowtasks.length > 0 || otherdaysTasks.length > 0)  && (name !=="" && name !== "AllTasks"))
            ?
             <FilteredDatas type={"Filters"}/>
