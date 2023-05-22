@@ -86,25 +86,13 @@ const TasksScreen = () => {
   const nextDate = tomorrow.format("Do MMMM YYYY");
 
   // for better code optimization and efficiency when the screen is focused, run filter function for the current name before the user was navigated back
-  
-  // useEffect(() => {
-  //   setTasks([]);
-  //   // setTodos([])
-  //   getAllTasks();
-  //   setRefresh(false);
-  //   setIsFirstLoad(false)
-  // }, [refresh, isFocused]);
 
-useEffect(()=>{
-  getAllTasks()
-},[])
- 
   // only run this hook when the screen is ficused and not when navigating between tabs
-// useFocusEffect(
-//   useCallback(()=>{
-//       getAllTasks()
-//   },[])
-// )
+useFocusEffect(
+  useCallback(()=>{
+      getAllTasks()
+  },[])
+)
 
 // don't forget to add the logic for initial landing from async storage. 
 
