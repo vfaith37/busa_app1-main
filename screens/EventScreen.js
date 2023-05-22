@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { SafeAreaView, FlatList, View, Text, Dimensions, ScrollView, StatusBar} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useScrollToTop } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '../api/client';
@@ -26,6 +26,14 @@ const EventScreen = () => {
   const [noMorePosts, setNoMorePosts] = useState(false);
  
  
+  const ref =  useRef(null);
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => ref.current?.scrollTo({ y: 0 }
+        ),
+    })
+  );
+
 
  const getEventData = useCallback(async (currentPage) => {
   
@@ -158,6 +166,7 @@ const EventScreen = () => {
   const renderItem = useCallback(
     ({ item}) => (
       <ScrollView
+      ref={ref}
       contentContainerStyle={{ 
         paddingTop:5,
         //  height: height/2.2
@@ -201,6 +210,7 @@ const EventScreen = () => {
       </View>
     )}
       <FlatList
+
         onEndReachedThreshold={0.1}
         onEndReached={loadMoreEvents}
         showsVerticalScrollIndicator={false}

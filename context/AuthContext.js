@@ -11,7 +11,7 @@ export const AuthProvider =({children})=>{
    const [userInfo, setUserInfo] = useState(null)
    const [eventTitle, setEventTitle] = useState(null)
    const [eventTime, setEventTime] = useState(null)
-
+   const [filterName, setFilterName] = useState("")
 
    
    const logout = async()=>{
@@ -19,12 +19,15 @@ export const AuthProvider =({children})=>{
     setUserToken(null)
     setEventTime(null)
     setEventTitle(null)
+    setFilterName(null)
 
     try{
   await  AsyncStorage.removeItem("userToken")
    await AsyncStorage.removeItem("userInfo")
    await AsyncStorage.removeItem("eventTitle")
    await AsyncStorage.removeItem("eventTime")
+   await AsyncStorage.removeItem("filtername")
+
 }catch(e){
     console.log(`${e}`)
 }

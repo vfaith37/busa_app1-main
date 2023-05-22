@@ -37,7 +37,7 @@ const [taskValues, setTaskValues] = useState("")
 
     const today = new Date();
     const maxDate = new Date();
-maxDate.setDate(maxDate.getDate() + 3);
+maxDate.setDate(maxDate.getDate() + 1);
 
     const Categories = [
         {

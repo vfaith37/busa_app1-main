@@ -111,7 +111,7 @@ export function MainStack() {
         drawerInactiveTintColor: "#0C0C0D",
         drawerLabelStyle: {
           fontFamily: "Poppins",
-          fontSize: 18,
+          fontSize: 15,
           fontWeight: "400",
           lineHeight: 21,
           marginVertical: 10,
@@ -124,6 +124,7 @@ export function MainStack() {
           borderColor: "#EFEEEB",
           backgroundColor: "#ffff",
           borderWidth: 1,
+          marginVertical:5
         },
 		drawerStyle: {width: 200}
       })}
@@ -134,7 +135,7 @@ export function MainStack() {
       <Drawer.Screen name="Learn" component={LearnScreen} />
       <Drawer.Screen name="Handbook" component={HandBookScreen} />
       <Drawer.Screen name="Complaints" component={ComplaintsScreen} />
-      <Drawer.Screen name="Settings" component={Profile} />
+      <Drawer.Screen name="Settings" component={ProfileStack} />
     </Drawer.Navigator>
   );
 }

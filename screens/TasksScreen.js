@@ -46,6 +46,10 @@ const List = [
   },
   {
     icon:"book-outline",
+    name:"Personal"
+  },
+  {
+    icon:"book-outline",
     name:"Incompleted"
   },
   {
@@ -136,34 +140,34 @@ useFocusEffect(
         );
 
         const myTasks = res.data.data;
-        // console.log(myTasks)
         setTasks(myTasks);
-        // setTasks(prevTasks => [...prevTasks, ...myTasks]);
-
         setTaskData(myTasks);
         setAllTaskData(myTasks)
 
         console.log(name)
         console.log(tasks)
-        console.log(allTaskData)
 
         // when user is navigated back, the name is now emoty so the filter function doesn't work
 
         if(name === "" || name !==""){
       const filtername = await AsyncStorage.getItem("filtername");
-                 if(filtername !==""){
+                 if(filtername !==null && filtername !== "AllTasks"){
                    setFilterName(filtername)
         console.log(filtername)
-
+             
         const value = res.data.data
 
                    const today = moment();
                    const currentDate = today.format("DD/MM/YYYY");
                    
-                   filterTasks(tasks,  filtername, currentDate);
-                   filterTomorrowsTasks(tasks, filterName);
-                   filterOtherDaysTasks(tasks, filtername);
-                 }   
+                   filterTasks(value,  filtername, currentDate);
+                   filterTomorrowsTasks(value, filtername);
+                  //  filterOtherDaysTasks(value, filtername);
+                 }  
+                 
+                 if(filtername === "AllTasks"){
+                  setAllTaskData(value)
+                 }
 
                  }
       }
@@ -174,34 +178,12 @@ useFocusEffect(
     }
   };
 
-  const filterTomorrowsTasks = (arr, type) => {
-    // here the function sif current date passed is not behind the task.date that means the date is tomorrow
-    let filteredTomorrowsTasks = [];
-    // const today = moment()
-    const tomorrow = moment().add(1, "days").startOf("day");
-    // const today = date.format("DD/MMMM/YYYY")
-    // Get the current date
-
-    arr.forEach((task) => {
-      if (
-        ((task.category === type || type === "All") || (task.completed === false && type === "Incompleted") || (task.completed === true && type === "Completed")) &&
-        moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
-      ) {
-        filteredTomorrowsTasks.push(task);
-      }
-
- 
-      setTomorrowsTasks(filteredTomorrowsTasks);
-      return filteredTomorrowsTasks;
-    });
-  };
-
 
   const filterTasks = (arr, type, date) => {
     let filteredTasks = [];
     const dates = moment(date, "DD/MM/YYYY");
 
-    arr.forEach((task) => {
+    arr.filter((task) => {
       const taskDate = moment(task.date, "DD/MM/YYYY");
                                               
       if (
@@ -211,8 +193,8 @@ useFocusEffect(
         filteredTasks.push(task);
       }
 
-      setTodos(filteredTasks);
       // console.log(filteredTasks)
+      setTodos(filteredTasks);
       return filteredTasks;
       // if there's date, so as to show it the next day
       // then filter this tasks by day
@@ -220,21 +202,46 @@ useFocusEffect(
   };
 
 
+  const filterTomorrowsTasks = (arr, type) => {
+
+    // here the function sif current date passed is not behind the task.date that means the date is tomorrow
+    let filteredTomorrowsTasks = [];
+    // const today = moment()
+    const tomorrow = moment().add(1, "days").startOf("day");
+    // const today = date.format("DD/MMMM/YYYY")
+    // Get the current date
+
+    arr.filter((task) => {
+      if (
+        ((task.category === type || type === "All") || (task.completed === false && type === "Incompleted") || (task.completed === true && type === "Completed")) &&
+        moment(task.date, "DD/MM/YYYY").isSame(tomorrow, "day")
+      ) {
+        filteredTomorrowsTasks.push(task);
+      }
+
+      console.log(filteredTomorrowsTasks)
+      setTomorrowsTasks(filteredTomorrowsTasks);
+      return filteredTomorrowsTasks;
+    });
+  };
+
+
   const filterOtherDaysTasks = (arr, type) => {
     let filteredOtherDaysTasks = [];
     const tomorrow = moment().add(1, "days").startOf("day");
+    console.log(tomorrow)
 
-    arr.forEach((task) => {
+    arr.filter((task) => {
       if (
         ((task.category === type || type === "All") || (task.completed === false && type === "Incompleted") || (task.completed === true && type ==="Completed")) &&
         moment(task.date, "DD/MM/YYYY").isAfter(tomorrow, "day")
       ) {
         filteredOtherDaysTasks.push(task);
       }
-        
+      
+      console.log(filteredOtherDaysTasks)
       setOtherDaysTasks(filteredOtherDaysTasks);
-      // console.log(filteredOtherDaysTasks)
-       return filteredOtherDaysTasks;
+      return filteredOtherDaysTasks;
     });
   };
 
@@ -246,7 +253,6 @@ useFocusEffect(
     const names = item.name
     const handlePress = async ()=>{
       setName(names);
-            console.log(names)
 
             // then save to async storage
             await AsyncStorage.setItem("filtername", names)
@@ -256,7 +262,7 @@ useFocusEffect(
             }else{
               filterTasks(tasks, names, currentDate);
               filterTomorrowsTasks(tasks, names);
-              filterOtherDaysTasks(tasks, names);
+               filterOtherDaysTasks(tasks, names);
             } 
     }
 
@@ -481,6 +487,8 @@ useFocusEffect(
 
 
   const handleDeleteTasks = async () => {
+
+    console.log("delete")
     if (selectedTasks.length === 0) {
       Alert.alert('No tasks selected', 'Please select tasks to delete');
       return;
@@ -821,7 +829,7 @@ setIsLoading(false)
                   </TouchableOpacity>
                 </View>
               )}
-        
+{/*          
               <View
                 style={{
                   flexDirection: "row",
@@ -839,12 +847,12 @@ setIsLoading(false)
                 >
                   Coming Days
                 </Text>
-              </View>
-              {otherdaysTasks.map((item) => {
+              </View>  */}
+              {/* {otherdaysTasks.map((item) => {
                 return <ListItem todo={item} key={item._id} />;
-              })}
+              })} */}
         
-              {otherdaysTasks.length === 0 && !isLoading && (
+              {/* {otherdaysTasks.length === 0 && !isLoading && (
                 <View>
                   <TouchableOpacity
                     activeOpacity={0.6}
@@ -863,14 +871,14 @@ setIsLoading(false)
                         paddingTop: 3,
                       }}
                     >
-                      {/* {type === "Completed" ? "no completed tasks" : "no tasks for coming days, click to set tasks"}
-                       */}
+                       {/* {type === "Completed" ? "no completed tasks" : "no tasks for coming days, click to set tasks"} */}
+                      
 
-                      { (type === name && name === "Completed") ? `You have ${otherdaysTasks.length} completed tasks`:"no tasks for tommorrow, click to set tasks"}
-                    </Text>
+                     {/* {(type === name && name === "Completed") ? `You have ${otherdaysTasks.length} completed tasks`:"no tasks for other days, click to set tasks"} 
+                     </Text>
                   </TouchableOpacity>
-                </View>
-              )}
+                </View> */}
+              {/* )}   */}
               </View>
       }
       </View>
