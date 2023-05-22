@@ -8,14 +8,17 @@ import {
 } from "@react-navigation/native";
 import { Icon } from '../constants/icons';
 import client from '../api/client';
+import AnimatedLottieView from 'lottie-react-native';
 
 
 const {width, height} = Dimensions.get("screen")
 
+const taskH =height/12.2
+const taskW = width*0.89
+
 
 const Tasks = () => {
   const navigation = useNavigation()
-    // get the added tasks from async storage then splice it to show first 5 and then if user clicks on it can navugate
     const [todos, setTodos] = useState([]);
     const [userInfo, setUserInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
@@ -95,7 +98,6 @@ const Tasks = () => {
 
       const DisplayTasks = ({todo}) => {
         return (
-
           <View>
             <TouchableOpacity
             activeOpacity={0.7}
@@ -110,18 +112,24 @@ const Tasks = () => {
               );
             }}
             >
-            <View style={{paddingTop:4, paddingLeft:15}}>
+            <View
+            style={{paddingTop:4, paddingLeft:15}}
+             >
           <View style={styles.listItem}>
-            <View style={{flexDirection:"row", justifyContent:"space-between", paddingTop:3, alignItems:"center"}}>
+            <View style={{flexDirection:"row", justifyContent:"space-between", paddingTop:5, alignItems:"center", paddingLeft:70}}>
              
              <View style={{left:-30}}>
-              <View style={{height:44, width:44, backgroundColor:COLORS.todoBackground, borderRadius:5, top:3, left:40,  }}>
+              <View style={{height:44, width:44, backgroundColor:COLORS.todoBackground, borderRadius:5, bottom:-45, left:-taskW*0.05, position:"absolute" }}>
                 {/* here conditionally render the icon based on whether its an assignment or class or anyother */}
-              <Icon name={"people-outline"} size={30} color={COLORS.white} style={{paddingTop:5, alignContent:"center", right:-8}}/>
+              <Icon 
+               name={todo.name === "Personal" ? "person-outline" : todo.name === "Assignments"? "book-outline" : "calendar-outline"} 
+              size={30} color={COLORS.white} style={{paddingTop:5, alignContent:"center", right:-8,}}/>
               </View>
               </View>
 
-            <View style={{paddingTop:-4,}}>
+            <View 
+            style={{top:40,}}
+            >
               <Text
                 style={{
                   fontWeight: '500',
@@ -129,16 +137,17 @@ const Tasks = () => {
                   color: COLORS.todo,
                   textDecorationLine: todo?.completed ? 'line-through' : 'none',
                   fontFamily:"Poppins3",
-                  textAlign:"center",
-                  paddingTop:15,
+                  top:-25,
                   lineHeight:24,
-                  paddingRight:70
+                  paddingLeft:15,
+                  position:"absolute"
                 }}>
                 {todo?.title} 
               </Text>
 
-              <View style={{flexDirection:"row", justifyContent:"space-between", marginHorizontal:85, right:50}}>
-              <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo, lineHeight:12.1}}>{todo?.venue} {"."}
+              <View style={{flexDirection:"row", justifyContent:"space-between", marginHorizontal:85, right:70,}}>
+              <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo, lineHeight:12.1}}>
+                {todo?.venue} {"."}
                   </Text>
                   <Text style={{fontSize:10, fontFamily:"Poppins", color:COLORS.todo, lineHeight:12.1}}>
                   {""} {todo?.time}
@@ -146,20 +155,6 @@ const Tasks = () => {
               </View>
             </View>
             </View>
-
-
-            {/* {!todo?.completed && (
-              <TouchableOpacity onPress={() => markTodoComplete(todo.id)}>
-                <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
-                  <Icon name="done" size={20} color="white" />
-                </View>
-              </TouchableOpacity>
-            )} */}
-            {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
-              <View style={styles.actionIcon}>
-                <Icon name="delete" size={20} color="white" />
-              </View>
-            </TouchableOpacity> */}
           </View>
             </View>
             </TouchableOpacity>
@@ -184,6 +179,17 @@ const Tasks = () => {
 
         {todos.length === 0 && !isLoading &&(
         <View>
+        <AnimatedLottieView
+                 source={require("../assets/animations/tasks.json")}
+                 autoPlay
+                 loop
+                 speed={0.5}
+                 style={{
+                  width:300, height:300, 
+                  alignSelf:"center"
+                 }}
+                 />
+
             <TouchableOpacity activeOpacity={0.6} onPress={()=>{
             navigation.dispatch(
               CommonActions.navigate({
@@ -196,10 +202,10 @@ const Tasks = () => {
               }
             }
                 >
-            <Text style={{fontFamily:"Poppins", fontSize:13, paddingTop:3}}>no tasks yet, click to set tasks</Text>
+            <Text style={{fontFamily:"Poppins", fontSize:13, paddingTop:3, textAlign:"center"}}>no tasks yet, click to set tasks</Text>
             </TouchableOpacity>
             </View>
-        )}
+         )} 
         
     </View>
   )
@@ -214,7 +220,9 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       marginHorizontal:-10,
       alignItems:"center",
-      marginVertical:10
+      marginVertical:10,
+      borderLeftWidth:12,
+      borderLeftColor:COLORS.todoBackground
     },
   });
 

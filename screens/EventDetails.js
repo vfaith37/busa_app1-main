@@ -14,7 +14,7 @@ import {
 	SafeAreaView
 } from "react-native";
 import { useState, useEffect, useRef} from "react";
-import {Location, Time } from "../constants/icons";
+import {Back, Location, Time } from "../constants/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { StackActions, useNavigation } from "@react-navigation/native";
@@ -205,6 +205,8 @@ function numberWithCommas(x) {
 					);
 				})}
 			</View>
+
+			<>
 			<Animated.FlatList
 				showsHorizontalScrollIndicator={false}
 				data={image}
@@ -241,9 +243,13 @@ function numberWithCommas(x) {
 					);
 				}}
 			/>
+{/* <Back style={{top:-height/0.9}} size={40} color={COLORS.white}/> */}
+             
+			</>
 
 			<View  
 			 >
+
 			<Indicator scrollx={scrollX} />
 			<View
 	style={{
@@ -256,7 +262,7 @@ function numberWithCommas(x) {
 		position:"absolute"
 	}}
 >
-	<View style={{ marginLeft: 40, top:10}}>
+	<View style={{ marginLeft: 30, top:10}}>
 		<Text
 			style={{
 				color: COLORS.lightblue,
@@ -275,7 +281,6 @@ function numberWithCommas(x) {
 				fontSize: 23,
 				color: COLORS.black,
 				fontFamily: "Poppins2",
-				textTransform: "uppercase",
 				top:13
 			}}
 		>

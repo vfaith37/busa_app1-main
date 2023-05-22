@@ -23,9 +23,11 @@ import moment from "moment";
 import client from "../api/client";
 import { useIsFocused } from "@react-navigation/native";
 import { CheckBox } from "react-native-elements";
+import AnimatedLottieView from "lottie-react-native";
 
 
 const { width, height } = Dimensions.get("screen");
+
 
 const List = [
   {
@@ -45,15 +47,15 @@ const List = [
     name: "Assignments",
   },
   {
-    icon:"book-outline",
+    icon:"person-outline",
     name:"Personal"
   },
   {
-    icon:"book-outline",
+    icon:"list-outline",
     name:"Incompleted"
   },
   {
-    icon:"book-outline",
+    icon:"trophy-outline",
     name:"Completed"
   }
 ];
@@ -75,10 +77,6 @@ const TasksScreen = () => {
   const [allTaskData, setAllTaskData] = useState([])
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [filterName, setFilterName] = useState("")
-  // const [isFirstLoad, setIsFirstLoad] = useState(true)
-  // const [initialLanding, setInitialLanding] = useState([])
-  // const [completedTasks, setCompletedTasks] = useState([])
-
 
   // const isFocused = useIsFocused();
 
@@ -97,14 +95,16 @@ const TasksScreen = () => {
   //   setIsFirstLoad(false)
   // }, [refresh, isFocused]);
 
-
+useEffect(()=>{
+  getAllTasks()
+},[])
  
   // only run this hook when the screen is ficused and not when navigating between tabs
-useFocusEffect(
-  useCallback(()=>{
-      getAllTasks()
-  },[])
-)
+// useFocusEffect(
+//   useCallback(()=>{
+//       getAllTasks()
+//   },[])
+// )
 
 // don't forget to add the logic for initial landing from async storage. 
 
@@ -218,8 +218,6 @@ useFocusEffect(
       ) {
         filteredTomorrowsTasks.push(task);
       }
-
-      console.log(filteredTomorrowsTasks)
       setTomorrowsTasks(filteredTomorrowsTasks);
       return filteredTomorrowsTasks;
     });
@@ -271,33 +269,12 @@ useFocusEffect(
       <View>
         <TouchableOpacity
           activeOpacity={0.7}
-          // onPress={async() => {
-          //   setName(item.name);
-          //   console.log(item.name)
-
-            
-          //   if (item.name === "AllTasks"){
-          //     setAllTaskData(tasks)
-          //     await AsyncStorage.setItem("filtername", "AllTasks")
-          //     const res = await AsyncStorage.getItem("filtername"); 
-             
-          //   }else{
-          //     filterTasks(tasks, item.name, currentDate);
-          //     filterTomorrowsTasks(tasks, item.name);
-          //     filterOtherDaysTasks(tasks, item.name);
-          //     await AsyncStorage.setItem("filtername", item.name)
-          //   } 
-
-          //   // await AsyncStorage.setItem("filtername", item.name)
-
-          // }}
-
           onPress={handlePress}
         >
           <View style={{ paddingHorizontal: 5 }}>
             <View
               style={{
-                width: 115,
+                width: item.name === "All"? 95: item.name === "Assignments"? 140: item.name === "Incompleted" || item.name === "Completed"? 130: 115,
                 height: 45,
                 backgroundColor: COLORS.todoInactive,
                 borderRadius: 20,
@@ -316,13 +293,13 @@ useFocusEffect(
                 <Icon
                   name={item.icon}
                   size={20}
-                  color={COLORS.black}
+                  color={COLORS.todoBackground}
                   style={{}}
                 />
                 <Text
                   style={{
                     fontFamily: "Poppins",
-                    fontSize: 13,
+                    fontSize: 14,
                     lineHeight: 21,
                     color: COLORS.black,
                   }}
@@ -369,15 +346,16 @@ useFocusEffect(
                   width: 44,
                   backgroundColor: "#0E23F0",
                   borderRadius: 11,
-                  top: 3,
-                  left: 40,
+                  top: 7,
+                  left: 25,
+                  position:"absolute"
                 }}
               >
                 {/* here conditionally render the icon based on whether its an assignment or class or anyother */}
                 <Icon
                   name={
                     todo.category === "Personal"
-                      ? "people-outline"
+                      ? "person-outline"
                       : todo.category === "Classes"
                       ? "calendar-outline"
                       : "book-outline"
@@ -398,8 +376,10 @@ useFocusEffect(
                       ? "line-through"
                       : "none",
                     fontFamily: "Poppins3",
-                    textAlign: "center",
+                    // textAlign: "center",
                     paddingTop: 15,
+                    paddingLeft:50,
+                    position:"absolute"
                   }}
                 >
                   {todo?.title}
@@ -410,13 +390,16 @@ useFocusEffect(
                     flexDirection: "row",
                     justifyContent: "space-between",
                     marginHorizontal: 85,
+                    paddingTop:45,
+                    
                   }}
-                >
+                  >
                   <Text
                     style={{
                       fontSize: 10,
                       fontFamily: "Poppins",
                       color: COLORS.todo,
+                      // position:"absolute"
                     }}
                   >
                     {todo?.venue} {"."}
@@ -428,7 +411,6 @@ useFocusEffect(
                       color: COLORS.todo,
                     }}
                   >
-                    {/* {todo?.time} */}
                     {""} {todo?.time}
                   </Text>
                 </View>
@@ -438,7 +420,7 @@ useFocusEffect(
         </View>
       </ScrollView>
     );
-  };
+  }; 
 
 
   const InitialLanding =()=>{
@@ -449,21 +431,60 @@ useFocusEffect(
                     paddingTop: 40,
                   }}
                 >
-                  {/* <Text
-                    style={{
-                      fontFamily: "Poppins3",
-                      fontSize: 24,
-                      fontWeight: "400",
-                      lineHeight: 36,
-                    }}
+                 <AnimatedLottieView
+                 source={require("../assets/animations/tasks.json")}
+                 autoPlay
+                 loop
+                 speed={0.5}
+                 style={{
+                  width:300, height:300, alignSelf:"center"
+                 }}
+                 />
+                </View>
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+            onPress={()=>{
+               navigation.navigate("AddTasksScreen")
+            }}
                   >
-                    Completed Tasks
-                  </Text> */}
-       {/* <FilteredDatas type={"Completed"}/> */}
-
-       <Text>Pls i'm to tell bro praise or bro taiwo to pls give a ui for this</Text>
+                    <Text
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 13,
+                        paddingTop: 3,
+                        alignSelf:"center"
+                      }}
+                    >
+                      Customize your tasks, click to start
+                    </Text>
+                  </TouchableOpacity>
                 </View>
       </>
+    )
+  }
+
+  const UserCameBack =()=>{
+    return(
+          <View
+                style={{
+                  paddingTop: 40,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins3",
+                    fontSize: 24,
+                    fontWeight: "400",
+                    lineHeight: 36,
+                  }}
+                >
+                  Recents
+                </Text>
+                {tasks.map((item) => {
+                  return <ListItem todo={item} key={item._id} />;
+                })}
+              </View>
     )
   }
 
@@ -686,24 +707,6 @@ setIsLoading(false)
                  type={"AllTasks"}
             />;
                })}
-
-
-
-
-
-          {/* {!todo?.completed && (
-              <TouchableOpacity onPress={() => markTodoComplete(todo.id)}>
-                <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
-                  <Icon name="book-outline" size={20} color="white" />
-                </View>
-              </TouchableOpacity>
-            )}
-            {/* <TouchableOpacity onPress={() => deleteTodo(todo.id)}>
-              <View style={styles.actionIcon}>
-                <Icon name="delete" size={20} color="white" />
-              </View>
-            </TouchableOpacity> */}
-
           </View>
           :
           <View>
@@ -887,6 +890,29 @@ setIsLoading(false)
     )
   }
 
+  const AllTaskCreated =()=>{
+    return(
+      <View style={{paddingTop:40}}>
+      <View>
+        <Text
+                  style={{
+                    fontFamily: "Poppins3",
+                    fontSize: 24,
+                    fontWeight: "400",
+                    lineHeight: 36,
+                  }}
+                >
+                  Recents
+                </Text>
+      </View>
+      {tasks.map((item) => {
+                 return <ListItem todo={item} key={item._id}
+            />
+               })}
+
+      </View>
+    )
+  }
 
 
   return (
@@ -922,6 +948,12 @@ setIsLoading(false)
 
         {/* where the filtering should start */}
 
+
+        {/* {tasks.map((item) => {
+                 return <ListItem todo={item} key={item._id}
+            />;
+               })} */}
+
         <ScrollView
           contentContainerStyle={{ height: height * 6 }}
           showsVerticalScrollIndicator={false}
@@ -930,23 +962,23 @@ setIsLoading(false)
            {
 
        isLoading? (
-          <View>
-             <Text
-          style={{
-            fontFamily: "Poppins",
-            fontSize: 13,
-            paddingTop: 10,
-          }}
-        >
-          loading.....
-        </Text>
+          <View style={{paddingTop:60}}>
+             <AnimatedLottieView
+                 source={require("../assets/animations/loading.json")}
+                 autoPlay
+                 loop
+                 speed={0.5}
+                 style={{
+                  width:100, height:100, alignSelf:"center"
+                 }}
+                 />
             </View>
            ):
            // write another loop for if the task length >=1 there's no name and there's data from the async storage. i.e the user reopened the app again
            (tasks.length >=1 && name === "" && filterName !== "")
            ?
            <View>
-            <InitialLanding/>
+            <UserCameBack/>
             </View>
             :
            ((todos.length > 0 || tomorrowtasks.length > 0 || otherdaysTasks.length > 0)  && (name !=="" && name !== "AllTasks"))
@@ -956,9 +988,7 @@ setIsLoading(false)
               ((todos.length ===0 && tomorrowtasks.length ===0 && otherdaysTasks.length ===0) && tasks.length ===0)
               ?
               <View>
-                {/* <InitialLanding/>
-                 */}
-                 <Text>Landed initially</Text>
+                <InitialLanding/>
                 </View>
                 :
                 ((todos.length ===0 && tomorrowtasks.length ===0 && otherdaysTasks.length ===0) && tasks.length >=1 && (name !=="" && name !== "AllTasks"))
@@ -972,7 +1002,7 @@ setIsLoading(false)
                ((todos.length ===0 && tomorrowtasks.length ===0 && otherdaysTasks.length ===0) && tasks.length >=1 && name === "")
                ?
                <View>
-                <Text>Landed initially</Text>
+             <AllTaskCreated/>
                 </View>
                 :
                 name === "AllTasks" &&
@@ -1036,6 +1066,8 @@ const styles = StyleSheet.create({
     width: 320,
     backgroundColor: COLORS.tasks,
     borderRadius: 10,
+    borderLeftWidth:12,
+    borderLeftColor:COLORS.todoBackground
     // marginHorizontal: -18,
   },
 

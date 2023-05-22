@@ -108,10 +108,8 @@ const PostImage = memo(({ post, navigation, date, component }) => {
           backgroundColor: COLORS.transparent,
           alignSelf: "center",
           top: 20,
-          height: component === "Feeds" ? imageHfeed : imageH,
+          height: component === "Feeds" ? imageHfeed : imageH*1.3,
           width: component === "Feeds" ? imageWfeed : imageW,
-          borderRadius: component === "Feeds" ? 5 : 20,
-          alignItems: "center",
         }}
       >
         <FlatList
@@ -125,10 +123,9 @@ const PostImage = memo(({ post, navigation, date, component }) => {
           keyExtractor={keyExtractor}
           onScroll={handleScroll}
           renderItem={({ item }, id) => (
-            <View>
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() =>
+            <TouchableOpacity
+            activeOpacity={1}
+            onPress={() =>
                   navigation.navigate("PostDetails", {
                     image: post.images,
                     title: post.title,
@@ -136,20 +133,30 @@ const PostImage = memo(({ post, navigation, date, component }) => {
                     content: post.content,
                   })
                 }
-              >
+                >
+                <View
+                 style={{
+          backgroundColor: COLORS.transparent,
+          alignSelf: "center",
+           height: component === "Feeds" ? imageHfeed : imageH,
+          width: component === "Feeds" ? imageWfeed : imageW,
+          borderRadius: component === "Feeds" ? 5 : 20,
+          alignItems: "center",
+        }}
+                >
                 <Image
                   style={{
-                    height: component === "Feeds" ? imageHfeed : imageH,
+                    height: component === "Feeds" ? imageHfeed: imageH,
                     width: component === "Feeds" ? imageWfeed : imageW,
                     borderRadius: component === "Feeds" ? 5 : 20,
-                    resizeMode: Platform.OS === "android"? "contain":null,
+                    resizeMode: component === "Feeds" ? Platform.OS === "android"? "contain":"stretch" : Platform.OS === "android"? "contain":null,
                     alignSelf: "center",
                   }}
                   key={id}
                   source={{ uri: item }}
                 />
-              </TouchableOpacity>
             </View>
+              </TouchableOpacity>
           )}
         />
       </View>
@@ -281,10 +288,11 @@ const PostFooter = ({ post, date, component }) => {
       ) : (
         <View
           style={{
-            paddingTop: imageH / 10,
+            // paddingTop: imageH/100,
+            bottom:-imageH/17,
             position: "absolute",
             paddingLeft: 20,
-            marginVertical: 5,
+            // marginVertical: 5,
           }}
         >
           <Text
@@ -326,7 +334,7 @@ const PostFooter = ({ post, date, component }) => {
               numberOfLines={2}
               ellipsizeMode="tail"
             >
-              {post.content}
+               {post.content}
             </Text>
           </View>
         </View>

@@ -110,7 +110,7 @@ export function MainStack() {
         drawerActiveTintColor: "#0A3697",
         drawerInactiveTintColor: "#0C0C0D",
         drawerLabelStyle: {
-          fontFamily: "Poppins",
+          fontFamily:"Poppins",
           fontSize: 15,
           fontWeight: "400",
           lineHeight: 21,

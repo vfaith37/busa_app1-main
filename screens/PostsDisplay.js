@@ -11,7 +11,7 @@ const PostsDisplay = ({post }) => {
       <TouchableOpacity activeOpacity={0.6} onPress={()=> navigation.navigate("AllPosts", {
         post
       })}>
-        <View style={{flexDirection:"row",  paddingTop:15, justifyContent:"space-between"}}>
+        <View style={{flexDirection:"row",  paddingTop:3, justifyContent:"space-between"}}>
       <Text style={{fontFamily:"Poppins3", fontSize:22, lineHeight:33, fontWeight:"600"}}>News</Text>
           {/* <Text style={{fontSize:13, paddingTop:13, paddingRight:10, fontFamily:"Poppins"}}>more {">>>"}</Text> */}
         </View>

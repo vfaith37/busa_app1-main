@@ -57,14 +57,10 @@ const HomeScreen = () => {
           `/news/get${userInfo.campus}CampusNews/${currentPage}/${PAGE_SIZE}`,
           config
         );
-              
-        // console.log (res.data.data)
-        
 
         const responseData = res.data.data;
 
         if (responseData.length > 0) {
-          // console.log(res)
         setPosts(prevPosts => [...prevPosts, ...responseData]);
         setCurrentPage(currentPage + 1);
         }else{

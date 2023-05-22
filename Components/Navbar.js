@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
-// import { FilterOutline, Person } from "../constants/icons";
+ import { FilterOutline, Person } from "../constants/icons";
 import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../constants/theme";
 
 const Navbar = ({ userInfo }) => {
   const navigation = useNavigation();
@@ -15,19 +16,19 @@ const Navbar = ({ userInfo }) => {
           marginTop: 10,
         }}
       >
-        <TouchableOpacity
+        <FilterOutline color={COLORS.black} size={42} onPress={()=>navigation.openDrawer()} style={{paddingTop:10}}/>
+
+               
+        {/* <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => navigation.openDrawer()}
           style={{ marginTop: 25 }}
-        >
-          {/* <FilterOutline 
-                // style={{transform: [{rotateY: '500deg'}]}}
-                 color={COLORS.black} size={40} onPress={()=>navigation.openDrawer()}/> */}
-          <Image
+        > */}
+          {/* <Image
             source={require("../assets/hamburger.png")}
             style={{ height: 30, width: 30 }}
-          />
-        </TouchableOpacity>
+          /> */}
+        {/* </TouchableOpacity> */}
 
         <Image
           source={require("../assets/busa.png")}
